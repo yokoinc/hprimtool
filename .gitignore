@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+dist/
+build/
+out/
+
+# Electron specific
+.electron-builder.env.*
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+neutralinojs.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Icon generation scripts (keep only the final one)
+create_icon.py
+create_proper_icns.py
+create_simple_icon.py
+
+# Sample files (too many for git)
+samples/*.hpr
+samples/*.hpm
+!samples/Analyse.hpr
+!samples/re1497.hpm

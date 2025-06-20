@@ -1,0 +1,68 @@
+A2003922201
+COUCKE
+JEAN-PAUL
+7 RUE BRUYERE SUR LE ROC
+
+76400 TOUSSAINT
+01/09/1951
+151097625946218
+A240819071
+19/08/2024
+76         LABO.FECAMP
+AUBPA      paul.aubry
+
+Laboratoire : LABORATOIRE DE FECAMP<br />
+M&eacute;decin : AUBRY PAUL 
+Correspondant : <br />
+N&deg;Demande : A240819071<br />
+Date demande : 19-08-2024<br />
+Patient : Mr COUCKE Jean-Paul<br />
+Date de Naissance : 01-09-1951<br />
+Date d&#039;impression du compte rendu : <br />
+Validation biologique : Christine PEPIN<br />
+Validation le : 19-08-2024 
+                                                                   
+----------------------- BIOCHIMIE SANGUINE ------------------------
+                                                                   
+HbA1c - HEMOGLOBINE GLYQUEE :               6.0 %       (<6,0)         
+
+     Interpétation
+                       < 5,5 % : Zone normale
+                       < 6,5 % : Cible chez un diabétique type 2 connu 
+                  5,5 - 7.0 % : Zone subnormale
+                                    Très bon équilibre glycémique chez un
+diabétique type1 connu 
+                                    A surveiller dans tous les autres cas.
+                  7.0 - 7,5 % : équilibre glycémique limite chez certains
+diabétiques type 1 
+                  7.5 - 10,0 % : Equilibre glycémique moyen à médiocre
+                     > 10,0 % : Glycorégulation fortement perturbée.Diabétique
+non connu.
+
+
+
+* !!Attention!! Nouvel automate à compter du 01/02/2024 *
+****LAB****
+TEX|                                                                   
+TEX|----------------------- BIOCHIMIE SANGUINE ------------------------
+TEX|                                                                   
+RES|HbA1c - HEMOGLOBINE GLYQUEE : |A1C(1)|N|6.0|%||6,0|N|F||||
+TEX|
+TEX|     Interpétation
+TEX|                       < 5,5 % : Zone normale
+TEX|                       < 6,5 % : Cible chez un diabétique type 2 connu 
+TEX|                  5,5 - 7.0 % : Zone subnormale
+TEX|                                    Très bon équilibre glycémique chez un diabétique type1 connu 
+TEX|                                    A surveiller dans tous les autres cas.
+TEX|                  7.0 - 7,5 % : équilibre glycémique limite chez certains diabétiques type 1 
+TEX|                  7.5 - 10,0 % : Equilibre glycémique moyen à médiocre
+TEX|                     > 10,0 % : Glycorégulation fortement perturbée.Diabétique non connu.
+TEX|
+TEX|
+TEX|
+TEX|* !!Attention!! Nouvel automate à compter du 01/02/2024 *
+****FIN****
+
+****FINFICHIER****
+
+

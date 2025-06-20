@@ -1,0 +1,168 @@
+A2003924901
+MARIN
+MICHEL
+112 RUE QUEUE DE RENARD
+
+76400 FECAMP
+23/05/1957
+157057625931697
+A240617059
+17/06/2024
+76         LABO.FECAMP
+CUFGR      gregory.CUFFEL
+
+Laboratoire : LABORATOIRE DE FECAMP<br />
+M&eacute;decin : CUFFEL GREGORY 
+Correspondant : <br />
+N&deg;Demande : A240617059<br />
+Date demande : 17-06-2024<br />
+Patient : Mr MARIN Michel<br />
+Date de Naissance : 23-05-1957<br />
+Date d&#039;impression du compte rendu : <br />
+Validation biologique : Caroline SAVALLE<br />
+Validation le : 19-06-2024 
+                                                                   
+-------------------- HEMATOCYTOLOGIE SANGUINE ---------------------
+                                                                   
+* NUMERATION GLOBULAIRE [*] *
+( Sysmex - XN550 / 1500 / DM1200 - Cytométrie /colorimétrie/microscopie)
+HEMATIES :                              5460000 /mm3    -              
+Hémoglobine :                              16.1 g/dL    (13,0-18,0)    
+Hématocrite :                              47.1 %       (40,0-50,0)    
+VGM :                                      86.3 fL      (82,0-97,0)    
+TCMH :                                     29.5 pg      (27,0-32,0)    
+CCMH :                                     34.2 g/dL    (31,0-36,5)    
+LEUCOCYTES :                               5.28 G/L     (4,00-10,00)   
+                              Soit :       5280 /mm^3(4000-10000)   
+Neutrophiles % :                           46.8 %       -              
+Neutrophiles  :                            2471 /mm3    (1850-6100)    
+Eosinophiles % :                            4.0 %       -              
+Eosinophiles :                              211 /mm3    (50-600)       
+Basophiles % :                              0.9 %       -              
+Basophiles :                                 48 /mm3    (<100)         
+Lymphocytes % :                            39.2 %       -              
+Lymphocytes :                              2070 /mm3    (1240-3600)    
+Monocytes % :                               9.1 %       -              
+Monocytes :                                 480 /mm3    (200-1000)     
+
+PLAQUETTES :                             168000 /mm3    (150000-400000)
+Commentaire(s) :                     Plaquettes quantifiées sur tube EDTA et controlé sur tube citraté.         -              
+                                                                   
+--------------- IMMUNOLOGIE - .LECTROPHOR»SES SANG ----------------
+                                                                   
+* ELECTROPHORESE DES PROTEINES SERIQUES *
+(Séparation électrocinétique en tube capillaire)
+     PROTIDES TOTAUX  :                      73 g/L     (66-83)        
+Albumine % :                               64.8 %       (55,8-66,1)    
+Alpah-1 Globulines % :                      3.5 %       (2,9-4,9)      
+Alpha-2 Globulines % :                      8.8 %       (7,1-11,8)     
+Béta1 Globulines % :                        6.0 %       (4,7-7,2)      
+Béta2 Globulines % :                        4.9 %       (3,2-6,5)      
+Gamma Globulines % :                       12.0 %       (11,0-18,8)    
+            
+                    Soit en Valeur absolue : 
+Albumine g/L :                           *47.3* g/L     (39,0-46,3)    
+Alpah-1 Globulines g/L :                    2.6 g/L     (2,1-3,4)      
+Alpha-2 Globulines g/L :                    6.4 g/L     (5,0-8,3)      
+Béta1 Globulines g/L :                      4.4 g/L     (3,4-5,2)      
+Béta2 Globulines g/L :                      3.6 g/L     (2,3-4,7)      
+Gamma Globulines g/L :                      8.8 g/L     (7,8-13,2)     
+
+Rapport Albumine/Globulines :            *1.84*         (1,20-1,80)    
+                                                                   
+------------------------ EXAMENS TRANSMIS -------------------------
+                                                                   
+Résultats :                          Hématologie cellulaire spécialisée : immunophénotypage
+                                     Nature de prélèvement Sang
+                                     ,,
+                                     .
+                                     Immunophénotypage des hémopathies lymphoïdes chroniques : OUI ou NON
+                                     Lymphocytes totaux 2,070 G/L
+                                     CD3+ 68 %
+                                     soit 1,408 G/L
+                                     CD4+ 73 %
+                                     CD8+ 21 %
+                                     CD4/CD8 3,48
+                                     CD56+ 9 %
+                                     CD7+ 81 %
+                                     CD19+ 5 %
+                                     soit 0,104 G/L
+                                     CD20+ 99 %
+                                     CD5+ 17 %
+                                     Kappa 61 %
+                                     Lambda 39 %
+                                     CD10+ 1 %
+                                     CD56+ 25 %
+                                     soit 0,518 G/L
+                                     Les valeurs absolues sont calculées à partir de la NFP
+                                     fournie par le laboratoire.
+                                     ..
+                                     .
+                                     .
+                                     .
+                                     Conclusion
+                                     Répartition normale des sous populations lymphocytaires T, B
+                                     et NK.
+                                     Absence d'infiltration lymphoïde pathologique évidente sur
+                                     ce prélèvement.
+                                     Les résultats de cette analyse ont été transmis à votre
+                                     médecin prescripteur.
+Immunophénotypage des hémopathies malignes - Sang total EDTA_1 :       Voir compte-rendu Biomnis ci-joint
+****LAB****
+TEX|                                                                   
+TEX|-------------------- HEMATOCYTOLOGIE SANGUINE ---------------------
+TEX|                                                                   
+TEX|* NUMERATION GLOBULAIRE [*] *
+TEX|( Sysmex - XN550 / 1500 / DM1200 - Cytométrie /colorimétrie/microscopie)
+RES|HEMATIES : |NUM(1.1)|N|5460000|/mm3|||N|F||||
+RES|Hémoglobine : |NUM(2)|N|16.1|g/dL|13,0|18,0|N|F||||
+RES|Hématocrite : |NUM(3)|N|47.1|%|40,0|50,0|N|F||||
+RES|VGM : |NUM(4)|N|86.3|fL|82,0|97,0|N|F||||
+RES|TCMH : |NUM(5)|N|29.5|pg|27,0|32,0|N|F||||
+RES|CCMH : |NUM(6)|N|34.2|g/dL|31,0|36,5|N|F||||
+RES|LEUCOCYTES : |NUM(7)|N|5.28|G/L|4,00|10,00|N|F|5280|/mm^3|4000|10000
+RES|Neutrophiles % : |FOR(2)|N|46.8|%|||N|F||||
+RES|Neutrophiles  : |FOR(2.1)|N|2471|/mm3|1850|6100|N|F||||
+RES|Eosinophiles % : |FOR(5)|N|4.0|%|||N|F||||
+RES|Eosinophiles : |FOR(5.1)|N|211|/mm3|50|600|N|F||||
+RES|Basophiles % : |FOR(6)|N|0.9|%|||N|F||||
+RES|Basophiles : |FOR(6.1)|N|48|/mm3||100|N|F||||
+RES|Lymphocytes % : |FOR(3)|N|39.2|%|||N|F||||
+RES|Lymphocytes : |FOR(3.1)|N|2070|/mm3|1240|3600|N|F||||
+RES|Monocytes % : |FOR(4)|N|9.1|%|||N|F||||
+RES|Monocytes : |FOR(4.1)|N|480|/mm3|200|1000|N|F||||
+TEX|
+RES|PLAQUETTES : |PQS(2)|N|168000|/mm3|150000|400000|N|F||||
+RES|Commentaire(s) : |COMH(1)|A|Plaquettes quantifiées sur tube EDTA et controlé sur tube citraté.||||N|F||||
+TEX|                                                                   
+TEX|--------------- IMMUNOLOGIE - .LECTROPHOR»SES SANG ----------------
+TEX|                                                                   
+TEX|* ELECTROPHORESE DES PROTEINES SERIQUES *
+TEX|(Séparation électrocinétique en tube capillaire)
+RES|     PROTIDES TOTAUX  : |ELEC(1)|N|73|g/L|66|83|N|F||||
+RES|Albumine % : |ELEC(2)|N|64.8|%|55,8|66,1|N|F||||
+RES|Alpah-1 Globulines % : |ELEC(3)|N|3.5|%|2,9|4,9|N|F||||
+RES|Alpha-2 Globulines % : |ELEC(4)|N|8.8|%|7,1|11,8|N|F||||
+RES|Béta1 Globulines % : |ELEC(5)|N|6.0|%|4,7|7,2|N|F||||
+RES|Béta2 Globulines % : |ELEC(6)|N|4.9|%|3,2|6,5|N|F||||
+RES|Gamma Globulines % : |ELEC(7)|N|12.0|%|11,0|18,8|N|F||||
+TEX|            
+TEX|                    Soit en Valeur absolue : 
+RES|Albumine g/L : |ELEC(2.1)|N|47.3|g/L|39,0|46,3|H|F||||
+RES|Alpah-1 Globulines g/L : |ELEC(3.1)|N|2.6|g/L|2,1|3,4|N|F||||
+RES|Alpha-2 Globulines g/L : |ELEC(4.1)|N|6.4|g/L|5,0|8,3|N|F||||
+RES|Béta1 Globulines g/L : |ELEC(5.1)|N|4.4|g/L|3,4|5,2|N|F||||
+RES|Béta2 Globulines g/L : |ELEC(6.1)|N|3.6|g/L|2,3|4,7|N|F||||
+RES|Gamma Globulines g/L : |ELEC(7.1)|N|8.8|g/L|7,8|13,2|N|F||||
+TEX|
+RES|Rapport Albumine/Globulines : |ELEC(10)|N|1.84||1,20|1,80|H|F||||
+TEX|                                                                   
+TEX|------------------------ EXAMENS TRANSMIS -------------------------
+TEX|                                                                   
+RES|Résultats : |X_TXTBIOMNIS(1)|A|Hématologie cellulaire spécialisée : immunophénotypage, Nature de prélèvement Sang, ,,, ., Immunophénotypage des hémopathies lymphoïdes chroniques : OUI ou NON, Lymphocytes totaux 2,070 G/L, CD3+ 68 %, soit||-|-|N|F||||
+RES|Immunophénotypage des hémopathies malignes - Sang total EDTA_1 : |X_IPHEN_1(1)|A|Voir compte-rendu Biomnis ci-joint||-|-|N|F||||
+****FIN****
+
+****FINFICHIER****
+
+

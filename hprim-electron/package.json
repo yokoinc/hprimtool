@@ -1,0 +1,100 @@
+{
+  "name": "hprim-tool",
+  "version": "1.0.0",
+  "description": "Analyseur de résultats médicaux HPRIM",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build-win": "electron-builder --win",
+    "build-mac": "electron-builder --mac",
+    "build-linux": "electron-builder --linux",
+    "dist": "npm run build"
+  },
+  "build": {
+    "appId": "com.medical.hprimtool",
+    "productName": "HPRIM Tool",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "renderer.js",
+      "index.html",
+      "styles.css",
+      "icons/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.medical",
+      "target": "dmg",
+      "icon": "icons/icon.icns"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64", "ia32"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64", "ia32"]
+        }
+      ],
+      "icon": "icons/icon.png",
+      "publisherName": "HPRIM Tool",
+      "fileAssociations": [
+        {
+          "ext": "hpr",
+          "name": "Fichier HPRIM",
+          "description": "Fichier de résultats biologiques HPRIM"
+        },
+        {
+          "ext": "hpm",
+          "name": "Fichier HPRIM",
+          "description": "Fichier de résultats biologiques HPRIM"
+        },
+        {
+          "ext": "hprim",
+          "name": "Fichier HPRIM",
+          "description": "Fichier de résultats biologiques HPRIM"
+        }
+      ]
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "icons/icon.png",
+      "category": "Office"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "HPRIM Tool"
+    },
+    "fileAssociations": [
+      {
+        "ext": "hpr",
+        "name": "Fichier HPRIM",
+        "description": "Fichier de résultats biologiques HPRIM",
+        "role": "Viewer"
+      },
+      {
+        "ext": "hpm",
+        "name": "Fichier HPRIM",
+        "description": "Fichier de résultats biologiques HPRIM",
+        "role": "Viewer"
+      },
+      {
+        "ext": "hprim",
+        "name": "Fichier HPRIM",
+        "description": "Fichier de résultats biologiques HPRIM",
+        "role": "Viewer"
+      }
+    ]
+  },
+  "devDependencies": {
+    "electron": "^27.0.0",
+    "electron-builder": "^24.0.0"
+  }
+}

@@ -1,0 +1,94 @@
+A2003919867
+MENARD
+DENIS
+6 RUE DE LA TOUR CARREE
+
+76400 FECAMP
+10/04/1956
+156047625924309
+B250304080
+04/03/2025
+76         LABO.FECAMP
+PERJU      justine.perret
+
+Laboratoire : LABORATOIRE DE LA COTE SAINT JACQUES<br />
+M&eacute;decin : PERRET JUSTINE 
+Correspondant : <br />
+N&deg;Demande : B250304080<br />
+Date demande : 04-03-2025<br />
+Patient : Mr MENARD Denis<br />
+Date de Naissance : 10-04-1956<br />
+Date d&#039;impression du compte rendu : <br />
+Validation biologique : Caroline SAVALLE<br />
+Validation le : 04-03-2025 
+                                                                   
+----------------------- BIOCHIMIE SANGUINE ------------------------
+                                                                   
+GLYCEMIE à jeun :                        *1.20* g/L     (0,82-1,15)    
+                              Soit :      *6.7* mmol/L  (4,6-6,4)      
+Critères de diagnostic de diabète selon   OMS 2006 / HAS(2014) : 
+Le diagnostic de diabète est défini par :
+- Une glycémie > =  1.26 g/L (7.0 mmol/L) à jeun, vérifiée sur un nouveau
+prélèvement ou une glycémie d'emblée >= 2.00 g/L (11.11 mmol/L).
+-Chez   la  femme enceinte une glycémie à jeun: > 0.92 g/L( 5.1mmol/L) peut être
+évocateur d'un diabète gestationnel
+Sources : IADPSG 2010 (International Association of Diabets pregnancy Study
+Group)
+HbA1c - HEMOGLOBINE GLYQUEE :               5.8 %       (<6,0)         
+
+     Interpétation
+                       < 5,5 % : Zone normale
+                       < 6,5 % : Cible chez un diabétique type 2 connu 
+                  5,5 - 7.0 % : Zone subnormale
+                                    Très bon équilibre glycémique chez un
+diabétique type1 connu 
+                                    A surveiller dans tous les autres cas.
+                  7.0 - 7,5 % : équilibre glycémique limite chez certains
+diabétiques type 1 
+                  7.5 - 10,0 % : Equilibre glycémique moyen à médiocre
+                     > 10,0 % : Glycorégulation fortement perturbée.Diabétique
+non connu.
+
+
+
+* !!Attention!! Nouvel automate à compter du 01/02/2024 *
+                                                                   
+---------------------- HORMONOLOGIE SANGUINE ----------------------
+                                                                   
+TSH (THYREOSTIMULINE) :                   3.030 mUI/l   (0,270-4,200)  
+HIL :                                                   -              
+****LAB****
+TEX|                                                                   
+TEX|----------------------- BIOCHIMIE SANGUINE ------------------------
+TEX|                                                                   
+RES|GLYCEMIE à jeun : |G(1)|N|1.20|g/L|0,82|1,15|H|F|6.7|mmol/L|4,6|6,4
+TEX|Critères de diagnostic de diabète selon   OMS 2006 / HAS(2014) : 
+TEX|Le diagnostic de diabète est défini par :
+TEX|- Une glycémie > =  1.26 g/L (7.0 mmol/L) à jeun, vérifiée sur un nouveau prélèvement ou une glycémie d'emblée >= 2.00 g/L (11.11 mmol/L).
+TEX|-Chez   la  femme enceinte une glycémie à jeun: > 0.92 g/L( 5.1mmol/L) peut être évocateur d'un diabète gestationnel
+TEX|Sources : IADPSG 2010 (International Association of Diabets pregnancy Study Group)
+RES|HbA1c - HEMOGLOBINE GLYQUEE : |A1C(1)|N|5.8|%||6,0|N|F||||
+TEX|
+TEX|     Interpétation
+TEX|                       < 5,5 % : Zone normale
+TEX|                       < 6,5 % : Cible chez un diabétique type 2 connu 
+TEX|                  5,5 - 7.0 % : Zone subnormale
+TEX|                                    Très bon équilibre glycémique chez un diabétique type1 connu 
+TEX|                                    A surveiller dans tous les autres cas.
+TEX|                  7.0 - 7,5 % : équilibre glycémique limite chez certains diabétiques type 1 
+TEX|                  7.5 - 10,0 % : Equilibre glycémique moyen à médiocre
+TEX|                     > 10,0 % : Glycorégulation fortement perturbée.Diabétique non connu.
+TEX|
+TEX|
+TEX|
+TEX|* !!Attention!! Nouvel automate à compter du 01/02/2024 *
+TEX|                                                                   
+TEX|---------------------- HORMONOLOGIE SANGUINE ----------------------
+TEX|                                                                   
+RES|TSH (THYREOSTIMULINE) : |TSH(1)|N|3.030|mUI/l|0,270|4,200|N|F||||
+RES|HIL : |TSH(1.1)|A|||||N|F||||
+****FIN****
+
+****FINFICHIER****
+
+

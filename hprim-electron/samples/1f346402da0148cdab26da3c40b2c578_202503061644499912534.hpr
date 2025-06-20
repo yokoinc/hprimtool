@@ -1,0 +1,155 @@
+A2003930535
+DEFRESNE-ALEMAN
+ALAIN
+2 RUE DE BOULOGNE
+
+76400 FECAMP
+28/08/1958
+158087625953868
+A250306086
+06/03/2025
+76         LABO.FECAMP
+GIRMA      marc.girault
+
+Laboratoire : LABORATOIRE DE FECAMP<br />
+M&eacute;decin : GIRAULT MARC 
+Correspondant : <br />
+N&deg;Demande : A250306086<br />
+Date demande : 06-03-2025<br />
+Patient : Mr DEFRESNE-ALEMAN Alain<br />
+Date de Naissance : 28-08-1958<br />
+Date d&#039;impression du compte rendu : <br />
+Validation biologique : Caroline SAVALLE<br />
+Validation le : 06-03-2025 
+                                                                   
+----------------------- BIOCHIMIE SANGUINE ------------------------
+                                                                   
+* EXPLORATION DU METABOLISME LIPIDIQUE *
+  (Colorimétrie Roche Cobas C501 ; Calculs)
+        - ASPECT DU SERUM :                                           Limpide
+
+        - CHOLESTEROL TOTAL :              1.96 g/L     (1,50-2,00)    
+                              Soit :        5.1 mmol/L  (3,9-5,2)      
+        - CHOLESTEROL HDL :                0.42 g/L     (>0,40)        
+        - LDL CHOLESTEROL :                1.42 g/L     -              
+        - Rapport d'Athérogénicité :     *4.67*         (<4,50)        
+        - TRIGLYCERIDES :                  0.59 g/L     (0,45-2,00)    
+                              Soit :       0.67 mmol/L  (0,51-2,28)    
+Interprétation du bilan lipidique :
+
+En l'absence de facteur de risque cardiovasculaire associé, le bilan est
+considéré comme normal si LDL <= 1.60g/L (4.1 mmol/L) et/ou HDL > 0.40g/L (1
+mmol/L) et/ ou Triglycérides <= 1.50 g/L (1.7 mmol/L).
+En présence d'une maladie coronaire, ou de plus de deux facteurs de risque
+cardiovasculaire associé, les résultats biologiques doivent être interprétés en
+fonction d'objectifs thérapeutiques qui déterminent les valeurs cibles de LDL.
+
+Valeurs cibles de LDL :
+0 facteur de risque : LDL <= 2.20 g/L soit 5.70 mmol/L
+1 facteur de risque : LDL <= 1.90 g/L soit 4.92 mmol/L
+2 facteurs de risque :LDL <= 1.60 g/L soit 4.14 mmol/L
+Plus de 2 facteurs de risque : LDL <= 1.30 g/L soit 3.37 mmol/L
+Patient à haut risque cardiovasculaire : LDL <= 1.00 g/L soit 2.59 mmol/L
+
+https://www.has-sante.fr/portail/jcms/c_2754387/fr/evaluation-et-prise-en-charge-du-risque-cardio-vasculaire
+HbA1c - HEMOGLOBINE GLYQUEE :               6.0 %       (<6,0)         
+
+     Interpétation
+                       < 5,5 % : Zone normale
+                       < 6,5 % : Cible chez un diabétique type 2 connu 
+                  5,5 - 7.0 % : Zone subnormale
+                                    Très bon équilibre glycémique chez un
+diabétique type1 connu 
+                                    A surveiller dans tous les autres cas.
+                  7.0 - 7,5 % : équilibre glycémique limite chez certains
+diabétiques type 1 
+                  7.5 - 10,0 % : Equilibre glycémique moyen à médiocre
+                     > 10,0 % : Glycorégulation fortement perturbée.Diabétique
+non connu.
+
+
+
+* !!Attention!! Nouvel automate à compter du 01/02/2024 *
+CREATININEMIE :                             9.1 mg/l    (6,7-11,7)     
+                              Soit :       80.5 µmol/L  (59,3-103,5)   
+   Estimation par calculs du débit de filtration glomérulaire (DFG)
+     DFG selon la formule CKD-EPI :        87.5 ml/min/1,73m2-              
+
+   valeurs normales du DFG :
+   >90 ml/min : DFG normal ou hyperfiltration
+    61 à 90 ml/ min : DFG légèrement diminué
+   31 à 60 ml/min : Insuffisance rénale modérée
+   15 à 30 ml/min : Insuffisance rénale sévère
+   < 15 ml/min : Insurffisance rénale terminale 
+
+
+Les évaluations du DFG par calculs sont des estimations . L'HAS recommande le
+calcul par la formule du CKD EPI
+     
+L'évaluation de la clairance par la formule de Cockroft est obsolète et ne doit
+plus être utilisée.
+
+CREATINE PHOSPHO KINASE(CPK) :               96 U/L     (30-190)       
+****LAB****
+TEX|                                                                   
+TEX|----------------------- BIOCHIMIE SANGUINE ------------------------
+TEX|                                                                   
+TEX|* EXPLORATION DU METABOLISME LIPIDIQUE *
+TEX|  (Colorimétrie Roche Cobas C501 ; Calculs)
+RES|        - ASPECT DU SERUM : |BLIP(1)|A|Limpide||-|-|N|F||||
+TEX|
+RES|        - CHOLESTEROL TOTAL : |BLIP(2)|N|1.96|g/L|1,50|2,00|N|F|5.1|mmol/L|3,9|5,2
+RES|        - CHOLESTEROL HDL : |BLIP(2.2)|N|0.42|g/L|0,40||N|F||||
+RES|        - LDL CHOLESTEROL : |BLIP(2.3)|N|1.42|g/L|||N|F||||
+RES|        - Rapport d'Athérogénicité : |BLIP(2.4)|N|4.67|||4,50|H|F||||
+RES|        - TRIGLYCERIDES : |BLIP(6)|N|0.59|g/L|0,45|2,00|N|F|0.67|mmol/L|0,51|2,28
+TEX|Interprétation du bilan lipidique :
+TEX|
+TEX|En l'absence de facteur de risque cardiovasculaire associé, le bilan est considéré comme normal si LDL <= 1.60g/L (4.1 mmol/L) et/ou HDL > 0.40g/L (1 mmol/L) et/ ou Triglycérides <= 1.50 g/L (1.7 mmol/L).
+TEX|En présence d'une maladie coronaire, ou de plus de deux facteurs de risque cardiovasculaire associé, les résultats biologiques doivent être interprétés en fonction d'objectifs thérapeutiques qui déterminent les valeurs cibles de LDL.
+TEX|
+TEX|Valeurs cibles de LDL :
+TEX|0 facteur de risque : LDL <= 2.20 g/L soit 5.70 mmol/L
+TEX|1 facteur de risque : LDL <= 1.90 g/L soit 4.92 mmol/L
+TEX|2 facteurs de risque :LDL <= 1.60 g/L soit 4.14 mmol/L
+TEX|Plus de 2 facteurs de risque : LDL <= 1.30 g/L soit 3.37 mmol/L
+TEX|Patient à haut risque cardiovasculaire : LDL <= 1.00 g/L soit 2.59 mmol/L
+TEX|
+TEX|https://www.has-sante.fr/portail/jcms/c_2754387/fr/evaluation-et-prise-en-charge-du-risque-cardio-vasculaire
+RES|HbA1c - HEMOGLOBINE GLYQUEE : |A1C(1)|N|6.0|%||6,0|N|F||||
+TEX|
+TEX|     Interpétation
+TEX|                       < 5,5 % : Zone normale
+TEX|                       < 6,5 % : Cible chez un diabétique type 2 connu 
+TEX|                  5,5 - 7.0 % : Zone subnormale
+TEX|                                    Très bon équilibre glycémique chez un diabétique type1 connu 
+TEX|                                    A surveiller dans tous les autres cas.
+TEX|                  7.0 - 7,5 % : équilibre glycémique limite chez certains diabétiques type 1 
+TEX|                  7.5 - 10,0 % : Equilibre glycémique moyen à médiocre
+TEX|                     > 10,0 % : Glycorégulation fortement perturbée.Diabétique non connu.
+TEX|
+TEX|
+TEX|
+TEX|* !!Attention!! Nouvel automate à compter du 01/02/2024 *
+RES|CREATININEMIE : |C(1)|N|9.1|mg/l|6,7|11,7|N|F|80.5|µmol/L|59,3|103,5
+TEX|   Estimation par calculs du débit de filtration glomérulaire (DFG)
+RES|     DFG selon la formule CKD-EPI : |C(1.6)|N|87.5|ml/min/1,73m2|||N|F||||
+TEX|
+TEX|   valeurs normales du DFG :
+TEX|   >90 ml/min : DFG normal ou hyperfiltration
+TEX|    61 à 90 ml/ min : DFG légèrement diminué
+TEX|   31 à 60 ml/min : Insuffisance rénale modérée
+TEX|   15 à 30 ml/min : Insuffisance rénale sévère
+TEX|   < 15 ml/min : Insurffisance rénale terminale 
+TEX|
+TEX|
+TEX|Les évaluations du DFG par calculs sont des estimations . L'HAS recommande le calcul par la formule du CKD EPI
+TEX|     
+TEX|L'évaluation de la clairance par la formule de Cockroft est obsolète et ne doit plus être utilisée.
+TEX|
+RES|CREATINE PHOSPHO KINASE(CPK) : |CPK(1)|N|96|U/L|30|190|N|F||||
+****FIN****
+
+****FINFICHIER****
+
+

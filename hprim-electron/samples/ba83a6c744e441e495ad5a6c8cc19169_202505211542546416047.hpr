@@ -1,0 +1,53 @@
+A2003930535
+DEFRESNE-ALEMAN
+ALAIN
+2 RUE DE BOULOGNE
+
+76400 FECAMP
+28/08/1958
+158087625953868
+A250520098
+20/05/2025
+76         LABO.FECAMP
+GIRMA      marc.girault
+
+Laboratoire : LABORATOIRE DE FECAMP<br />
+M&eacute;decin : GIRAULT MARC 
+Correspondant : <br />
+N&deg;Demande : A250520098<br />
+Date demande : 20-05-2025<br />
+Patient : Mr DEFRESNE-ALEMAN Alain<br />
+Date de Naissance : 28-08-1958<br />
+Date d&#039;impression du compte rendu : <br />
+Validation biologique : Caroline SAVALLE<br />
+Validation le : 20-05-2025 
+                                                                   
+----------------------- BIOCHIMIE SANGUINE ------------------------
+                                                                   
+TROPONINE T HS Stat :                    <0.013 ng/ml   (<0,014)       
+  Interprétation des valeurs                     
+                          < 0.014 ng/ml      Exclusion du diagnostic d'atteinte
+cardiaque.
+                                                     En cas de persistance
+d'évocation  d'IDM, le dosage 
+                                                     doit être répété après un
+délai de 3 à 6 heures.
+                           0.10 ng /ml         Seuil de signification selon les
+critères OMS 
+
+****LAB****
+TEX|                                                                   
+TEX|----------------------- BIOCHIMIE SANGUINE ------------------------
+TEX|                                                                   
+RES|TROPONINE T HS Stat : |TROPO(1)|A|<0.013|ng/ml||0,014|N|F||||
+TEX|  Interprétation des valeurs                     
+TEX|                          < 0.014 ng/ml      Exclusion du diagnostic d'atteinte cardiaque.
+TEX|                                                     En cas de persistance d'évocation  d'IDM, le dosage 
+TEX|                                                     doit être répété après un délai de 3 à 6 heures.
+TEX|                           0.10 ng /ml         Seuil de signification selon les critères OMS 
+TEX|
+****FIN****
+
+****FINFICHIER****
+
+

@@ -1,0 +1,131 @@
+A2003950599
+GOBBE
+MAXIME
+chem. des  Plantis
+
+76400 FECAMP
+16/07/2001
+101077625926415
+A250430056
+30/04/2025
+76         LABO.FECAMP
+FRAAN      anouk.fraysse
+
+Laboratoire : LABORATOIRE DE FECAMP<br />
+M&eacute;decin : FRAYSSE ANOUK 
+Correspondant : <br />
+N&deg;Demande : A250430056<br />
+Date demande : 30-04-2025<br />
+Patient : Mr GOBBE Maxime<br />
+Date de Naissance : 16-07-2001<br />
+Date d&#039;impression du compte rendu : <br />
+Validation biologique : Caroline SAVALLE<br />
+Validation le : 05-05-2025 
+                                                                   
+--------------------------------  ---------------------------------
+                                                                   
+Analyses non effectuées à la demande :                               du patient
+analyses concernées :                                     anticorps anti Musk
+                                                                   
+----------------------- BIOCHIMIE URINAIRE ------------------------
+                                                                   
+Type de prélèvement :                                             Echantillon
+CREATININE URINAIRE :                    *3.36* g/l     (0,40-2,78)    
+                              Soit :    *29.74* mmol/l  (3,54-24,60)   
+
+SODIUM URINAIRE :                           113 mmol/L  -              
+
+POTASSIUM URINAIRE :                         70 mmol/l  -              
+CHLORE URINAIRE :                            82 mmol/L  -              
+
+                                                                   
+------------ CYTOLOGIE - MICROBIOLOGIE - INFECTIOLOGIE ------------
+                                                                   
+* EXAMEN CYTOLOGIQUE DES URINES *
+(Iris 100 , analyse d'image et cytométrie en flux / microscopie optique) Site
+Eugène Marchand
+ASPECT :                                Limpide         -              
+
+Hématurie :                               <1000 /mL     -              
+Leucocyturie :                             3000 /mL     (<10000)       
+Cellules épithéliales :                                               Absence
+Cellules rondes :                                                     Absence
+Cristaux :                              Absence         -              
+Cylindres :                             Absence         -              
+* EXAMEN BACTERIOLOGIQUE *
+(Identification phénotypique sur automate VITEK après culture sur gélose
+chromogènique)
+Résultat culture :                                         Cultures négatives
+Conclusion :                         Absence d'infection urinaire ou de colonisation
+                                                                   
+-------------------- COMMENTAIRE MICROBIOLOGIE --------------------
+                                                                   
+Commentaire Cytologie :               L'analyse cytologique de l'échantillon ayant été traitée dans un délai supérieur à 24h (ou délai non précisé), la leucocyturie et l'hématurie sont susceptible d'être sous estimées de 30%.         -              
+                                                                   
+------------------------ EXAMENS TRANSMIS -------------------------
+                                                                   
+Anticorps anti-récepteur de l'acétylcholine - sérum :       Voir compte-rendu Biomnis ci-joint
+Résultats :                          Anticorps anti-récepteur de l'acétylcholine (RIA)
+                                     Anticorps anti-récepteur de l'acétylcholine (RIA) <  0,25 nmol/L
+                                     Ac anti-récepteur
+                                     de l'acétylcholine    Interprétation
+                                     (nmol/L)
+                                     < 0,25               négatif
+                                     0,25 - 0,40           douteux
+                                     > 0,40               positif
+                                     Conc. si REAC <0,25 nmol/L
+                                     Conc. si REAC <0,25 nmol/L
+                                     NB: en cas de forte suspicion clinique de myasthénie
+                                     auto-immune, le bilan peut être complété par la
+                                     recherche des anticorps anti-MuSK; 40 à 60% des patients
+                                     avec une myasthénie sans Ac anti-récepteur de
+                                     l'acétylcholine ont des anticorps anti-MuSK.
+                                     Attention cette analyse est toutefois hors nomenclature.
+****LAB****
+TEX|                                                                   
+TEX|--------------------------------  ---------------------------------
+TEX|                                                                   
+RES|Analyses non effectuées à la demande : |ANE(1)|A|du patient||-|-|N|F||||
+RES|analyses concernées : |ANE(2)|A|anticorps anti Musk||-|-|N|F||||
+TEX|                                                                   
+TEX|----------------------- BIOCHIMIE URINAIRE ------------------------
+TEX|                                                                   
+RES|Type de prélèvement : |DIU(1)|A|Echantillon||-|-|N|F||||
+RES|CREATININE URINAIRE : |UC(1)|N|3.36|g/l|0,40|2,78|H|F|29.74|mmol/l|3,54|24,60
+TEX|
+RES|SODIUM URINAIRE : |UNA(1)|N|113|mmol/L|||N|F||||
+TEX|
+RES|POTASSIUM URINAIRE : |UK(1)|N|70|mmol/l|||N|F||||
+RES|CHLORE URINAIRE : |UCL(1)|N|82|mmol/L|||N|F||||
+TEX|
+TEX|                                                                   
+TEX|------------ CYTOLOGIE - MICROBIOLOGIE - INFECTIOLOGIE ------------
+TEX|                                                                   
+TEX|* EXAMEN CYTOLOGIQUE DES URINES *
+TEX|(Iris 100 , analyse d'image et cytométrie en flux / microscopie optique) Site Eugène Marchand
+RES|ASPECT : |CYTU(1.1)|A|Limpide||||N|F||||
+TEX|
+RES|Hématurie : |CYTU(3)|A|<1000|/mL|||N|F||||
+RES|Leucocyturie : |CYTU(4)|N|3000|/mL||10000|N|F||||
+RES|Cellules épithéliales : |CYTU(5)|A|Absence||-|-|N|F||||
+RES|Cellules rondes : |CYTU(5.2)|A|Absence||-|-|N|F||||
+RES|Cristaux :|CYTU(6)|A|Absence||||N|F||||
+RES|Cylindres :|CYTU(7)|A|Absence||||N|F||||
+TEX|* EXAMEN BACTERIOLOGIQUE *
+TEX|(Identification phénotypique sur automate VITEK après culture sur gélose chromogènique)
+RES|Résultat culture : |BU(1)|A|Cultures négatives||-|-|N|F||||
+RES|Conclusion : |BU(1.9)|A|Absence d'infection urinaire ou de colonisation||-|-|N|F||||
+TEX|                                                                   
+TEX|-------------------- COMMENTAIRE MICROBIOLOGIE --------------------
+TEX|                                                                   
+RES|Commentaire Cytologie : |COMCYTO(1)|A| L'analyse cytologique de l'échantillon ayant été traitée dans un délai supérieur à 24h (ou délai non précisé), la leucocyturie et l'hématurie sont susceptible d'être sous estimées de 30%.||||N|F||||
+TEX|                                                                   
+TEX|------------------------ EXAMENS TRANSMIS -------------------------
+TEX|                                                                   
+RES|Anticorps anti-récepteur de l'acétylcholine - sérum : |X_REAC_1(1)|A|Voir compte-rendu Biomnis ci-joint||-|-|N|F||||
+RES|Résultats : |X_TXTBIOMNIS(1)|A|Anticorps anti-récepteur de l'acétylcholine (RIA), Anticorps anti-récepteur de l'acétylcholine (RIA) <  0,25 nmol/L, Ac anti-récepteur, de l'acétylcholine    Interprétation, (nmol/L), < 0,25               n||-|-|N|F||||
+****FIN****
+
+****FINFICHIER****
+
+

@@ -1,0 +1,76 @@
+A2003922265
+LECOMTE
+CHRISTIAN
+5 RUE DE ROUEN
+
+76400 TOUSSAINT
+26/01/1944
+144012828900123
+A250227094
+27/02/2025
+76         LABO.FECAMP
+AUBPA      paul.aubry
+
+Laboratoire : LABORATOIRE DE FECAMP<br />
+M&eacute;decin : VASSELIN ANATOLE 
+Correspondant : <br />
+N&deg;Demande : A250227094<br />
+Date demande : 27-02-2025<br />
+Patient : Mr LECOMTE Christian<br />
+Date de Naissance : 26-01-1944<br />
+Date d&#039;impression du compte rendu : <br />
+Validation biologique : Caroline SAVALLE<br />
+Validation le : 27-02-2025 
+                                                                   
+----------------------- BIOCHIMIE SANGUINE ------------------------
+                                                                   
+CREATININEMIE :                             8.9 mg/l    (6,7-11,7)     
+                              Soit :       78.8 µmol/L  (59,3-103,5)   
+   Estimation par calculs du débit de filtration glomérulaire (DFG)
+     DFG selon la formule CKD-EPI :        80.2 ml/min/1,73m2-              
+
+   valeurs normales du DFG :
+   >90 ml/min : DFG normal ou hyperfiltration
+    61 à 90 ml/ min : DFG légèrement diminué
+   31 à 60 ml/min : Insuffisance rénale modérée
+   15 à 30 ml/min : Insuffisance rénale sévère
+   < 15 ml/min : Insurffisance rénale terminale 
+
+
+Les évaluations du DFG par calculs sont des estimations . L'HAS recommande le
+calcul par la formule du CKD EPI
+     
+L'évaluation de la clairance par la formule de Cockroft est obsolète et ne doit
+plus être utilisée.
+
+UREE :                               *Le dosage de l'urée ne peut être prescrit que pour les patients présentant une IR aigue, les patients dialysés ou pour évaluation nutritionnelle dans une IRC. (JO19/9/19)   Si la prescription ne le mentionnait pas une créatinine a été ajoutée.* g/L     (0,18-0,55)    
+POTASSIUM PLASMATIQUE :                     3.9 mEq/l   (3,6-4,8)      
+Commentaire :                        Les valeurs usuelles de potassium correspondent à un dosage réalisé selon les préconisations internationales de l'OMS et des sociétés savantes : Traitement du tube dans les 2 heures suivant le prélèvement faute de quoi le résultat est surévalué. Seul un prélèvement effectué au laboratoire permet de s'assurer de la validité du dosage
+****LAB****
+TEX|                                                                   
+TEX|----------------------- BIOCHIMIE SANGUINE ------------------------
+TEX|                                                                   
+RES|CREATININEMIE : |C(1)|N|8.9|mg/l|6,7|11,7|N|F|78.8|µmol/L|59,3|103,5
+TEX|   Estimation par calculs du débit de filtration glomérulaire (DFG)
+RES|     DFG selon la formule CKD-EPI : |C(1.6)|N|80.2|ml/min/1,73m2|||N|F||||
+TEX|
+TEX|   valeurs normales du DFG :
+TEX|   >90 ml/min : DFG normal ou hyperfiltration
+TEX|    61 à 90 ml/ min : DFG légèrement diminué
+TEX|   31 à 60 ml/min : Insuffisance rénale modérée
+TEX|   15 à 30 ml/min : Insuffisance rénale sévère
+TEX|   < 15 ml/min : Insurffisance rénale terminale 
+TEX|
+TEX|
+TEX|Les évaluations du DFG par calculs sont des estimations . L'HAS recommande le calcul par la formule du CKD EPI
+TEX|     
+TEX|L'évaluation de la clairance par la formule de Cockroft est obsolète et ne doit plus être utilisée.
+TEX|
+RES|UREE : |U(1)|A|Le dosage de l'urée ne peut être prescrit que pour les patients présentant une IR aigue, les patients dialysés ou pour évaluation nutritionnelle dans une IRC. (JO19/9/19)   Si la prescription ne le |g/L|0,18|0,55|L|F|0.0|mmol/L|3,0|9,2
+RES|POTASSIUM PLASMATIQUE : |K(1)|N|3.9|mEq/l|3,6|4,8|N|F||||
+RES|Commentaire :|K(1.2)|A|Les valeurs usuelles de potassium correspondent à un dosage réalisé selon les préconisations internationales de l'OMS et des sociétés savantes : Traitement du tube dans les 2 heures suivant le prélèvement faute de ||-|-|N|F||||
+****FIN****
+
+****FINFICHIER****
+
+

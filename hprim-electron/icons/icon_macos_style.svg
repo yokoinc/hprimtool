@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <!-- Dégradé principal style macOS -->
+    <linearGradient id="mainGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#7BB3F0"/>
+      <stop offset="50%" style="stop-color:#4A90E2"/>
+      <stop offset="100%" style="stop-color:#2C5AA0"/>
+    </linearGradient>
+    
+    <!-- Dégradé pour la croix -->
+    <linearGradient id="crossGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF"/>
+      <stop offset="100%" style="stop-color:#F0F0F0"/>
+    </linearGradient>
+    
+    <!-- Ombre portée style macOS -->
+    <filter id="macShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="12"/>
+      <feOffset dx="0" dy="6" result="offsetblur"/>
+      <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+      <feMerge> 
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/> 
+      </feMerge>
+    </filter>
+    
+    <!-- Reflet style macOS -->
+    <linearGradient id="macGloss" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.4"/>
+      <stop offset="40%" style="stop-color:#FFFFFF;stop-opacity:0.2"/>
+      <stop offset="60%" style="stop-color:#FFFFFF;stop-opacity:0"/>
+      <stop offset="100%" style="stop-color:#000000;stop-opacity:0.1"/>
+    </linearGradient>
+    
+    <!-- Bordure subtile -->
+    <linearGradient id="borderGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#000000;stop-opacity:0.2"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Carré principal avec bords arrondis style macOS (rayon ~22% de la taille) -->
+  <rect x="112" y="112" width="800" height="800" rx="180" ry="180" 
+        fill="url(#mainGradient)" 
+        filter="url(#macShadow)"/>
+  
+  <!-- Bordure subtile -->
+  <rect x="112" y="112" width="800" height="800" rx="180" ry="180" 
+        fill="none" 
+        stroke="url(#borderGradient)" 
+        stroke-width="2"/>
+  
+  <!-- Croix médicale au centre -->
+  <g transform="translate(512, 512)">
+    <!-- Barre verticale de la croix -->
+    <rect x="-25" y="-120" width="50" height="240" rx="8" ry="8" 
+          fill="url(#crossGradient)" opacity="0.95"/>
+    
+    <!-- Barre horizontale de la croix -->
+    <rect x="-120" y="-25" width="240" height="50" rx="8" ry="8" 
+          fill="url(#crossGradient)" opacity="0.95"/>
+  </g>
+  
+  <!-- Lettre H pour HPRIM -->
+  <text x="512" y="680" 
+        font-family="SF Pro Display, -apple-system, system-ui, sans-serif" 
+        font-size="55" 
+        font-weight="500" 
+        text-anchor="middle" 
+        fill="white" 
+        opacity="0.9">H</text>
+  
+  <!-- Reflet style macOS sur tout l'icône -->
+  <rect x="112" y="112" width="800" height="800" rx="180" ry="180" 
+        fill="url(#macGloss)"/>
+  
+  <!-- Petit reflet brillant en haut -->
+  <ellipse cx="400" cy="280" rx="80" ry="40" 
+           fill="rgba(255,255,255,0.3)" 
+           transform="rotate(-25 400 280)"/>
+</svg>

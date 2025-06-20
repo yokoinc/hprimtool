@@ -1,0 +1,84 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+      
+      - name: Cache Rust dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      
+      - name: Install dependencies
+        run: |
+          rustup target add x86_64-pc-windows-msvc
+      
+      - name: Build Tauri app
+        run: |
+          cd src-tauri
+          cargo tauri build --target x86_64-pc-windows-msvc
+      
+      - name: Upload Windows executable
+        uses: actions/upload-artifact@v3
+        with:
+          name: hprimtool-windows
+          path: src-tauri/target/x86_64-pc-windows-msvc/release/bundle/msi/*.msi
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-apple-darwin,aarch64-apple-darwin
+      
+      - name: Cache Rust dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      
+      - name: Install dependencies
+        run: |
+          rustup target add x86_64-apple-darwin
+          rustup target add aarch64-apple-darwin
+      
+      - name: Build Tauri app (Intel)
+        run: |
+          cd src-tauri
+          cargo tauri build --target x86_64-apple-darwin
+      
+      - name: Build Tauri app (Apple Silicon)
+        run: |
+          cd src-tauri  
+          cargo tauri build --target aarch64-apple-darwin
+      
+      - name: Upload macOS executables
+        uses: actions/upload-artifact@v3
+        with:
+          name: hprimtool-macos
+          path: |
+            src-tauri/target/x86_64-apple-darwin/release/bundle/dmg/*.dmg
+            src-tauri/target/aarch64-apple-darwin/release/bundle/dmg/*.dmg

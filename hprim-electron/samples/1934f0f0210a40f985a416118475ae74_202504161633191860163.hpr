@@ -1,0 +1,96 @@
+A2003956701
+COUCKE
+DANIEL
+13 RUE PAUL BERT
+RES DE L HOTEL DE VILLE
+76400 FECAMP
+15/01/1949
+149017625903131
+A250416001
+16/04/2025
+76         LABO.FECAMP
+GRAOP      ophelie.grandsire
+
+Laboratoire : LABORATOIRE DE FECAMP<br />
+M&eacute;decin : GRANDSIRE OPHELIE 
+Correspondant : <br />
+N&deg;Demande : A250416001<br />
+Date demande : 16-04-2025<br />
+Patient : Mr COUCKE Daniel<br />
+Date de Naissance : 15-01-1949<br />
+Date d&#039;impression du compte rendu : <br />
+Validation biologique : Delphine MAMMES<br />
+Validation le : 16-04-2025 
+                                                                   
+----------------------- BIOCHIMIE SANGUINE ------------------------
+                                                                   
+* EXPLORATION DU METABOLISME LIPIDIQUE *
+  (Colorimétrie Roche Cobas C501 ; Calculs)
+        - ASPECT DU SERUM :                                           Limpide
+
+        - CHOLESTEROL TOTAL :            *1.23* g/L     (1,50-2,00)    
+                              Soit :      *3.2* mmol/L  (3,9-5,2)      
+        - CHOLESTEROL HDL :              *0.39* g/L     (>0,40)        
+        - LDL CHOLESTEROL :                0.65 g/L     -              
+        - Rapport d'Athérogénicité :       3.15         (<4,50)        
+        - TRIGLYCERIDES :                  0.94 g/L     (0,45-2,00)    
+                              Soit :       1.07 mmol/L  (0,51-2,28)    
+Interprétation du bilan lipidique :
+
+En l'absence de facteur de risque cardiovasculaire associé, le bilan est
+considéré comme normal si LDL <= 1.60g/L (4.1 mmol/L) et/ou HDL > 0.40g/L (1
+mmol/L) et/ ou Triglycérides <= 1.50 g/L (1.7 mmol/L).
+En présence d'une maladie coronaire, ou de plus de deux facteurs de risque
+cardiovasculaire associé, les résultats biologiques doivent être interprétés en
+fonction d'objectifs thérapeutiques qui déterminent les valeurs cibles de LDL.
+
+Valeurs cibles de LDL :
+0 facteur de risque : LDL <= 2.20 g/L soit 5.70 mmol/L
+1 facteur de risque : LDL <= 1.90 g/L soit 4.92 mmol/L
+2 facteurs de risque :LDL <= 1.60 g/L soit 4.14 mmol/L
+Plus de 2 facteurs de risque : LDL <= 1.30 g/L soit 3.37 mmol/L
+Patient à haut risque cardiovasculaire : LDL <= 1.00 g/L soit 2.59 mmol/L
+
+https://www.has-sante.fr/portail/jcms/c_2754387/fr/evaluation-et-prise-en-charge-du-risque-cardio-vasculaire
+BILIRUBINE TOTALE :                         5.2 mg/l    (1,0-12,0)     
+                              Soit :        8.9 µmol/L  (1,7-20,5)     
+TRANSAMINASE TGO (ASAT) :                    24 U/L     (5-50)         
+TRANSAMINASE TGP (ALAT) :                    20 U/L     (5-50)         
+PHOSPHATASES ALCALINES :                     62 U/L     (40-130)       
+GAMMA-GLUTAMYL-TRANSFERASE (GGT) :           18 U/L     (5-60)         
+****LAB****
+TEX|                                                                   
+TEX|----------------------- BIOCHIMIE SANGUINE ------------------------
+TEX|                                                                   
+TEX|* EXPLORATION DU METABOLISME LIPIDIQUE *
+TEX|  (Colorimétrie Roche Cobas C501 ; Calculs)
+RES|        - ASPECT DU SERUM : |BLIP(1)|A|Limpide||-|-|N|F||||
+TEX|
+RES|        - CHOLESTEROL TOTAL : |BLIP(2)|N|1.23|g/L|1,50|2,00|L|F|3.2|mmol/L|3,9|5,2
+RES|        - CHOLESTEROL HDL : |BLIP(2.2)|N|0.39|g/L|0,40||L|F||||
+RES|        - LDL CHOLESTEROL : |BLIP(2.3)|N|0.65|g/L|||N|F||||
+RES|        - Rapport d'Athérogénicité : |BLIP(2.4)|N|3.15|||4,50|N|F||||
+RES|        - TRIGLYCERIDES : |BLIP(6)|N|0.94|g/L|0,45|2,00|N|F|1.07|mmol/L|0,51|2,28
+TEX|Interprétation du bilan lipidique :
+TEX|
+TEX|En l'absence de facteur de risque cardiovasculaire associé, le bilan est considéré comme normal si LDL <= 1.60g/L (4.1 mmol/L) et/ou HDL > 0.40g/L (1 mmol/L) et/ ou Triglycérides <= 1.50 g/L (1.7 mmol/L).
+TEX|En présence d'une maladie coronaire, ou de plus de deux facteurs de risque cardiovasculaire associé, les résultats biologiques doivent être interprétés en fonction d'objectifs thérapeutiques qui déterminent les valeurs cibles de LDL.
+TEX|
+TEX|Valeurs cibles de LDL :
+TEX|0 facteur de risque : LDL <= 2.20 g/L soit 5.70 mmol/L
+TEX|1 facteur de risque : LDL <= 1.90 g/L soit 4.92 mmol/L
+TEX|2 facteurs de risque :LDL <= 1.60 g/L soit 4.14 mmol/L
+TEX|Plus de 2 facteurs de risque : LDL <= 1.30 g/L soit 3.37 mmol/L
+TEX|Patient à haut risque cardiovasculaire : LDL <= 1.00 g/L soit 2.59 mmol/L
+TEX|
+TEX|https://www.has-sante.fr/portail/jcms/c_2754387/fr/evaluation-et-prise-en-charge-du-risque-cardio-vasculaire
+RES|BILIRUBINE TOTALE : |BT(1)|N|5.2|mg/l|1,0|12,0|N|F|8.9|µmol/L|1,7|20,5
+RES|TRANSAMINASE TGO (ASAT) : |TGO(1)|N|24|U/L|5|50|N|F||||
+RES|TRANSAMINASE TGP (ALAT) : |TGP(1)|N|20|U/L|5|50|N|F||||
+RES|PHOSPHATASES ALCALINES : |PAL(1)|N|62|U/L|40|130|N|F||||
+RES|GAMMA-GLUTAMYL-TRANSFERASE (GGT) : |GGT(1)|N|18|U/L|5|60|N|F||||
+****FIN****
+
+****FINFICHIER****
+
+

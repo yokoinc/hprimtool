@@ -1,0 +1,68 @@
+A200394467
+DECULTOT
+ALAIN
+2 RUE EMMANUEL FOY
+
+76111 YPORT
+27/03/1953
+153037657505266
+A250318244
+18/03/2025
+76         LABO.FECAMP
+CRECA FCP  caroline.crepin
+
+Laboratoire : LABORATOIRE DE FECAMP<br />
+M&eacute;decin : CREPIN CAROLINE 
+Correspondant : PHARMACIE CAPRON Courrier <br />
+N&deg;Demande : A250318244<br />
+Date demande : 18-03-2025<br />
+Patient : Mr DECULTOT Alain<br />
+Date de Naissance : 27-03-1953<br />
+Date d&#039;impression du compte rendu : <br />
+Validation biologique : Caroline SAVALLE<br />
+Validation le : 18-03-2025 
+                                                                   
+----------------------- BIOCHIMIE SANGUINE ------------------------
+                                                                   
+HbA1c - HEMOGLOBINE GLYQUEE :             *6.8* %       (<6,0)         
+
+     Interpétation
+                       < 5,5 % : Zone normale
+                       < 6,5 % : Cible chez un diabétique type 2 connu 
+                  5,5 - 7.0 % : Zone subnormale
+                                    Très bon équilibre glycémique chez un
+diabétique type1 connu 
+                                    A surveiller dans tous les autres cas.
+                  7.0 - 7,5 % : équilibre glycémique limite chez certains
+diabétiques type 1 
+                  7.5 - 10,0 % : Equilibre glycémique moyen à médiocre
+                     > 10,0 % : Glycorégulation fortement perturbée.Diabétique
+non connu.
+
+
+
+* !!Attention!! Nouvel automate à compter du 01/02/2024 *
+****LAB****
+TEX|                                                                   
+TEX|----------------------- BIOCHIMIE SANGUINE ------------------------
+TEX|                                                                   
+RES|HbA1c - HEMOGLOBINE GLYQUEE : |A1C(1)|N|6.8|%||6,0|H|F||||
+TEX|
+TEX|     Interpétation
+TEX|                       < 5,5 % : Zone normale
+TEX|                       < 6,5 % : Cible chez un diabétique type 2 connu 
+TEX|                  5,5 - 7.0 % : Zone subnormale
+TEX|                                    Très bon équilibre glycémique chez un diabétique type1 connu 
+TEX|                                    A surveiller dans tous les autres cas.
+TEX|                  7.0 - 7,5 % : équilibre glycémique limite chez certains diabétiques type 1 
+TEX|                  7.5 - 10,0 % : Equilibre glycémique moyen à médiocre
+TEX|                     > 10,0 % : Glycorégulation fortement perturbée.Diabétique non connu.
+TEX|
+TEX|
+TEX|
+TEX|* !!Attention!! Nouvel automate à compter du 01/02/2024 *
+****FIN****
+
+****FINFICHIER****
+
+

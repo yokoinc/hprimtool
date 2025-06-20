@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HPRIM Tool - Analyseur de résultats médicaux</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            color: #2c5aa0;
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .drop-zone {
+            border: 2px dashed #ddd;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 20px 0;
+            text-align: center;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.dragover {
+            border-color: #4caf50;
+            background: #f0f8f0;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background: #5a67d8;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .result-item {
+            background: #f8f9fa;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ddd;
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: baseline;
+        }
+
+        .result-name {
+            font-weight: 400;
+            color: #2c5aa0;
+            margin-bottom: 0;
+            text-transform: uppercase;
+            font-family: Arial, Helvetica, 'Segoe UI', sans-serif;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+        }
+
+        .result-value-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            min-width: 180px;
+        }
+
+        .value-line {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 3px;
+        }
+
+        .result-number {
+            font-size: 0.95rem;
+            font-weight: 400;
+            text-align: right;
+            min-width: 50px;
+        }
+        
+        .result-unit {
+            font-size: 0.95rem;
+            font-weight: 400;
+            margin-left: 5px;
+            text-align: left;
+            min-width: 120px;
+            max-width: 120px;
+            overflow-wrap: break-word;
+        }
+
+        .result-norms {
+            font-size: 0.95rem;
+            font-weight: 400;
+            text-align: right;
+            color: #666;
+            justify-self: end;
+        }
+        
+        .result-item[style*="border-left-color: #ff5722"] .result-number {
+            font-weight: 600;
+        }
+
+        /* Styles pour l'impression */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                font-size: 12pt;
+                line-height: 1.4;
+            }
+
+            .container {
+                max-width: none;
+                margin: 0;
+            }
+
+            /* Cacher la zone de drop pour l'impression */
+            .drop-zone {
+                display: none !important;
+            }
+
+            /* Optimiser l'en-tête patient */
+            .content-area {
+                box-shadow: none;
+                border-radius: 0;
+                margin: 0;
+                padding: 10px 0;
+            }
+
+            /* Éviter les coupures de page dans les résultats */
+            .result-item {
+                page-break-inside: avoid;
+                break-inside: avoid;
+                margin: 5px 0;
+                padding: 8px;
+                box-shadow: none;
+                border: 1px solid #ddd;
+                border-radius: 3px;
+            }
+
+            /* Grouper les commentaires avec leurs résultats */
+            .result-item,
+            .result-item + div[style*="grid-column"] {
+                page-break-inside: avoid;
+                break-inside: avoid;
+            }
+
+            /* Assurer que l'en-tête patient reste avec les premiers résultats */
+            div[style*="background: #e3f2fd"] {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+
+            /* Réduire les espacements pour l'impression */
+            .result-item {
+                gap: 15px;
+            }
+
+            .result-name {
+                font-size: 10pt;
+            }
+
+            .result-number,
+            .result-unit,
+            .result-norms {
+                font-size: 10pt;
+            }
+
+            /* Styles pour les commentaires en impression */
+            div[style*="grid-column: 1 / -1"] {
+                font-size: 8pt !important;
+                margin-top: 3px !important;
+                padding: 3px 5px !important;
+                border: 1px solid #eee;
+            }
+
+            /* Éviter les sauts de page orphelins */
+            h1, h2, h3 {
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+
+            /* Forcer une nouvelle page si nécessaire pour grouper les résultats */
+            .result-item:nth-child(15n) {
+                page-break-after: auto;
+                break-after: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>🏥 HPRIM Tool</h1>
+                    <p>Analyseur de résultats biologiques</p>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn" onclick="openFile()">Ouvrir</button>
+                    <button class="btn" onclick="window.print()">Imprimer</button>
+                    <button class="btn" onclick="quitApp()" style="background: #dc3545;">Quitter</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="drop-zone" id="dropZone">
+            <h3>Glissez votre fichier HPRIM ici</h3>
+            <p>ou</p>
+            <button class="btn" onclick="openFile()">
+                Sélectionner un fichier
+            </button>
+        </div>
+
+        <div id="results">
+            <p style="color: #999; font-style: italic; padding: 20px;">Les résultats apparaîtront ici...</p>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
