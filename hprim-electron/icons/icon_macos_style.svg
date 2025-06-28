@@ -8,12 +8,6 @@
       <stop offset="100%" style="stop-color:#2C5AA0"/>
     </linearGradient>
     
-    <!-- Dégradé pour la croix -->
-    <linearGradient id="crossGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#FFFFFF"/>
-      <stop offset="100%" style="stop-color:#F0F0F0"/>
-    </linearGradient>
-    
     <!-- Ombre portée style macOS -->
     <filter id="macShadow" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur in="SourceAlpha" stdDeviation="12"/>
@@ -38,6 +32,17 @@
       <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.3"/>
       <stop offset="100%" style="stop-color:#000000;stop-opacity:0.2"/>
     </linearGradient>
+    
+    <!-- Filtre ombre portée discrète pour H' -->
+    <filter id="dropShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6"/>
+      <feOffset dx="3" dy="5" result="offsetblur"/>
+      <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0"/>
+      <feMerge> 
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/> 
+      </feMerge>
+    </filter>
   </defs>
   
   <!-- Carré principal avec bords arrondis style macOS (rayon ~22% de la taille) -->
@@ -51,32 +56,18 @@
         stroke="url(#borderGradient)" 
         stroke-width="2"/>
   
-  <!-- Croix médicale au centre -->
-  <g transform="translate(512, 512)">
-    <!-- Barre verticale de la croix -->
-    <rect x="-25" y="-120" width="50" height="240" rx="8" ry="8" 
-          fill="url(#crossGradient)" opacity="0.95"/>
-    
-    <!-- Barre horizontale de la croix -->
-    <rect x="-120" y="-25" width="240" height="50" rx="8" ry="8" 
-          fill="url(#crossGradient)" opacity="0.95"/>
-  </g>
-  
-  <!-- Lettre H pour HPRIM -->
-  <text x="512" y="680" 
+  <!-- Texte H' pour HPRIM parfaitement centré avec ombre portée -->
+  <text x="512" y="512" 
         font-family="SF Pro Display, -apple-system, system-ui, sans-serif" 
-        font-size="55" 
-        font-weight="500" 
+        font-size="450" 
+        font-weight="600" 
         text-anchor="middle" 
+        dominant-baseline="central"
         fill="white" 
-        opacity="0.9">H</text>
+        opacity="0.95"
+        filter="url(#dropShadow)">H'</text>
   
   <!-- Reflet style macOS sur tout l'icône -->
   <rect x="112" y="112" width="800" height="800" rx="180" ry="180" 
         fill="url(#macGloss)"/>
-  
-  <!-- Petit reflet brillant en haut -->
-  <ellipse cx="400" cy="280" rx="80" ry="40" 
-           fill="rgba(255,255,255,0.3)" 
-           transform="rotate(-25 400 280)"/>
 </svg>

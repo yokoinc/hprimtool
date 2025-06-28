@@ -1,10 +1,11 @@
 {
   "name": "hprim-tool",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Analyseur de résultats médicaux HPRIM",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "test": "node test-simple.js",
     "build": "electron-builder",
     "build-win": "electron-builder --win",
     "build-mac": "electron-builder --mac",
@@ -19,15 +20,53 @@
     },
     "files": [
       "main.js",
+      "preload.js",
       "renderer.js",
       "index.html",
-      "styles.css",
+      "i18n.js",
       "icons/**/*"
     ],
     "mac": {
       "category": "public.app-category.medical",
-      "target": "dmg",
-      "icon": "icons/icon.icns"
+      "target": {
+        "target": "dmg",
+        "arch": ["arm64", "x64"]
+      },
+      "icon": "icons/icon.icns",
+      "gatekeeperAssess": false,
+      "hardenedRuntime": true,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
+    },
+    "dmg": {
+      "title": "HPRIM Tool",
+      "icon": "icons/icon.icns",
+      "background": "build/dmg-background.png",
+      "window": {
+        "width": 600,
+        "height": 450
+      },
+      "contents": [
+        {
+          "x": 150,
+          "y": 200,
+          "type": "file"
+        },
+        {
+          "x": 450,
+          "y": 200,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ],
+      "additionalDMGOptions": {
+        "window": {
+          "position": {
+            "x": 400,
+            "y": 100
+          }
+        }
+      }
     },
     "win": {
       "target": [
@@ -45,18 +84,18 @@
       "fileAssociations": [
         {
           "ext": "hpr",
-          "name": "Fichier HPRIM",
-          "description": "Fichier de résultats biologiques HPRIM"
+          "name": "HPRIM File",
+          "description": "Medical test results file"
         },
         {
           "ext": "hpm",
-          "name": "Fichier HPRIM",
-          "description": "Fichier de résultats biologiques HPRIM"
+          "name": "HPRIM File",
+          "description": "Medical test results file"
         },
         {
           "ext": "hprim",
-          "name": "Fichier HPRIM",
-          "description": "Fichier de résultats biologiques HPRIM"
+          "name": "HPRIM File",
+          "description": "Medical test results file"
         }
       ]
     },
@@ -75,20 +114,20 @@
     "fileAssociations": [
       {
         "ext": "hpr",
-        "name": "Fichier HPRIM",
-        "description": "Fichier de résultats biologiques HPRIM",
+        "name": "HPRIM File",
+        "description": "Medical test results file",
         "role": "Viewer"
       },
       {
         "ext": "hpm",
-        "name": "Fichier HPRIM",
-        "description": "Fichier de résultats biologiques HPRIM",
+        "name": "HPRIM File",
+        "description": "Medical test results file",
         "role": "Viewer"
       },
       {
         "ext": "hprim",
-        "name": "Fichier HPRIM",
-        "description": "Fichier de résultats biologiques HPRIM",
+        "name": "HPRIM File",
+        "description": "Medical test results file",
         "role": "Viewer"
       }
     ]

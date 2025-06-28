@@ -12,7 +12,10 @@
         }
 
         body {
-            font-family: Arial, Helvetica, 'Segoe UI', sans-serif;
+            font-family: system-ui, -apple-system, 'Segoe UI', 'SF Pro Display', 'Inter', 'Helvetica Neue', sans-serif;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             color: #333;
@@ -42,12 +45,39 @@
 
         .drop-zone {
             border: 2px dashed #ddd;
-            border-radius: 12px;
+            border-radius: 8px;
             padding: 40px;
             margin: 20px 0;
             text-align: center;
             background: white;
-            transition: all 0.3s ease;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .drop-zone.compact {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .drop-zone.compact h3 {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .drop-zone.compact p {
+            margin: 5px 0;
+        }
+
+        .drop-zone.compact .btn {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+
+        .drop-zone:hover {
+            border-color: #667eea;
+            background: #f8f9fa;
         }
 
         .drop-zone.dragover {
@@ -62,12 +92,220 @@
             padding: 12px 24px;
             border-radius: 8px;
             cursor: pointer;
-            margin: 10px;
-            font-size: 1rem;
+            margin: 5px;
+            font-size: 0.95rem;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            transition: background 0.2s ease;
         }
 
         .btn:hover {
-            background: #5a67d8;
+            background: rgba(102, 126, 234, 0.9);
+        }
+
+        .btn:active {
+            background: rgba(102, 126, 234, 0.8);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn:disabled:hover {
+            background: #667eea;
+            transform: none;
+        }
+
+        #printExportBtn {
+            background: #28a745;
+        }
+
+        #printExportBtn:hover:not(:disabled) {
+            background: rgba(40, 167, 69, 0.9);
+        }
+
+        #exportBtn {
+            background: #17a2b8;
+        }
+
+        #exportBtn:hover:not(:disabled) {
+            background: rgba(23, 162, 184, 0.9);
+        }
+
+        .btn[style*="background: #dc3545"] {
+            background: #dc3545 !important;
+        }
+
+        .btn[style*="background: #dc3545"]:hover {
+            background: rgba(220, 53, 69, 0.9) !important;
+        }
+
+        .print-export-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            min-width: 180px;
+            display: none;
+        }
+
+        .print-export-menu.show {
+            display: block;
+        }
+
+        .print-export-menu button {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            background: white;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-radius: 0;
+            font-size: 0.9rem;
+        }
+
+        .print-export-menu button:first-child {
+            border-radius: 6px 6px 0 0;
+        }
+
+        .print-export-menu button:last-child {
+            border-radius: 0 0 6px 6px;
+        }
+
+        .print-export-menu button:hover {
+            background: #f8f9fa;
+        }
+
+        .print-export-menu button:active {
+            background: #e9ecef;
+        }
+
+        /* Export Menu */
+        .export-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            min-width: 140px;
+            display: none;
+        }
+
+        .export-menu.show {
+            display: block;
+        }
+
+        .export-menu button {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            background: white;
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-radius: 0;
+            font-size: 0.9rem;
+        }
+
+        .export-menu button:first-child {
+            border-radius: 6px 6px 0 0;
+        }
+
+        .export-menu button:last-child {
+            border-radius: 0 0 6px 6px;
+        }
+
+        .export-menu button:hover {
+            background: #f8f9fa;
+        }
+
+        .export-menu button:active {
+            background: #e9ecef;
+        }
+
+        /* Language Toggle Button */
+        .language-toggle {
+            background: #6f42c1 !important;
+            font-size: 1.1rem;
+            padding: 10px 16px !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .language-toggle:hover {
+            background: #5a2d91 !important;
+            transform: scale(1.05);
+        }
+
+        /* Language Menu */
+        .language-menu {
+            position: fixed;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 20px var(--shadow);
+            z-index: 1000;
+            max-width: 280px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .language-menu.show {
+            display: block;
+        }
+
+        .language-menu-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 400;
+            color: var(--text-accent);
+            background: var(--bg-secondary);
+        }
+
+        .language-menu button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            text-align: left;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-radius: 0;
+            font-size: 0.9rem;
+        }
+
+        .language-menu button:hover {
+            background: var(--bg-secondary);
+        }
+
+        .language-menu button.active {
+            background: var(--text-accent);
+            color: white;
+        }
+
+        .language-menu button .flag {
+            font-size: 1.2rem;
+            min-width: 24px;
+        }
+
+        .language-menu button .name {
+            flex: 1;
         }
 
         .content-area {
@@ -96,7 +334,9 @@
             color: #2c5aa0;
             margin-bottom: 0;
             text-transform: uppercase;
-            font-family: Arial, Helvetica, 'Segoe UI', sans-serif;
+            font-family: system-ui, -apple-system, 'Segoe UI', 'SF Pro Display', 'Inter', 'Helvetica Neue', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             letter-spacing: 0.5px;
             font-size: 0.9rem;
         }
@@ -139,46 +379,118 @@
             justify-self: end;
         }
         
-        .result-item[style*="border-left-color: #ff5722"] .result-number {
-            font-weight: 600;
+        /* Gras pour les valeurs avec statut H/L explicite */
+        .result-item[style*="border-left-color: rgb(255, 87, 34)"] .result-number {
+            font-weight: bold;
         }
 
         /* Styles pour l'impression */
         @media print {
             body {
-                background: white;
-                padding: 0;
-                font-size: 12pt;
-                line-height: 1.4;
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                font-size: 9pt;
+                line-height: 1.2;
+                width: 100% !important;
+                box-sizing: border-box !important;
             }
 
             .container {
-                max-width: none;
-                margin: 0;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
             }
 
-            /* Cacher la zone de drop pour l'impression */
+            /* CACHER L'EN-TÊTE ET LES ÉLÉMENTS NON NÉCESSAIRES */
+            header {
+                display: none !important;
+            }
+            
             .drop-zone {
                 display: none !important;
             }
+            
+            #searchContainer {
+                display: none !important;
+            }
 
-            /* Optimiser l'en-tête patient */
+            /* Optimiser l'en-tête patient - supprimer les cadres */
             .content-area {
                 box-shadow: none;
                 border-radius: 0;
                 margin: 0;
-                padding: 10px 0;
+                padding: 8px 0;
+            }
+            
+            /* En-tête patient sans cadre */
+            div[style*="background: #e3f2fd"] {
+                background: white !important;
+                border: none !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                padding: 10px 0 !important;
+                margin: 0 0 15px 0 !important;
+                border-bottom: 1px solid #ccc !important;
+                page-break-after: avoid;
+                break-after: avoid;
             }
 
-            /* Éviter les coupures de page dans les résultats */
+            /* SUPPRESSION DE TOUS LES CADRES ET RÉDUCTION DES TAILLES */
             .result-item {
                 page-break-inside: avoid;
                 break-inside: avoid;
-                margin: 5px 0;
-                padding: 8px;
-                box-shadow: none;
-                border: 1px solid #ddd;
-                border-radius: 3px;
+                margin: 2px 0 !important;
+                padding: 4px 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+                border-radius: 0 !important;
+                background: white !important;
+                border-bottom: 1px dotted #ddd;
+                /* FORCER L'AFFICHAGE EN TABLE POUR ALIGNEMENT PARFAIT */
+                display: table !important;
+                width: 100% !important;
+                table-layout: fixed !important;
+                box-sizing: border-box !important;
+                border-collapse: collapse !important;
+            }
+            
+            /* LAYOUT PARFAIT : GAUCHE - CENTRE EXACT - DROITE COMPLET */
+            .result-name {
+                display: table-cell !important;
+                width: 40% !important;
+                text-align: left !important;
+                vertical-align: baseline !important;
+                padding-right: 0 !important;
+            }
+            
+            .result-norms {
+                display: table-cell !important;
+                width: 40% !important;
+                vertical-align: baseline !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                border: none !important;
+                /* SOLUTION RADICALE : TRANSFORMER EN BLOCK AVEC POSITION ABSOLUE */
+                position: relative !important;
+                white-space: nowrap !important;
+                box-sizing: border-box !important;
+            }
+            
+            /* Positionner chaque contenu de norme au bord droit absolu */
+            .result-norms > * {
+                position: absolute !important;
+                right: 0 !important;
+                top: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            /* Supprimer les bordures colorées */
+            .result-item[style*="border-left-color"] {
+                border-left: none !important;
             }
 
             /* Grouper les commentaires avec leurs résultats */
@@ -188,33 +500,159 @@
                 break-inside: avoid;
             }
 
-            /* Assurer que l'en-tête patient reste avec les premiers résultats */
-            div[style*="background: #e3f2fd"] {
-                page-break-after: avoid;
-                break-after: avoid;
-            }
-
-            /* Réduire les espacements pour l'impression */
-            .result-item {
-                gap: 15px;
-            }
-
+            /* TAILLES DE POLICE RÉDUITES */
             .result-name {
-                font-size: 10pt;
+                font-size: 8pt;
+                font-weight: 500;
             }
 
             .result-number,
             .result-unit,
             .result-norms {
-                font-size: 10pt;
+                font-size: 8pt;
+            }
+            
+            /* En-tête patient plus petit */
+            div[style*="font-size: 1.1rem"] {
+                font-size: 10pt !important;
+            }
+            
+            div[style*="font-size: 0.9rem"] {
+                font-size: 8pt !important;
             }
 
-            /* Styles pour les commentaires en impression */
+            /* FORCER LES COMMENTAIRES EN DESSOUS : changer la structure table en block */
+            .result-item:has(div[style*="grid-column"]) {
+                display: block !important;
+                /* Revenir au layout flex pour les éléments avec commentaires */
+            }
+            
+            .result-item:has(div[style*="grid-column"]) .result-name,
+            .result-item:has(div[style*="grid-column"]) .result-value-container,
+            .result-item:has(div[style*="grid-column"]) .result-norms {
+                display: inline-block !important;
+                vertical-align: top !important;
+            }
+            
+            .result-item:has(div[style*="grid-column"]) .result-name {
+                width: 40% !important;
+            }
+            
+            .result-item:has(div[style*="grid-column"]) .result-value-container {
+                width: 20% !important;
+                padding: 0 !important;
+                text-align: center !important;
+                /* Garder l'alignement flex pour les éléments avec commentaires aussi */
+            }
+            
+            .result-item:has(div[style*="grid-column"]) .result-norms {
+                width: 40% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                border: none !important;
+                white-space: nowrap !important;
+                box-sizing: border-box !important;
+                position: relative !important;
+            }
+            
+            .result-item:has(div[style*="grid-column"]) .result-norms > * {
+                position: absolute !important;
+                right: 0 !important;
+                top: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            /* Commentaires en block complet sous la ligne */
             div[style*="grid-column: 1 / -1"] {
+                font-size: 7pt !important;
+                margin: 2px 0 4px 0 !important;
+                padding: 2px 0 !important;
+                background: white !important;
+                border: none !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                width: 100% !important;
+                display: block !important;
+                text-align: left !important;
+                clear: both !important;
+            }
+            
+            /* CENTRER LES VALEURS DANS LEUR COLONNE */
+            .value-line {
+                display: flex !important;
+                align-items: baseline !important;
+                justify-content: center !important;
+                white-space: nowrap !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            .result-number {
                 font-size: 8pt !important;
-                margin-top: 3px !important;
-                padding: 3px 5px !important;
-                border: 1px solid #eee;
+                text-align: right !important;
+                min-width: 40px !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            .result-unit {
+                font-size: 8pt !important;
+                margin-left: 3px !important;
+                text-align: left !important;
+                min-width: 30px !important;
+                padding: 0 !important;
+            }
+            
+            /* Colonne valeurs - CENTRE EXACT DE LA PAGE (20% au milieu) */
+            .result-value-container {
+                display: table-cell !important;
+                width: 20% !important;
+                vertical-align: baseline !important;
+                white-space: nowrap !important;
+                padding: 0 !important;
+                text-align: center !important;
+                /* Container qui contient les value-line avec leur flex */
+            }
+            
+            /* Masquer le bouton "Voir fichier brut" et sa zone en impression - SÉLECTEURS PRÉCIS */
+            button[onclick*="showRawFilePopup"],
+            .btn[onclick*="showRawFilePopup"],
+            button[onclick*="showRawFile"],
+            .btn[onclick*="showRawFile"],
+            button[data-i18n*="view_raw"],
+            .btn[data-i18n*="view_raw"] {
+                display: none !important;
+            }
+            
+            /* Masquer spécifiquement la zone du bouton raw (avec text-align center et margin-top) */
+            div[style*="text-align: center"][style*="margin-top: 20px"][style*="border-top: 1px solid #ddd"] {
+                display: none !important;
+            }
+            
+            /* S'ASSURER QUE LE CONTENU PRINCIPAL RESTE VISIBLE */
+            #results {
+                display: block !important;
+                visibility: visible !important;
+            }
+            
+            .content-area {
+                display: block !important;
+                visibility: visible !important;
+            }
+            
+            /* Forcer la visibilité des result-items */
+            .result-item {
+                visibility: visible !important;
+                color: black !important;
+            }
+            
+            /* Debug : s'assurer que le texte est visible */
+            .result-name,
+            .result-value-container,
+            .result-norms {
+                color: black !important;
+                visibility: visible !important;
             }
 
             /* Éviter les sauts de page orphelins */
@@ -223,11 +661,247 @@
                 break-after: avoid;
             }
 
-            /* Forcer une nouvelle page si nécessaire pour grouper les résultats */
-            .result-item:nth-child(15n) {
+            /* Économie d'espace vertical */
+            .result-item:nth-child(20n) {
                 page-break-after: auto;
                 break-after: auto;
             }
+            
+            /* Supprimer tous les backgrounds colorés */
+            * {
+                background: white !important;
+                box-shadow: none !important;
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            header {
+                padding: 15px;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            header > div > div {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .drop-zone {
+                padding: 30px 20px;
+                margin: 15px 0;
+            }
+
+            .result-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                text-align: left;
+            }
+
+            .result-value-container {
+                align-items: flex-start;
+                min-width: auto;
+            }
+
+            .result-norms {
+                text-align: left;
+                justify-self: start;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                margin: 5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .drop-zone {
+                padding: 20px 15px;
+            }
+
+            .result-item {
+                padding: 12px;
+                margin: 8px 0;
+            }
+
+            .result-name {
+                font-size: 0.8rem;
+            }
+
+            .result-number,
+            .result-unit,
+            .result-norms {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Accessibility improvements */
+        .btn:focus {
+            outline: 2px solid #667eea;
+            outline-offset: 2px;
+        }
+
+        .drop-zone:focus {
+            outline: 2px solid #667eea;
+            outline-offset: 2px;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: #6c757d !important;
+            font-size: 1.1rem;
+            padding: 10px 16px !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: #5a6268 !important;
+            transform: scale(1.05);
+        }
+
+        /* Dark theme styles */
+        [data-theme="dark"] {
+            --bg-gradient-start: #1a202c;
+            --bg-gradient-end: #2d3748;
+            --bg-primary: #2d3748;
+            --bg-secondary: #4a5568;
+            --bg-tertiary: #718096;
+            --text-primary: #e2e8f0;
+            --text-secondary: #a0aec0;
+            --text-accent: #90cdf4;
+            --border-color: #4a5568;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Light theme styles (default) */
+        [data-theme="light"] {
+            --bg-gradient-start: #f5f7fa;
+            --bg-gradient-end: #c3cfe2;
+            --bg-primary: white;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+            --text-primary: #333;
+            --text-secondary: #666;
+            --text-accent: #2c5aa0;
+            --border-color: #ddd;
+            --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        /* Apply theme variables */
+        body {
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+            color: var(--text-primary);
+        }
+
+        header,
+        .content-area,
+        .drop-zone {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+
+        .result-item {
+            background: var(--bg-secondary);
+            border-left-color: var(--border-color);
+        }
+
+        .result-name {
+            color: var(--text-accent);
+        }
+
+        .result-norms {
+            color: var(--text-secondary);
+        }
+
+        .print-export-menu {
+            background: var(--bg-primary);
+            border-color: var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .print-export-menu button {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .print-export-menu button:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* Dark theme specific overrides */
+        [data-theme="dark"] .drop-zone:hover {
+            border-color: #667eea;
+            background: var(--bg-secondary);
+        }
+
+        [data-theme="dark"] .drop-zone.dragover {
+            border-color: #4caf50;
+            background: #2d4a32;
+        }
+
+        [data-theme="dark"] .btn {
+            background: #4c51bf;
+            color: white;
+        }
+
+        [data-theme="dark"] .btn:hover {
+            background: #553c9a;
+        }
+
+        [data-theme="dark"] #printExportBtn {
+            background: #38a169 !important;
+        }
+
+        [data-theme="dark"] #printExportBtn:hover:not(:disabled) {
+            background: #2f855a !important;
+        }
+
+        [data-theme="dark"] .print-export-menu button:active {
+            background: var(--bg-tertiary);
+        }
+
+        /* Dark theme - HPRIM Tool title in white */
+        [data-theme="dark"] header h1 {
+            color: white !important;
+        }
+
+        /* Dark theme - Result names in white */
+        [data-theme="dark"] .result-name {
+            color: white !important;
+        }
+
+        /* Remove bold from all h3 elements */
+        h3 {
+            font-weight: 400;
+        }
+
+        /* Ensure drop-zone h3 is not bold */
+        .drop-zone h3 {
+            font-weight: 400;
+        }
+
+        /* Light theme specific overrides */
+        [data-theme="light"] .btn {
+            background: #667eea;
+            color: white;
+        }
+
+        [data-theme="light"] .btn:hover {
+            background: #5a67d8;
         }
     </style>
 </head>
@@ -236,30 +910,65 @@
         <header>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <h1>🏥 HPRIM Tool</h1>
-                    <p>Analyseur de résultats biologiques</p>
+                    <h1 data-i18n="app.title">HPRIM Tool</h1>
+                    <p data-i18n="app.subtitle">Analyseur de résultats biologiques</p>
                 </div>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn" onclick="openFile()">Ouvrir</button>
-                    <button class="btn" onclick="window.print()">Imprimer</button>
-                    <button class="btn" onclick="quitApp()" style="background: #dc3545;">Quitter</button>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button class="btn" onclick="toggleSearch()" id="searchBtn" style="background: #6c757d;">
+                        <span>🔍 <span data-i18n="search.button">Rechercher</span></span>
+                    </button>
+                    <button class="btn" onclick="window.print()" id="printBtn" style="background: #28a745;" disabled>
+                        <span data-i18n="buttons.print">🖨️ Imprimer</span>
+                    </button>
+                    <button class="btn" onclick="exportToCSV()" id="exportBtn" style="background: #17a2b8;" disabled>
+                        <span data-i18n="buttons.export">📊 Export CSV</span>
+                    </button>
+                    <button class="btn" onclick="quitApp()" style="background: #dc3545;" data-i18n="buttons.quit">Quitter</button>
                 </div>
             </div>
         </header>
 
-        <div class="drop-zone" id="dropZone">
-            <h3>Glissez votre fichier HPRIM ici</h3>
-            <p>ou</p>
-            <button class="btn" onclick="openFile()">
+        <div class="drop-zone" id="dropZone" tabindex="0" role="button" data-i18n-attr='{"aria-label": "tooltip.drag_drop"}'>
+            <h3 data-i18n="dropzone.title">Glissez votre fichier HPRIM ici</h3>
+            <p data-i18n="dropzone.or">ou</p>
+            <button class="btn" onclick="openFile()" data-i18n="buttons.select_file" data-i18n-attr='{"aria-label": "tooltip.select_dialog"}'>
                 Sélectionner un fichier
             </button>
+            <p style="margin-top: 15px; font-size: 0.9em; color: #666;">
+                <span data-i18n="dropzone.formats">Formats acceptés: .hpr, .hpm, .hpm1, .hpm2, .hpm3, .hprim, .txt</span><br>
+                <span data-i18n="dropzone.size_limit">Taille maximum: 10 MB</span>
+            </p>
         </div>
 
+
+        <!-- Menu export supprimé - export direct CSV -->
+
         <div id="results">
-            <p style="color: #999; font-style: italic; padding: 20px;">Les résultats apparaîtront ici...</p>
+            <!-- Les résultats apparaîtront ici -->
         </div>
     </div>
 
+    <script src="i18n.js"></script>
+    <script>
+        // Initialiser la langue et le thème au chargement
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('DOM chargé, initialisation i18n...');
+            
+            // Détecter automatiquement la langue
+            if (window.i18n) {
+                console.log('window.i18n disponible');
+                await window.i18n.autoDetectLanguage();
+                
+                // Force une mise à jour de l'UI après le chargement complet
+                setTimeout(() => {
+                    console.log('Mise à jour forcée de l\'UI après chargement');
+                    window.i18n.updateUI();
+                }, 100);
+            } else {
+                console.error('window.i18n non disponible!');
+            }
+        });
+    </script>
     <script src="renderer.js"></script>
 </body>
 </html>

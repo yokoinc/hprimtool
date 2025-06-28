@@ -121,7 +121,7 @@ function checkAndMoveToApplications() {
 // Gestion des arguments de ligne de commande (fichier passé au lancement)
 if (process.argv.length > 1) {
     const potentialFile = process.argv[process.argv.length - 1];
-    if (potentialFile && potentialFile.endsWith('.hpr') || potentialFile.endsWith('.hpm') || potentialFile.endsWith('.hprim')) {
+    if (potentialFile && (potentialFile.endsWith('.hpr') || potentialFile.endsWith('.hpm') || potentialFile.endsWith('.hpm1') || potentialFile.endsWith('.hpm2') || potentialFile.endsWith('.hpm3') || potentialFile.endsWith('.hprim'))) {
         fileToOpen = potentialFile;
         console.log('Fichier détecté au lancement:', fileToOpen);
     }
@@ -139,7 +139,8 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
-            enableRemoteModule: true
+            enableRemoteModule: true,
+            preload: path.join(__dirname, 'preload.js')
         },
         icon: path.join(__dirname, 'icons', 'icon.png')
     });
@@ -225,6 +226,18 @@ function createWindow() {
         }
     });
 
+    globalShortcut.register('CommandOrControl+P', () => {
+        if (mainWindow) {
+            // Déclencher l'impression via JavaScript (comme le bouton Imprimer)
+            mainWindow.webContents.executeJavaScript('window.print();');
+        }
+    });
+
+    // Gérer la fermeture de la fenêtre - quitter l'app au lieu de juste fermer
+    mainWindow.on('close', (event) => {
+        app.quit();
+    });
+
     // Événement quand la fenêtre est prête
     mainWindow.webContents.once('dom-ready', () => {
         // Vérifier si on doit déplacer l'app vers /Applications (macOS uniquement)
@@ -252,7 +265,7 @@ function openFileDialog() {
     dialog.showOpenDialog(mainWindow, {
         title: 'Sélectionner un fichier HPRIM',
         filters: [
-            { name: 'Fichiers HPRIM', extensions: ['hpr', 'hpm', 'hprim'] },
+            { name: 'Fichiers HPRIM', extensions: ['hpr', 'hpm', 'hpm1', 'hpm2', 'hpm3', 'hprim'] },
             { name: 'Fichiers texte', extensions: ['txt'] },
             { name: 'Tous les fichiers', extensions: ['*'] }
         ],
@@ -267,19 +280,71 @@ function openFileDialog() {
     });
 }
 
-// IPC: Lire un fichier
+// IPC: Lire un fichier avec sécurité renforcée
 ipcMain.handle('read-file', async (event, filePath) => {
     try {
+        // Validation du chemin de fichier
+        if (!filePath || typeof filePath !== 'string') {
+            throw new Error('Chemin de fichier invalide');
+        }
+        
+        // Normaliser le chemin pour éviter les attaques de traversée
+        const normalizedPath = path.normalize(filePath);
+        
+        // Vérifier que le chemin ne contient pas de traversée
+        if (normalizedPath.includes('..')) {
+            throw new Error('Traversée de répertoire non autorisée');
+        }
+        
+        // Vérifier l'extension du fichier
+        const allowedExtensions = ['.hpr', '.hpm', '.hpm1', '.hpm2', '.hpm3', '.hprim', '.txt'];
+        const ext = path.extname(normalizedPath).toLowerCase();
+        if (!allowedExtensions.includes(ext)) {
+            throw new Error(`Extension de fichier non autorisée: ${ext}`);
+        }
+        
+        // Vérifier que le fichier existe
+        if (!fs.existsSync(normalizedPath)) {
+            throw new Error('Fichier introuvable');
+        }
+        
+        // Vérifier la taille du fichier (limite: 10MB)
+        const stats = fs.statSync(normalizedPath);
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        if (stats.size > maxSize) {
+            throw new Error(`Fichier trop volumineux (${Math.round(stats.size / 1024 / 1024)}MB > 10MB)`);
+        }
+        
         // Lire le fichier en binaire puis convertir en ISO-8859-1
-        const buffer = fs.readFileSync(filePath);
+        const buffer = fs.readFileSync(normalizedPath);
+        
+        // Vérifier que le fichier n'est pas vide
+        if (buffer.length === 0) {
+            throw new Error('Le fichier est vide');
+        }
+        
         // Convertir chaque byte en caractère ISO-8859-1
         let text = '';
         for (let i = 0; i < buffer.length; i++) {
             text += String.fromCharCode(buffer[i]);
         }
+        
+        console.log(`Fichier lu avec succès: ${normalizedPath} (${buffer.length} bytes)`);
         return text;
+        
     } catch (error) {
-        throw new Error(`Erreur lors de la lecture du fichier: ${error.message}`);
+        console.error('Erreur lors de la lecture du fichier:', error);
+        
+        // Messages d'erreur spécifiques selon le type d'erreur
+        if (error.code === 'ENOENT') {
+            throw new Error('Fichier introuvable');
+        } else if (error.code === 'EACCES') {
+            throw new Error('Accès refusé au fichier');
+        } else if (error.code === 'EISDIR') {
+            throw new Error('Le chemin spécifié est un dossier, pas un fichier');
+        } else {
+            throw new Error(`Erreur lors de la lecture du fichier: ${error.message}`);
+        }
     }
 });
 
@@ -292,6 +357,105 @@ ipcMain.on('open-file-dialog', (event) => {
 ipcMain.on('quit-app', (event) => {
     app.quit();
 });
+
+// IPC: Obtenir la langue du système
+ipcMain.handle('get-system-language', async () => {
+    return app.getLocale();
+});
+
+// IPC: Mettre à jour le titre de la fenêtre
+ipcMain.on('update-window-title', (event, title) => {
+    if (mainWindow) {
+        mainWindow.setTitle(title);
+    }
+});
+
+// IPC: Export CSV
+ipcMain.handle('export-excel', async (event, resultsData, patientName) => {
+    try {
+        const fileName = `resultats_${patientName || 'patient'}_${new Date().toISOString().slice(0,10)}.csv`;
+        
+        const { filePath } = await dialog.showSaveDialog(mainWindow, {
+            title: 'Exporter en CSV',
+            defaultPath: fileName,
+            filters: [
+                { name: 'CSV Files (Excel compatible)', extensions: ['csv'] },
+                { name: 'Tous les fichiers', extensions: ['*'] }
+            ]
+        });
+
+        if (filePath) {
+            // S'assurer que le fichier a l'extension .csv
+            const finalPath = filePath.endsWith('.csv') ? filePath : filePath + '.csv';
+            
+            // Créer le contenu CSV avec BOM UTF-8 pour Excel
+            const BOM = '\uFEFF'; // BOM pour forcer UTF-8 dans Excel
+            let csvContent = BOM + 'Analyse;Valeur;Unité;Valeurs de référence;Statut;Commentaires\n';
+            
+            resultsData.forEach(result => {
+                // Nettoyer le nom (supprimer les deux-points de fin)
+                const name = (result.name || '').replace(/:\s*$/, '').replace(/;/g, ',').replace(/"/g, '""');
+                
+                // Gérer les valeurs multiples
+                let value = result.value1 || '';
+                let unit = result.unit1 || '';
+                
+                if (result.hasMultipleUnits && result.value2) {
+                    value += ` / ${result.value2}`;
+                    unit += ` / ${result.unit2 || ''}`;
+                }
+                
+                // Formater les normes proprement
+                let norms = '';
+                if (result.min1 !== null && result.max1 !== null) {
+                    norms = `${result.min1} - ${result.max1}`;
+                } else if (result.min1 !== null) {
+                    norms = `> ${result.min1}`;
+                } else if (result.max1 !== null) {
+                    norms = `< ${result.max1}`;
+                }
+                
+                // Ajouter les normes de la deuxième unité si applicable
+                if (result.hasMultipleUnits && (result.min2 !== null || result.max2 !== null)) {
+                    let norms2 = '';
+                    if (result.min2 !== null && result.max2 !== null) {
+                        norms2 = `${result.min2} - ${result.max2}`;
+                    } else if (result.min2 !== null) {
+                        norms2 = `> ${result.min2}`;
+                    } else if (result.max2 !== null) {
+                        norms2 = `< ${result.max2}`;
+                    }
+                    if (norms2) {
+                        norms += ` / ${norms2}`;
+                    }
+                }
+                
+                const status = result.isAbnormal ? 'Anormal' : 'Normal';
+                
+                // Gérer les commentaires
+                const comments = (result.comments && result.comments.length > 0) ? 
+                    result.comments.join(' ').replace(/;/g, ',').replace(/"/g, '""') : '';
+                
+                csvContent += `"${name}";"${value}";"${unit}";"${norms}";"${status}";"${comments}"\n`;
+            });
+
+            // Sauvegarder le fichier CSV avec UTF-8 + BOM
+            const fs = require('fs');
+            fs.writeFileSync(finalPath, csvContent, 'utf8');
+            
+            console.log('Fichier CSV exporté vers:', finalPath);
+            return { success: true, path: finalPath };
+        } else {
+            return { success: false, cancelled: true };
+        }
+
+    } catch (error) {
+        console.error('Erreur export CSV:', error);
+        return { success: false, error: error.message };
+    }
+});
+
+// Export PDF function removed - only CSV/Excel export available
 
 // Gestion de l'ouverture de fichiers par double-clic (macOS)
 app.on('open-file', (event, filePath) => {
