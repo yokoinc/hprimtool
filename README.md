@@ -2,24 +2,29 @@
 
 **Analyseur professionnel de fichiers de résultats biologiques au format HPRIM**
 
+[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](https://github.com/yokoinc/hprimtool/releases)
+[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey.svg)]()
+[![License](https://img.shields.io/badge/license-Free-green.svg)]()
+
 ## 📋 Description
 
-HPRIM Tool est une application desktop moderne qui permet de lire, analyser et afficher de manière claire et structurée les fichiers de résultats d'analyses biologiques au format HPRIM (.hpr, .hpm, .hprim).
+HPRIM Tool est une application desktop moderne qui permet de lire, analyser et afficher de manière claire et structurée les fichiers de résultats d'analyses biologiques au format HPRIM (.hpr, .hpm, .hpm1, .hpm2, .hpm3, .hprim).
 
-L'application transforme les données brutes HPRIM en rapports médicaux facilement lisibles avec une mise en forme professionnelle et une détection automatique des anomalies.
+L'application transforme les données brutes HPRIM en rapports médicaux facilement lisibles avec une mise en forme professionnelle, une détection automatique des anomalies et un système d'impression optimisé.
 
 ## ✨ Fonctionnalités
 
 ### 📊 **Analyse et Affichage**
-- ✅ Lecture complète des fichiers HPRIM (.hpr, .hpm, .hprim)
+- ✅ Lecture complète des fichiers HPRIM (.hpr, .hpm, .hpm1, .hpm2, .hpm3, .hprim)
 - ✅ Parsing intelligent des formats structurés et texte libre
-- ✅ Affichage professionnel avec colonnes alignées (Paramètre : Valeur Unité Normes)
-- ✅ Extraction automatique des informations patient (nom, âge, dates)
+- ✅ Affichage professionnel avec colonnes parfaitement alignées
+- ✅ Extraction automatique des informations patient (nom • âge • date de naissance)
 - ✅ Gestion des commentaires et interprétations médicales
+- ✅ Nettoyage automatique des noms de résultats (suppression des "- ")
 
 ### 🎯 **Détection des Anomalies**
 - ✅ Détection automatique des valeurs hors normes
-- ✅ Badges colorés : rouge pour les valeurs anormales, vert pour les valeurs normales
+- ✅ Mise en évidence des valeurs anormales (gras, couleurs)
 - ✅ Parsing avancé des normes (format "min-max" ou valeurs séparées)
 - ✅ Support des opérateurs de comparaison (<, >, ≤, ≥)
 
@@ -27,14 +32,29 @@ L'application transforme les données brutes HPRIM en rapports médicaux facilem
 - ✅ Interface moderne et intuitive
 - ✅ Support du glisser-déposer
 - ✅ Associations de fichiers (double-clic pour ouvrir)
-- ✅ Impression des résultats
+- ✅ Système de recherche en temps réel avec mise en surbrillance
+- ✅ Support multilingue (français/anglais, détection automatique)
 - ✅ Compatible macOS, Windows et Linux (ARM64 et x64)
 
+### 🖨️ **Impression Optimisée** 
+- ✅ Impression professionnelle avec colonnes parfaitement alignées
+- ✅ Raccourcis clavier : CMD+P (Mac) / Ctrl+P (Windows/Linux)
+- ✅ Layout optimisé : gauche-centre-droite
+- ✅ Suppression automatique des éléments non-imprimables
+- ✅ Police réduite et économie d'encre
+
+### 📊 **Export de Données**
+- ✅ Export CSV compatible Excel (UTF-8 + BOM)
+- ✅ Formatage professionnel avec séparateurs français
+- ✅ Gestion des valeurs multiples et commentaires
+- ✅ Nom de fichier automatique avec date
+
 ### 🔧 **Fonctionnalités Avancées**
-- ✅ Formatage automatique des noms de paramètres (ajout de " :")
+- ✅ Sécurité renforcée pour le traitement des fichiers
 - ✅ Gestion des unités multiples (ex: % et g/L)
 - ✅ Support des valeurs avec astérisques et symboles spéciaux
 - ✅ Validation croisée des données patient
+- ✅ Mode texte brut pour diagnostic
 
 ## 📦 Installation
 
@@ -43,17 +63,17 @@ L'application transforme les données brutes HPRIM en rapports médicaux facilem
 Téléchargez directement la version correspondant à votre système :
 
 #### 🍎 **macOS**
-- Télécharger : `HPRIM Tool-1.0.0-arm64.dmg`
+- Télécharger : `HPRIM Tool-1.0.1-arm64.dmg`
 - Double-cliquez sur le fichier DMG et glissez l'application dans Applications
 
 #### 🪟 **Windows**
-- **Installateur** : `HPRIM Tool Setup 1.0.0.exe` (recommandé)
-- **Portable** : `HPRIM Tool 1.0.0.exe` (sans installation)
+- **Installateur** : `HPRIM Tool Setup 1.0.1.exe` (recommandé)
+- **Portable** : `HPRIM Tool 1.0.1.exe` (sans installation)
 
 #### 🐧 **Linux/Ubuntu**
-- Télécharger : `HPRIM Tool-1.0.0-arm64.AppImage`
-- Rendre exécutable : `chmod +x "HPRIM Tool-1.0.0-arm64.AppImage"`
-- Lancer : `./HPRIM Tool-1.0.0-arm64.AppImage`
+- Télécharger : `HPRIM Tool-1.0.1-arm64.AppImage`
+- Rendre exécutable : `chmod +x "HPRIM Tool-1.0.1-arm64.AppImage"`
+- Lancer : `./HPRIM Tool-1.0.1-arm64.AppImage`
 
 ---
 
