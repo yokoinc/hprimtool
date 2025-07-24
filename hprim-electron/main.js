@@ -137,9 +137,10 @@ function createWindow() {
         center: true,
         title: 'HPRIM Tool - Analyseur de résultats médicaux',
         webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false,
-            enableRemoteModule: true,
+            nodeIntegration: false,     // ✅ Sécurisé - empêche l'accès direct à Node.js
+            contextIsolation: true,     // ✅ Isolation du contexte pour la sécurité
+            enableRemoteModule: false,  // ✅ Désactive le module remote vulnérable
+            sandbox: false,             // Désactivé pour compatibilité avec preload
             preload: path.join(__dirname, 'preload.js')
         },
         icon: path.join(__dirname, 'icons', 'icon.png')
@@ -148,72 +149,106 @@ function createWindow() {
     // Charger l'interface
     mainWindow.loadFile('index.html');
 
-    // Menu macOS
+    // Menu en français pour toutes les plateformes
+    const template = [];
+    
+    // Menu spécifique macOS
     if (process.platform === 'darwin') {
-        const template = [
+        template.push({
+            label: 'HPRIM Tool',
+            submenu: [
+                { role: 'about', label: 'À propos de HPRIM Tool' },
+                { type: 'separator' },
+                { role: 'hide', label: 'Masquer HPRIM Tool' },
+                { role: 'hideothers', label: 'Masquer les autres' },
+                { role: 'unhide', label: 'Tout afficher' },
+                { type: 'separator' },
+                { role: 'quit', label: 'Quitter HPRIM Tool' }
+            ]
+        });
+    }
+    
+    // Menu Fichier pour toutes les plateformes
+    template.push({
+        label: 'Fichier',
+        submenu: [
             {
-                label: 'HPRIM Tool',
-                submenu: [
-                    { role: 'about', label: 'À propos de HPRIM Tool' },
-                    { type: 'separator' },
-                    { role: 'hide', label: 'Masquer HPRIM Tool' },
-                    { role: 'hideothers', label: 'Masquer les autres' },
-                    { role: 'unhide', label: 'Tout afficher' },
-                    { type: 'separator' },
-                    { role: 'quit', label: 'Quitter HPRIM Tool' }
-                ]
+                label: 'Ouvrir...',
+                accelerator: 'CmdOrCtrl+O',
+                click: openFileDialog
             },
-            {
-                label: 'Fichier',
-                submenu: [
-                    {
-                        label: 'Ouvrir...',
-                        accelerator: 'CmdOrCtrl+O',
-                        click: openFileDialog
-                    },
-                    { type: 'separator' },
-                    { role: 'close', label: 'Fermer la fenêtre' }
-                ]
-            },
-            {
-                label: 'Édition',
-                submenu: [
-                    { role: 'undo', label: 'Annuler' },
-                    { role: 'redo', label: 'Refaire' },
-                    { type: 'separator' },
-                    { role: 'cut', label: 'Couper' },
-                    { role: 'copy', label: 'Copier' },
-                    { role: 'paste', label: 'Coller' },
-                    { role: 'selectall', label: 'Tout sélectionner' }
-                ]
-            },
-            {
-                label: 'Affichage',
-                submenu: [
-                    { role: 'reload', label: 'Actualiser' },
-                    { role: 'toggledevtools', label: 'Outils de développement' },
-                    { type: 'separator' },
-                    { role: 'resetzoom', label: 'Taille réelle' },
-                    { role: 'zoomin', label: 'Zoom avant' },
-                    { role: 'zoomout', label: 'Zoom arrière' },
-                    { type: 'separator' },
-                    { role: 'togglefullscreen', label: 'Plein écran' }
-                ]
-            },
-            {
-                label: 'Fenêtre',
-                submenu: [
-                    { role: 'minimize', label: 'Réduire' },
+            { type: 'separator' },
+            process.platform === 'darwin' 
+                ? { role: 'close', label: 'Fermer la fenêtre' }
+                : { role: 'quit', label: 'Quitter' }
+        ]
+    });
+    
+    // Menu Édition
+    template.push({
+        label: 'Édition',
+        submenu: [
+            { role: 'undo', label: 'Annuler' },
+            { role: 'redo', label: 'Rétablir' },
+            { type: 'separator' },
+            { role: 'cut', label: 'Couper' },
+            { role: 'copy', label: 'Copier' },
+            { role: 'paste', label: 'Coller' },
+            { role: 'selectall', label: 'Tout sélectionner' }
+        ]
+    });
+    
+    // Menu Affichage
+    template.push({
+        label: 'Affichage',
+        submenu: [
+            { role: 'reload', label: 'Actualiser' },
+            { role: 'toggledevtools', label: 'Outils de développement' },
+            { type: 'separator' },
+            { role: 'resetzoom', label: 'Taille réelle' },
+            { role: 'zoomin', label: 'Zoom avant' },
+            { role: 'zoomout', label: 'Zoom arrière' },
+            { type: 'separator' },
+            { role: 'togglefullscreen', label: 'Plein écran' }
+        ]
+    });
+    
+    // Menu Fenêtre
+    template.push({
+        label: 'Fenêtre',
+        submenu: [
+            { role: 'minimize', label: 'Réduire' },
+            ...(process.platform === 'darwin' 
+                ? [
                     { role: 'zoom', label: 'Zoom' },
                     { type: 'separator' },
                     { role: 'front', label: 'Tout à l\'avant' }
-                ]
+                ] 
+                : [])
+        ]
+    });
+    
+    // Menu Aide
+    template.push({
+        label: 'Aide',
+        submenu: [
+            {
+                label: 'À propos',
+                click: () => {
+                    dialog.showMessageBox(mainWindow, {
+                        type: 'info',
+                        title: 'À propos de HPRIM Tool',
+                        message: 'HPRIM Tool',
+                        detail: 'Outil de visualisation et d\'analyse de fichiers HPRIM.\n\nVersion: 1.0.0',
+                        buttons: ['OK']
+                    });
+                }
             }
-        ];
-        
-        const menu = Menu.buildFromTemplate(template);
-        Menu.setApplicationMenu(menu);
-    }
+        ]
+    });
+    
+    const menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
 
     // Gérer les raccourcis globaux
     globalShortcut.register('CommandOrControl+Q', () => {
@@ -260,8 +295,19 @@ function createWindow() {
     });
 }
 
+// Variable pour éviter les doubles appels de dialogue
+let isDialogOpen = false;
+
 // Fonction pour ouvrir la boîte de dialogue de fichier
 function openFileDialog() {
+    // Protection contre les doubles appels
+    if (isDialogOpen) {
+        console.log('Dialog already open, skipping...');
+        return;
+    }
+    
+    isDialogOpen = true;
+    
     dialog.showOpenDialog(mainWindow, {
         title: 'Sélectionner un fichier HPRIM',
         filters: [
@@ -271,11 +317,13 @@ function openFileDialog() {
         ],
         properties: ['openFile']
     }).then(result => {
+        isDialogOpen = false;
         if (!result.canceled && result.filePaths.length > 0) {
             const filePath = result.filePaths[0];
             mainWindow.webContents.send('file-selected', filePath);
         }
     }).catch(err => {
+        isDialogOpen = false;
         console.error('Erreur lors de l\'ouverture du fichier:', err);
     });
 }

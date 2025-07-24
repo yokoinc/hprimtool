@@ -3,8 +3,10 @@ const path = require('path');
 
 console.log('Preload script loaded');
 
-// Avec contextIsolation: false, on expose directement sur window
-window.electronAPI = {
+// Avec contextIsolation: true, on utilise contextBridge pour sécuriser l'exposition
+const { contextBridge } = require('electron');
+
+contextBridge.exposeInMainWorld('electronAPI', {
     readFile: (filePath) => {
         if (!filePath || typeof filePath !== 'string') {
             throw new Error('Invalid file path');
@@ -58,17 +60,9 @@ window.electronAPI = {
         return ipcRenderer.invoke('export-excel', resultsData, patientName);
     },
     
-    openFileDialog: () => {
-        return ipcRenderer.send('open-file-dialog');
-    },
-    
-    quitApp: () => {
-        return ipcRenderer.send('quit-app');
-    },
-    
     updateWindowTitle: (title) => {
         return ipcRenderer.send('update-window-title', title);
     }
-};
+});
 
-console.log('electronAPI exposed to main world');
+console.log('electronAPI exposed to main world via contextBridge');

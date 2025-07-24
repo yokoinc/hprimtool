@@ -20,6 +20,7 @@
             min-height: 100vh;
             color: #333;
             padding: 20px;
+            cursor: default !important;
         }
 
         .container {
@@ -86,7 +87,7 @@
         }
 
         .btn {
-            background: #667eea;
+            background: linear-gradient(145deg, #667eea, #5a6fd8);
             color: white;
             border: none;
             padding: 12px 24px;
@@ -94,17 +95,33 @@
             cursor: pointer;
             margin: 5px;
             font-size: 0.95rem;
-            font-weight: 400;
+            font-weight: 500;
             letter-spacing: 0.3px;
-            transition: background 0.2s ease;
+            transition: all 0.2s ease;
+            box-shadow: 
+                0 4px 8px rgba(102, 126, 234, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
         }
 
         .btn:hover {
-            background: rgba(102, 126, 234, 0.9);
+            background: linear-gradient(145deg, #7b8ef0, #6a7bde);
+            box-shadow: 
+                0 6px 12px rgba(102, 126, 234, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
         }
 
         .btn:active {
-            background: rgba(102, 126, 234, 0.8);
+            background: linear-gradient(145deg, #5a6fd8, #4f63c9);
+            box-shadow: 
+                0 2px 4px rgba(102, 126, 234, 0.3),
+                inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            transform: translateY(1px);
         }
 
         .btn:disabled {
@@ -118,27 +135,71 @@
         }
 
         #printExportBtn {
-            background: #28a745;
+            background: linear-gradient(145deg, #28a745, #20913a) !important;
+            box-shadow: 
+                0 4px 8px rgba(40, 167, 69, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
         }
 
         #printExportBtn:hover:not(:disabled) {
-            background: rgba(40, 167, 69, 0.9);
+            background: linear-gradient(145deg, #34ce57, #2fa44e) !important;
+            box-shadow: 
+                0 6px 12px rgba(40, 167, 69, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
         }
 
         #exportBtn {
-            background: #17a2b8;
+            background: linear-gradient(145deg, #17a2b8, #138496) !important;
+            box-shadow: 
+                0 4px 8px rgba(23, 162, 184, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
         }
 
         #exportBtn:hover:not(:disabled) {
-            background: rgba(23, 162, 184, 0.9);
+            background: linear-gradient(145deg, #1fc7e2, #17a2b8) !important;
+            box-shadow: 
+                0 6px 12px rgba(23, 162, 184, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
         }
 
         .btn[style*="background: #dc3545"] {
-            background: #dc3545 !important;
+            background: linear-gradient(145deg, #dc3545, #c82333) !important;
+            box-shadow: 
+                0 4px 8px rgba(220, 53, 69, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
         }
 
         .btn[style*="background: #dc3545"]:hover {
-            background: rgba(220, 53, 69, 0.9) !important;
+            background: linear-gradient(145deg, #e85770, #dc3545) !important;
+            box-shadow: 
+                0 6px 12px rgba(220, 53, 69, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+            transform: translateY(-1px);
+        }
+
+        .btn[style*="background: #6c757d"] {
+            background: linear-gradient(145deg, #6c757d, #545b62) !important;
+            box-shadow: 
+                0 4px 8px rgba(108, 117, 125, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .btn[style*="background: #6c757d"]:hover {
+            background: linear-gradient(145deg, #868e96, #6c757d) !important;
+            box-shadow: 
+                0 6px 12px rgba(108, 117, 125, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1) !important;
+            transform: translateY(-1px);
         }
 
         .print-export-menu {
@@ -757,6 +818,25 @@
             outline-offset: 2px;
         }
 
+        /* Force curseur par défaut partout */
+        *, *:before, *:after {
+            cursor: inherit !important;
+        }
+        
+        body, html {
+            cursor: default !important;
+        }
+        
+        /* Exception pour les éléments interactifs */
+        button, .btn, input[type="button"], input[type="submit"], 
+        .drop-zone, [onclick], [role="button"] {
+            cursor: pointer !important;
+        }
+        
+        input[type="text"], input[type="search"], textarea {
+            cursor: text !important;
+        }
+
         /* Theme Toggle Button */
         .theme-toggle {
             background: #6c757d !important;
@@ -915,7 +995,7 @@
                 </div>
                 <div style="display: flex; gap: 10px; align-items: center;">
                     <button class="btn" onclick="toggleSearch()" id="searchBtn" style="background: #6c757d;">
-                        <span>🔍 <span data-i18n="search.button">Rechercher</span></span>
+                        <span data-i18n="search.button">Rechercher</span>
                     </button>
                     <button class="btn" onclick="window.print()" id="printBtn" style="background: #28a745;" disabled>
                         <span data-i18n="buttons.print">🖨️ Imprimer</span>

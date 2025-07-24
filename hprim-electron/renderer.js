@@ -1,48 +1,103 @@
-const { ipcRenderer } = require('electron');
+// Plus besoin d'importer ipcRenderer - on utilise electronAPI exposé par preload.js
 
 // Variables globales
 const dropZone = document.getElementById('dropZone');
 const results = document.getElementById('results');
 let currentFileContent = null; // Stockage du contenu brut du fichier
 
-// Écouter les événements d'ouverture de fichier
-ipcRenderer.on('file-to-open', (event, filePath) => {
-    console.log('Fichier reçu:', filePath);
+// ============================================================================
+// OPTIMISATIONS DE PERFORMANCE
+// ============================================================================
+
+// Map d'encodage précompilée pour éviter les multiples replace()
+const ENCODING_MAP = new Map([
+    ['È', 'é'], ['Ë', 'è'], ['Ì', 'à'], ['Á', 'à'], ['Ç', 'ç'],
+    ['É', 'e'], ['À', 'à'], ['Ù', 'u'], ['Ñ', 'n'], ['Â', 'â'],
+    ['Ê', 'ê'], ['Î', 'î'], ['Ô', 'ô'], ['Û', 'û']
+]);
+
+// Regex précompilée pour performance
+const ENCODING_REGEX = new RegExp(`[${Array.from(ENCODING_MAP.keys()).join('')}]`, 'g');
+
+// Fonction optimisée de nettoyage d'encodage
+function cleanEncoding(text) {
+    if (!text) return text;
+    return text.replace(ENCODING_REGEX, char => ENCODING_MAP.get(char) || char);
+}
+
+// Regex précompilées pour parsing
+const VALUE_PATTERNS = {
+    special: /^([<>≤≥=]+)\s*([\d.,\-+]+)/,
+    numeric: /^([\d.,\-+]+)\s*([<>≤≥=]*)/,
+    range: /([\d,\.]+)\s*[-–]\s*([\d,\.]+)/
+};
+
+// Système de logging conditionnel pour production
+const Logger = {
+    // En développement : process.env.NODE_ENV !== 'production'
+    // En production : on ne garde que les erreurs critiques
+    isDev: typeof process !== 'undefined' && process.env && process.env.NODE_ENV !== 'production',
+    
+    debug: function(msg, ...args) {
+        if (this.isDev) console.log(msg, ...args);
+    },
+    
+    info: function(msg, ...args) {
+        if (this.isDev) console.log('ℹ️', msg, ...args);
+    },
+    
+    warn: function(msg, ...args) {
+        console.warn('⚠️', msg, ...args);
+    },
+    
+    error: function(msg, ...args) {
+        console.error('❌', msg, ...args);
+    }
+};
+
+// Écouter les événements d'ouverture de fichier via electronAPI
+window.electronAPI.onFileToOpen((filePath) => {
+    Logger.debug('Fichier reçu:', filePath);
     handleFile(filePath);
 });
 
-ipcRenderer.on('file-selected', (event, filePath) => {
-    console.log('Fichier sélectionné:', filePath);
+window.electronAPI.onFileSelected((filePath) => {
+    Logger.debug('Fichier sélectionné:', filePath);
     handleFile(filePath);
 });
 
 // Fonction pour traiter un fichier
 async function handleFile(filePath) {
-    console.log('handleFile appelé avec:', filePath);
+    Logger.debug('handleFile appelé avec:', filePath);
     
     if (!filePath) {
-        console.error('Aucun chemin de fichier fourni');
+        Logger.error('Aucun chemin de fichier fourni');
         results.innerHTML = '<p style="color: red;">Aucun fichier spécifié</p>';
         return;
     }
     
     try {
-        console.log('Tentative de lecture du fichier:', filePath);
+        Logger.debug('Tentative de lecture du fichier:', filePath);
         
-        // Afficher le message de chargement
+        // Afficher le message de chargement et définir le curseur
+        document.body.style.cursor = 'wait';
         const loadingMsg = window.i18n ? window.i18n.t('messages.loading') : 'Chargement du fichier';
         results.innerHTML = `<p style="color: blue;">${loadingMsg}: ${filePath}</p>`;
         
-        // Lire le fichier avec Electron
-        const content = await ipcRenderer.invoke('read-file', filePath);
-        console.log('Contenu lu, longueur:', content.length);
+        // Lire le fichier avec Electron via electronAPI
+        const content = await window.electronAPI.readFile(filePath);
+        Logger.debug('Contenu lu, longueur:', content.length);
         
-        console.log('Début du parsing et affichage...');
+        Logger.debug('Début du parsing et affichage...');
         parseAndDisplay(content);
-        console.log('Fichier traité avec succès');
+        Logger.debug('Fichier traité avec succès');
         
     } catch (error) {
-        console.error('Erreur détaillée lors de la lecture du fichier:', error);
+        Logger.error('Erreur détaillée lors de la lecture du fichier:', error);
+        
+        // Réinitialiser l'état d'ouverture et le curseur même en cas d'erreur
+        isOpeningFile = false;
+        document.body.style.cursor = 'default';
         
         let errorMsg = 'Erreur lors de la lecture du fichier';
         if (error.message) {
@@ -83,10 +138,22 @@ dropZone.addEventListener('drop', async (e) => {
     }
 });
 
+// Variable pour éviter les doubles clics
+let isOpeningFile = false;
+
 // Clic sur la zone de drop pour ouvrir un fichier
 dropZone.addEventListener('click', () => {
+    if (isOpeningFile) return;
+    
+    isOpeningFile = true;
     // Envoyer un message au processus principal pour ouvrir la boîte de dialogue
-    ipcRenderer.send('open-file-dialog');
+    window.electronAPI.openFileDialog();
+    
+    // Réinitialiser après un court délai (sécurité)
+    setTimeout(() => {
+        isOpeningFile = false;
+        document.body.style.cursor = 'default';
+    }, 2000);
 });
 
 // ============================================================================
@@ -95,12 +162,21 @@ dropZone.addEventListener('click', () => {
 
 // Fonction pour ouvrir un fichier (bouton "Ouvrir")
 function openFile() {
-    ipcRenderer.send('open-file-dialog');
+    if (isOpeningFile) return;
+    
+    isOpeningFile = true;
+    window.electronAPI.openFileDialog();
+    
+    // Réinitialiser après un court délai (sécurité)
+    setTimeout(() => {
+        isOpeningFile = false;
+        document.body.style.cursor = 'default';
+    }, 2000);
 }
 
 // Fonction pour quitter l'application (bouton "Quitter")
 function quitApp() {
-    ipcRenderer.send('quit-app');
+    window.electronAPI.quitApp();
 }
 
 // ============================================================================
@@ -120,14 +196,13 @@ function toggleSearch() {
     const searchHTML = `
         <div id="searchContainer" style="background: white; padding: 10px; margin: 10px 0; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-left: 3px solid #2c5aa0;">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="font-size: 0.9rem; color: #666;">🔍</span>
                 <input type="text" id="searchInput" placeholder="${window.i18n ? window.i18n.t('search.placeholder') : 'Rechercher dans les résultats...'}" 
                        style="flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem;" 
                        oninput="performSearch(this.value)" onkeyup="handleSearchKeyup(event)">
-                <button onclick="clearSearch()" style="background: #f8f9fa; border: 1px solid #ddd; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">
+                <button onclick="clearSearch()" style="background: linear-gradient(145deg, #f8f9fa, #e9ecef); border: 1px solid #ddd; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2); transition: all 0.2s ease;">
                     ${window.i18n ? window.i18n.t('search.clear') : 'Effacer'}
                 </button>
-                <button onclick="toggleSearch()" style="background: #dc3545; color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">
+                <button onclick="toggleSearch()" style="background: linear-gradient(145deg, #dc3545, #c82333); color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; box-shadow: 0 2px 4px rgba(220,53,69,0.3), inset 0 1px 0 rgba(255,255,255,0.2); transition: all 0.2s ease; text-shadow: 0 1px 1px rgba(0,0,0,0.2);">
                     ✕
                 </button>
             </div>
@@ -273,7 +348,7 @@ function resetSearchDisplay() {
         removeHighlighting(result);
     });
     
-    console.log('Affichage des résultats réinitialisé - tous les résultats visibles');
+    Logger.debug('Affichage des résultats réinitialisé - tous les résultats visibles');
 }
 
 function handleSearchKeyup(event) {
@@ -287,7 +362,14 @@ function handleSearchKeyup(event) {
 // ============================================================================
 
 function parseAndDisplay(content) {
-    console.log('parseAndDisplay called with content length:', content.length);
+    Logger.debug('parseAndDisplay called with content length:', content.length);
+    
+    // Effacer immédiatement le message de chargement et réinitialiser le curseur
+    results.innerHTML = '';
+    document.body.style.cursor = 'default';
+    
+    // Réinitialiser l'état d'ouverture de fichier
+    isOpeningFile = false;
     
     // Stocker le contenu brut pour l'affichage éventuel
     currentFileContent = content;
@@ -309,10 +391,10 @@ function parseAndDisplay(content) {
     
     // Extraire les informations patient
     const patientInfo = extractPatientInfo(content);
-    console.log('Patient info:', patientInfo);
+    Logger.debug('Patient info:', patientInfo);
     
     const parsed = parseHPRIM(content);
-    console.log('Parsed results:', parsed);
+    Logger.debug('Parsed results:', parsed);
     
     let html = '';
     
@@ -444,7 +526,7 @@ function parseAndDisplay(content) {
             exportBtn.disabled = false;
             exportBtn.style.opacity = '1';
         }
-        console.log('✅ Boutons export activés');
+        Logger.debug('✅ Boutons export activés');
     } else {
         if (printBtn) {
             printBtn.disabled = true;
@@ -454,7 +536,7 @@ function parseAndDisplay(content) {
             exportBtn.disabled = true;
             exportBtn.style.opacity = '0.5';
         }
-        console.log('❌ Boutons export désactivés (aucun résultat)');
+        Logger.debug('❌ Boutons export désactivés (aucun résultat)');
     }
     
     // Ajouter le bouton "Voir fichier brut" en bas de la page si un fichier est chargé
@@ -513,14 +595,14 @@ function normalizeNumericValue(value) {
 }
 
 function parseHPRIM(content) {
-    console.log('Parsing HPRIM avec détection automatique de format...');
+    Logger.debug('Parsing HPRIM avec détection automatique de format...');
     
     // Décoder les entités HTML d'abord
     const decodedContent = decodeHTMLEntities(content);
     
     // Détecter le format sur le contenu décodé
     const format = detectHPRIMFormat(decodedContent);
-    console.log('Format détecté:', format);
+    Logger.debug('Format détecté:', format);
     
     // Router vers le bon parser selon le format
     switch(format) {
@@ -531,14 +613,14 @@ function parseHPRIM(content) {
         case 'text_readable':
             return parseTextReadableHPRIM(decodedContent);
         default:
-            console.warn('Format HPRIM non reconnu, tentative de parsing générique...');
+            Logger.warn('Format HPRIM non reconnu, tentative de parsing générique...');
             return parseStructuredPipesHPRIM(decodedContent); // Fallback vers l'ancien parser
     }
 }
 
 // Parser pour format avec tags ****LAB**** (nouveau)
 function parseStructuredTagsHPRIM(content) {
-    console.log('Parsing format structuré avec tags...');
+    Logger.debug('Parsing format structuré avec tags...');
     const rawResults = [];
     const lines = content.split('\n');
     
@@ -575,49 +657,44 @@ function parseStructuredTagsHPRIM(content) {
 // Fonction helper pour collecter les TEX qui suivent une position donnée
 function collectFollowingTEX(lines, startIndex, maxLines = 15) {
     const texLines = [];
-    console.log(`Collecte TEX pour ligne ${startIndex}:`, lines[startIndex]);
+    Logger.debug(`Collecte TEX pour ligne ${startIndex}:`, lines[startIndex]);
     
     for (let i = startIndex + 1; i < Math.min(startIndex + maxLines, lines.length); i++) {
         const line = lines[i];
-        console.log(`  Ligne ${i}: ${line}`);
+        Logger.debug(`  Ligne ${i}: ${line}`);
         
         if (line.startsWith('TEX|')) {
             const texContent = line.substring(4).trim();
-            console.log(`    TEX trouvé: "${texContent}"`);
+            Logger.debug(`    TEX trouvé: "${texContent}"`);
             if (texContent && texContent.length > 3 && !texContent.includes('---')) {
                 // Corriger l'encodage
-                const cleanText = texContent
-                    .replace(/È/g, 'é')
-                    .replace(/Ë/g, 'è') 
-                    .replace(/Ì/g, 'à')
-                    .replace(/Á/g, 'à')
-                    .replace(/Ç/g, 'ç');
+                const cleanText = cleanEncoding(texContent);
                 texLines.push(cleanText);
-                console.log(`    TEX ajouté: "${cleanText}"`);
+                Logger.debug(`    TEX ajouté: "${cleanText}"`);
             } else {
-                console.log(`    TEX ignoré (trop court ou contient ---)`);
+                Logger.debug(`    TEX ignoré (trop court ou contient ---)`);
             }
         } else if (line.startsWith('RES|') || line.startsWith('LAB|')) {
             // Arrêter si on trouve un RES ou LAB
-            console.log(`    Arrêt: RES ou LAB trouvé`);
+            Logger.debug(`    Arrêt: RES ou LAB trouvé`);
             break;
         } else if (line.trim() === '') {
             // Continuer même après une ligne vide, car des TEX importants peuvent suivre
-            console.log(`    Ligne vide, continuation`);
+            Logger.debug(`    Ligne vide, continuation`);
             continue;
         } else {
-            console.log(`    Autre ligne, continuation`);
+            Logger.debug(`    Autre ligne, continuation`);
         }
         // Sinon continuer (pour gérer les lignes entre TEX)
     }
     
-    console.log(`Résultat collecte: ${texLines.length} commentaires trouvés`);
+    Logger.debug(`Résultat collecte: ${texLines.length} commentaires trouvés`);
     return texLines;
 }
 
 // Parser pour format structuré avec pipes RES| (amélioré) 
 function parseStructuredPipesHPRIM(content) {
-    console.log('Parsing format structuré avec pipes...');
+    Logger.debug('Parsing format structuré avec pipes...');
     const rawResults = [];
     const lines = content.split('\n');
     
@@ -667,17 +744,17 @@ function parseStructuredPipesHPRIM(content) {
     }
     
     // Debug: vérifier les premières lignes qui contiennent RES
-    console.log('Looking for RES lines...');
+    Logger.debug('Looking for RES lines...');
     const resLines = lines.filter(line => line.includes('RES|'));
-    console.log(`Found ${resLines.length} lines containing RES|`);
+    Logger.debug(`Found ${resLines.length} lines containing RES|`);
     if (resLines.length > 0) {
-        console.log('First RES line:', JSON.stringify(resLines[0]));
-        console.log('Starts with RES|?', resLines[0].startsWith('RES|'));
+        Logger.debug('First RES line:', JSON.stringify(resLines[0]));
+        Logger.debug('Starts with RES|?', resLines[0].startsWith('RES|'));
         
         // Debug: montrer les 5 premières lignes RES
-        console.log('Premières lignes RES trouvées:');
+        Logger.debug('Premières lignes RES trouvées:');
         resLines.slice(0, 5).forEach((line, index) => {
-            console.log(`RES ${index + 1}:`, line);
+            Logger.debug(`RES ${index + 1}:`, line);
         });
     }
     
@@ -700,26 +777,21 @@ function parseStructuredPipesHPRIM(content) {
             const texContent = line.substring(4).trim();
             // Si c'est un en-tête de section (contient des *, majuscules, etc.)
             if (texContent && (texContent.includes('*') || texContent.match(/^[A-Z\s]+$/) || texContent.includes('---'))) {
-                currentSectionHeader = texContent
-                    .replace(/È/g, 'é')
-                    .replace(/Ë/g, 'è')
-                    .replace(/Ì/g, 'à')
-                    .replace(/Á/g, 'à')
-                    .replace(/Ç/g, 'ç');
+                currentSectionHeader = cleanEncoding(texContent);
             }
             continue;
         }
         
         if (line.startsWith('RES|')) {
             const parts = line.split('|');
-            console.log('Ligne RES trouvée, parts.length:', parts.length, 'Line:', line);
+            Logger.debug('Ligne RES trouvée, parts.length:', parts.length, 'Line:', line);
             if (parts.length >= 8) {
                 const name = parts[1] ? parts[1].trim() : '';
                 const code = parts[2] ? parts[2].trim() : '';
                 const type = parts[3] ? parts[3].trim() : '';
                 const valueStr = parts[4] ? parts[4].trim() : '';
-                console.log('RES ligne trouvée:', line);
-                console.log('Name:', name, 'ValueStr:', valueStr);
+                Logger.debug('RES ligne trouvée:', line);
+                Logger.debug('Name:', name, 'ValueStr:', valueStr);
                 const unit = parts[5] ? parts[5].trim() : '';
                 const normStr = parts[6] ? parts[6].trim() : '';
                 let maxStr = parts[7] ? parts[7].trim() : '';
@@ -756,14 +828,14 @@ function parseStructuredPipesHPRIM(content) {
                 
                 // Condition plus permissive pour capturer tous les résultats importants
                 if (name && (valueStr || unit || type === 'T')) {
-                    console.log('Result added:', name, 'Type:', type, 'Value:', valueStr, 'Unit:', unit);
+                    Logger.debug('Result added:', name, 'Type:', type, 'Value:', valueStr, 'Unit:', unit);
                     // Nettoyer le nom : supprimer "- " au début et normaliser les espaces
                     let cleanName = name.replace(/\s+/g, ' ').trim();
                     
                     // Supprimer les tirets et espaces en début de nom
                     cleanName = cleanName.replace(/^[-\s]+/, '').trim();
                     
-                    console.log('Nom nettoyé:', `"${name}" -> "${cleanName}"`);
+                    Logger.debug('Nom nettoyé:', `"${name}" -> "${cleanName}"`);
                     
                     // Vérifier si c'est une ligne "soit" qui doit être fusionnée avec la précédente
                     if (cleanName.toLowerCase() === 'soit' && rawResults.length > 0) {
@@ -780,7 +852,7 @@ function parseStructuredPipesHPRIM(content) {
                         lastResult.operator2 = parsedValue.operator;
                         lastResult.hasMultipleUnits = true;
                         
-                        console.log('Fusionné "soit" avec:', lastResult.name);
+                        Logger.debug('Fusionné "soit" avec:', lastResult.name);
                         continue; // Passer au suivant sans créer un nouveau résultat
                     }
                     const cleanUnit = unit;
@@ -797,16 +869,11 @@ function parseStructuredPipesHPRIM(content) {
                         commentText = valueStr;
                         actualValue = value2Str;
                         actualUnit = unit2 || unit;
-                        console.log('Commentaire détecté dans valueStr pour:', name, 'Commentaire:', commentText.substring(0, 50) + '...');
+                        Logger.debug('Commentaire détecté dans valueStr pour:', name, 'Commentaire:', commentText.substring(0, 50) + '...');
                     }
                     
                     // Corriger l'encodage dans la valeur
-                    const cleanValueStr = actualValue
-                        .replace(/È/g, 'é')
-                        .replace(/Ë/g, 'è')
-                        .replace(/Ì/g, 'à')
-                        .replace(/Á/g, 'à')
-                        .replace(/Ç/g, 'ç');
+                    const cleanValueStr = cleanEncoding(actualValue);
                     
                     // Parser les valeurs avec symboles spéciaux
                     const parsedValue1 = parseSpecialValue(cleanValueStr);
@@ -824,12 +891,7 @@ function parseStructuredPipesHPRIM(content) {
                     
                     // Ajouter le commentaire détecté dans valueStr s'il y en a un
                     if (commentText) {
-                        const cleanCommentText = commentText
-                            .replace(/È/g, 'é')
-                            .replace(/Ë/g, 'è')
-                            .replace(/Ì/g, 'à')
-                            .replace(/Á/g, 'à')
-                            .replace(/Ç/g, 'ç');
+                        const cleanCommentText = cleanEncoding(commentText);
                         associatedComments.push(cleanCommentText);
                     }
                     
@@ -867,7 +929,7 @@ function parseStructuredPipesHPRIM(content) {
                     
                     // Ajouter " :" si pas déjà présent
                     const finalName = cleanName.endsWith(':') ? cleanName : cleanName + ' :';
-                    console.log('Nom final:', finalName);
+                    Logger.debug('Nom final:', finalName);
                     
                     rawResults.push({
                         name: finalName,
@@ -888,10 +950,10 @@ function parseStructuredPipesHPRIM(content) {
                         operator2: parsedValue2 ? parsedValue2.operator : null
                     });
                 } else {
-                    console.log('Result IGNORED:', name, 'Type:', type, 'Value:', valueStr, 'Unit:', unit);
+                    Logger.debug('Result IGNORED:', name, 'Type:', type, 'Value:', valueStr, 'Unit:', unit);
                 }
             } else {
-                console.log('Line IGNORED (not enough parts):', line);
+                Logger.debug('Line IGNORED (not enough parts):', line);
             }
         }
     }
@@ -905,7 +967,7 @@ function parseStructuredPipesHPRIM(content) {
         let isAbnormal = false;
         let hasNorms = false;
         
-        console.log(`Analyse ${result.name}:`, {
+        Logger.debug(`Analyse ${result.name}:`, {
             value1: result.value1,
             min1: result.min1,
             max1: result.max1,
@@ -944,15 +1006,15 @@ function parseStructuredPipesHPRIM(content) {
         });
     }
     
-    console.log(`${rawResults.length} résultats bruts trouvés`);
-    console.log(`${groupedResults.length} résultats HPRIM groupés trouvés`);
-    console.log('Grouped results:', groupedResults);
+    Logger.debug(`${rawResults.length} résultats bruts trouvés`);
+    Logger.debug(`${groupedResults.length} résultats HPRIM groupés trouvés`);
+    Logger.debug('Grouped results:', groupedResults);
     return groupedResults;
 }
 
 // Parser pour format texte lisible (amélioré)
 function parseTextReadableHPRIM(content) {
-    console.log('Parsing format texte lisible...');
+    Logger.debug('Parsing format texte lisible...');
     const rawResults = [];
     const lines = content.split('\n');
     
@@ -1128,15 +1190,10 @@ function parseRESLine(line) {
         
         if (isCommentInValue && value2Str) {
             // valueStr est un commentaire, value2Str est la vraie valeur
-            commentText = valueStr
-                .replace(/È/g, 'é')
-                .replace(/Ë/g, 'è')
-                .replace(/Ì/g, 'à')
-                .replace(/Á/g, 'à')
-                .replace(/Ç/g, 'ç');
+            commentText = cleanEncoding(valueStr);
             actualValue = value2Str;
             actualUnit = unit2 || unit;
-            console.log('Commentaire détecté dans parseRESLine pour:', name, 'Commentaire:', commentText.substring(0, 50) + '...');
+            Logger.debug('Commentaire détecté dans parseRESLine pour:', name, 'Commentaire:', commentText.substring(0, 50) + '...');
         }
         
         const parsedValue = parseSpecialValue(actualValue);
@@ -1165,7 +1222,7 @@ function parseRESLine(line) {
 
 // Fonction pour traiter les résultats bruts
 function processRawResults(rawResults) {
-    console.log(`Processing ${rawResults.length} raw results...`);
+    Logger.debug(`Processing ${rawResults.length} raw results...`);
     
     // Filtrer et nettoyer les résultats (accepter valeurs numériques ET textuelles)
     const processedResults = rawResults.filter(result => {
@@ -1188,13 +1245,13 @@ function processRawResults(rawResults) {
         return result;
     });
     
-    console.log(`Processed ${processedResults.length} valid results`);
+    Logger.debug(`Processed ${processedResults.length} valid results`);
     return processedResults;
 }
 
 // Parser pour format HPRIM en texte libre
 function parseTextFormatHPRIM(content) {
-    console.log('Parsing format texte libre...');
+    Logger.debug('Parsing format texte libre...');
     const lines = content.split('\n');
     const results = [];
     
@@ -1215,11 +1272,11 @@ function parseTextFormatHPRIM(content) {
             line.includes('  ') && // Contient des espaces multiples (alignement)
             (line.includes('<') || line.includes('>') || line.match(/\d+[\.,]\d+/) || line.match(/\d+\s+\w+/))) {
             
-            console.log('Ligne candidate trouvée:', line);
+            Logger.debug('Ligne candidate trouvée:', line);
             
             // Essayer d'extraire le nom et la valeur
             const parts = line.split(/\s{2,}/); // Split sur 2+ espaces
-            console.log('Parts:', parts);
+            Logger.debug('Parts:', parts);
             
             if (parts.length >= 2) {
                 const name = parts[0].trim();
@@ -1233,7 +1290,7 @@ function parseTextFormatHPRIM(content) {
                     }
                 }
                 
-                console.log('Name:', name, 'ValueAndUnit:', valueAndUnit);
+                Logger.debug('Name:', name, 'ValueAndUnit:', valueAndUnit);
                 
                 // Extraire valeur et unité
                 const valueMatch = valueAndUnit.match(/^([<>]?\s*[\d\.,]+|négatif|positif|absent)/i);
@@ -1261,14 +1318,14 @@ function parseTextFormatHPRIM(content) {
                         comments: []
                     };
                     
-                    console.log('Résultat créé:', result);
+                    Logger.debug('Résultat créé:', result);
                     results.push(result);
                 }
             }
         }
     }
     
-    console.log('Résultats texte libre trouvés:', results.length);
+    Logger.debug('Résultats texte libre trouvés:', results.length);
     return results;
 }
 
@@ -1528,13 +1585,13 @@ function extractDoctorName(lines) {
         if (line.includes('M&eacute;decin :') || line.includes('Médecin :')) {
             // Nettoyer les balises HTML et entités
             const cleanLine = line.replace(/<[^>]+>/g, '').replace(/&eacute;/g, 'é').replace(/&nbsp;/g, ' ');
-            console.log('Ligne médecin trouvée:', cleanLine); // Debug
+            Logger.debug('Ligne médecin trouvée:', cleanLine); // Debug
             
             // Pattern plus flexible pour capturer le nom complet
             const match = cleanLine.match(/M[éê]decin\s*:\s*(.+?)(?:\s*$|<)/);
             if (match) {
                 const doctorName = match[1].trim();
-                console.log('Nom médecin extrait:', doctorName); // Debug
+                Logger.debug('Nom médecin extrait:', doctorName); // Debug
                 return doctorName;
             }
         }
@@ -1819,7 +1876,7 @@ function autoDetectTheme() {
     // Appliquer le thème
     document.documentElement.setAttribute('data-theme', theme);
     
-    console.log(`Thème automatique détecté: ${theme} (${hour}h)`);
+    Logger.debug(`Thème automatique détecté: ${theme} (${hour}h)`);
     
     // Programmer la prochaine vérification à la prochaine heure pleine
     const nextHour = new Date();

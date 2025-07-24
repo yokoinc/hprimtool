@@ -1,8 +1,11 @@
 {
   "name": "hprim-tool",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Analyseur de résultats médicaux HPRIM",
   "main": "main.js",
+  "homepage": "https://github.com/yokoinc/hprimtool",
+  "author": "HPRIM Tool Team",
+  "license": "MIT",
   "scripts": {
     "start": "electron .",
     "test": "node test-simple.js",
@@ -58,29 +61,20 @@
           "type": "link",
           "path": "/Applications"
         }
-      ],
-      "additionalDMGOptions": {
-        "window": {
-          "position": {
-            "x": 400,
-            "y": 100
-          }
-        }
-      }
+      ]
     },
     "win": {
       "target": [
         {
-          "target": "nsis",
-          "arch": ["x64", "ia32"]
-        },
-        {
           "target": "portable",
-          "arch": ["x64", "ia32"]
+          "arch": ["x64"]
         }
       ],
       "icon": "icons/icon.png",
       "publisherName": "HPRIM Tool",
+      "verifyUpdateCodeSignature": false,
+      "signDlls": false,
+      "forceCodeSigning": false,
       "fileAssociations": [
         {
           "ext": "hpr",
@@ -100,9 +94,41 @@
       ]
     },
     "linux": {
-      "target": "AppImage",
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        },
+        {
+          "target": "deb",
+          "arch": ["x64"]
+        }
+      ],
       "icon": "icons/icon.png",
-      "category": "Office"
+      "category": "Office",
+      "description": "Analyseur de résultats biologiques HPRIM",
+      "desktop": {
+        "Name": "HPRIM Tool",
+        "Comment": "Analyseur de résultats biologiques",
+        "GenericName": "Analyseur médical",
+        "Keywords": "medical;hprim;laboratory;results;analyse;biologie;",
+        "StartupWMClass": "HPRIM Tool"
+      }
+    },
+    "deb": {
+      "priority": "optional",
+      "depends": [
+        "libgtk-3-0",
+        "libnotify4",
+        "libnss3",
+        "libxss1",
+        "libxtst6",
+        "xdg-utils",
+        "libatspi2.0-0",
+        "libasound2"
+      ],
+      "packageCategory": "utils",
+      "maintainer": "HPRIM Tool <support@hprimtool.com>"
     },
     "nsis": {
       "oneClick": false,
