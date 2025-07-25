@@ -73,13 +73,15 @@ jobs:
     - name: Build Windows packages
       run: |
         cd hprim-electron
-        npm run build -- --win
+        npm run build -- --win --x64
         
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: packages-windows
-        path: hprim-electron/dist/*.exe
+        path: |
+          hprim-electron/dist/*.exe
+          hprim-electron/dist/*.portable
         if-no-files-found: warn
 
   build-macos:
@@ -103,7 +105,7 @@ jobs:
     - name: Build macOS packages
       run: |
         cd hprim-electron
-        npm run build -- --mac
+        npm run build -- --mac --x64 --arm64
         
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
@@ -129,6 +131,7 @@ jobs:
           packages-linux-*/*.rpm  
           packages-linux-*/*.AppImage
           packages-windows/*.exe
+          packages-windows/*.portable
           packages-macos/*.dmg
         draft: false
         prerelease: false
