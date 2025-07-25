@@ -42,7 +42,27 @@
       "gatekeeperAssess": false,
       "hardenedRuntime": true,
       "entitlements": "build/entitlements.mac.plist",
-      "entitlementsInherit": "build/entitlements.mac.plist"
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "fileAssociations": [
+        {
+          "ext": "hpr",
+          "name": "HPRIM Medical File",
+          "description": "Medical test results file",
+          "role": "Editor"
+        },
+        {
+          "ext": "hpm", 
+          "name": "HPRIM Medical File",
+          "description": "Medical test results file",
+          "role": "Editor"
+        },
+        {
+          "ext": "hprim",
+          "name": "HPRIM Medical File", 
+          "description": "Medical test results file",
+          "role": "Editor"
+        }
+      ]
     },
     "dmg": {
       "title": "HPRIM Tool",
@@ -121,7 +141,33 @@
         "Keywords": "medical;hprim;laboratory;results;analyse;biologie;",
         "StartupWMClass": "HPRIM Tool",
         "MimeType": "application/x-hprim;"
-      }
+      },
+      "fileAssociations": [
+        {
+          "ext": "hpr",
+          "name": "HPRIM Medical File",
+          "description": "Medical test results file",
+          "mimeType": "application/x-hprim",
+          "icon": "icons/file_icon.png",
+          "role": "Editor"
+        },
+        {
+          "ext": "hpm", 
+          "name": "HPRIM Medical File",
+          "description": "Medical test results file",
+          "mimeType": "application/x-hprim",
+          "icon": "icons/file_icon.png",
+          "role": "Editor"
+        },
+        {
+          "ext": "hprim",
+          "name": "HPRIM Medical File", 
+          "description": "Medical test results file",
+          "mimeType": "application/x-hprim",
+          "icon": "icons/file_icon.png",
+          "role": "Editor"
+        }
+      ]
     },
     "deb": {
       "priority": "optional",
@@ -157,33 +203,7 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "shortcutName": "HPRIM Tool"
-    },
-    "fileAssociations": [
-      {
-        "ext": "hpr",
-        "name": "HPRIM Medical File",
-        "description": "Medical test results file",
-        "mimeType": "application/x-hprim",
-        "icon": "icons/file_icon.png",
-        "role": "Editor"
-      },
-      {
-        "ext": "hpm", 
-        "name": "HPRIM Medical File",
-        "description": "Medical test results file",
-        "mimeType": "application/x-hprim",
-        "icon": "icons/file_icon.png",
-        "role": "Editor"
-      },
-      {
-        "ext": "hprim",
-        "name": "HPRIM Medical File", 
-        "description": "Medical test results file",
-        "mimeType": "application/x-hprim",
-        "icon": "icons/file_icon.png",
-        "role": "Editor"
-      }
-    ]
+    }
   },
   "devDependencies": {
     "electron": "^27.0.0",
