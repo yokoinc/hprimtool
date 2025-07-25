@@ -67,7 +67,6 @@
     "dmg": {
       "title": "HPRIM Tool",
       "icon": "icons/icon.icns",
-      "background": "build/dmg-background.png",
       "window": {
         "width": 600,
         "height": 450
