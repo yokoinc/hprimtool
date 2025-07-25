@@ -6,7 +6,7 @@
   "homepage": "https://github.com/yokoinc/hprimtool",
   "author": {
     "name": "HPRIM Tool Team",
-    "email": "support@hprimtool.com"
+    "email": "cuffel.gregory@gmail.com"
   },
   "license": "MIT",
   "scripts": {
@@ -136,7 +136,7 @@
         "libasound2"
       ],
       "packageCategory": "utils",
-      "maintainer": "HPRIM Tool <support@hprimtool.com>"
+      "maintainer": "HPRIM Tool Team <cuffel.gregory@gmail.com>"
     },
     "rpm": {
       "depends": [

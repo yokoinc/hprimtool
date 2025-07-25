@@ -11,7 +11,6 @@ function checkAndMoveToApplications() {
     
     // Ignorer en mode développement (détecté par la présence d'Electron dans le chemin)
     if (process.execPath.includes('node_modules/electron')) {
-        console.log('Mode développement détecté, vérification /Applications ignorée');
         return;
     }
     
@@ -32,23 +31,14 @@ function checkAndMoveToApplications() {
     
     const targetPath = `/Applications/${appName}`;
     
-    console.log('=== DEBUG APPLICATIONS CHECK ===');
-    console.log('appPath:', appPath);
-    console.log('process.execPath:', process.execPath);
-    console.log('appName:', appName);
-    console.log('currentAppPath:', currentAppPath);
-    console.log('targetPath:', targetPath);
-    console.log('currentAppPath.startsWith("/Applications/"):', currentAppPath.startsWith('/Applications/'));
     
     // Vérifier si on est déjà dans /Applications
     if (currentAppPath.startsWith('/Applications/')) {
-        console.log('Application déjà dans /Applications');
         return;
     }
     
     // Vérifier si l'app existe déjà dans /Applications
     if (fs.existsSync(targetPath)) {
-        console.log('Application existe déjà dans /Applications');
         return;
     }
     
@@ -74,7 +64,6 @@ function checkAndMoveToApplications() {
             // Méthode 1: Utiliser mv avec sudo via osascript
             const moveScript = `do shell script "mv '${escapedCurrentPath}' '${escapedTargetDir}'" with administrator privileges`;
             
-            console.log('Script AppleScript:', moveScript);
             execSync(`osascript -e "${moveScript}"`, { timeout: 10000 });
             
             dialog.showMessageBoxSync(mainWindow, {
@@ -123,7 +112,6 @@ if (process.argv.length > 1) {
     const potentialFile = process.argv[process.argv.length - 1];
     if (potentialFile && (potentialFile.endsWith('.hpr') || potentialFile.endsWith('.hpm') || potentialFile.endsWith('.hpm1') || potentialFile.endsWith('.hpm2') || potentialFile.endsWith('.hpm3') || potentialFile.endsWith('.hprim'))) {
         fileToOpen = potentialFile;
-        console.log('Fichier détecté au lancement:', fileToOpen);
     }
 }
 
@@ -277,18 +265,15 @@ function createWindow() {
     mainWindow.webContents.once('dom-ready', () => {
         // Vérifier si on doit déplacer l'app vers /Applications (macOS uniquement)
         setTimeout(() => {
-            console.log('Appel de checkAndMoveToApplications()...');
             try {
                 checkAndMoveToApplications();
             } catch (error) {
-                console.error('Erreur dans checkAndMoveToApplications:', error);
                 // Ne pas interrompre le fonctionnement de l'app
             }
         }, 1000); // Attendre 1 seconde pour que la fenêtre soit complètement chargée
         
         // Si un fichier a été passé au lancement, l'envoyer à la fenêtre
         if (fileToOpen) {
-            console.log('Envoi du fichier à la fenêtre:', fileToOpen);
             mainWindow.webContents.send('file-to-open', fileToOpen);
             fileToOpen = null; // Reset pour éviter de le renvoyer
         }
@@ -302,7 +287,6 @@ let isDialogOpen = false;
 function openFileDialog() {
     // Protection contre les doubles appels
     if (isDialogOpen) {
-        console.log('Dialog already open, skipping...');
         return;
     }
     
@@ -324,7 +308,6 @@ function openFileDialog() {
         }
     }).catch(err => {
         isDialogOpen = false;
-        console.error('Erreur lors de l\'ouverture du fichier:', err);
     });
 }
 
@@ -377,11 +360,9 @@ ipcMain.handle('read-file', async (event, filePath) => {
             text += String.fromCharCode(buffer[i]);
         }
         
-        console.log(`Fichier lu avec succès: ${normalizedPath} (${buffer.length} bytes)`);
         return text;
         
     } catch (error) {
-        console.error('Erreur lors de la lecture du fichier:', error);
         
         // Messages d'erreur spécifiques selon le type d'erreur
         if (error.code === 'ENOENT') {
@@ -491,14 +472,12 @@ ipcMain.handle('export-excel', async (event, resultsData, patientName) => {
             const fs = require('fs');
             fs.writeFileSync(finalPath, csvContent, 'utf8');
             
-            console.log('Fichier CSV exporté vers:', finalPath);
             return { success: true, path: finalPath };
         } else {
             return { success: false, cancelled: true };
         }
 
     } catch (error) {
-        console.error('Erreur export CSV:', error);
         return { success: false, error: error.message };
     }
 });
@@ -508,7 +487,6 @@ ipcMain.handle('export-excel', async (event, resultsData, patientName) => {
 // Gestion de l'ouverture de fichiers par double-clic (macOS)
 app.on('open-file', (event, filePath) => {
     event.preventDefault();
-    console.log('Fichier ouvert via open-file:', filePath);
     
     if (mainWindow && mainWindow.webContents) {
         mainWindow.webContents.send('file-to-open', filePath);

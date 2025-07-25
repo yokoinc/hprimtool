@@ -104,7 +104,7 @@ const translations = {
             button: 'Search',
             placeholder: 'Search in results...',
             clear: 'Clear',
-            results: '{count} result(s) found out of {total}'
+            results: '{count} result(s) found of {total}'
         },
         dropzone: {
             title: 'Drop your HPRIM file here',
@@ -122,7 +122,7 @@ const translations = {
         messages: {
             loading: 'Loading file',
             no_results: 'No results found',
-            welcome: 'Use Cmd+O to open a file or drag and drop a .hpr file into this window.',
+            welcome: 'Use Ctrl+O (Windows/Linux) or Cmd+O (Mac) to open a file or drag and drop a .hpr file into this window.',
             no_file: 'No file specified',
             no_export_data: 'No results to export',
             pdf_success: 'PDF exported successfully!',
@@ -141,7 +141,7 @@ const translations = {
             born: 'Born',
             years_old: 'years old',
             sampling: 'Sampling',
-            sampling_at: 'at',
+            sampling_at: 'sampled at',
             doctor: 'Dr',
             laboratory: 'Laboratory'
         },
@@ -232,14 +232,11 @@ class I18n {
             
             // Vérifier si la langue est supportée (seulement fr et en)
             if (this.translations && this.translations[langCode]) {
-                console.log(`Langue OS détectée: ${langCode} (${systemLang})`);
                 return langCode;
             }
             
-            console.log(`Langue OS ${langCode} non supportée, fallback vers français`);
             return 'fr';
         } catch (error) {
-            console.log('Erreur détection langue OS:', error);
         }
         
         // Fallback vers français
@@ -251,7 +248,6 @@ class I18n {
         if (!this.initialized) {
             const detectedLang = await this.detectSystemLanguage();
             this.currentLang = detectedLang || 'fr'; // Forcer français si aucune détection
-            console.log(`Langue définie: ${this.currentLang}`);
             this.initialized = true;
             // Appliquer immédiatement la langue
             this.updateUI();
@@ -263,7 +259,6 @@ class I18n {
         if (this.translations[lang]) {
             this.currentLang = lang;
             this.updateUI();
-            console.log(`Langue changée vers: ${lang}`);
         }
     }
 
@@ -283,13 +278,11 @@ class I18n {
 
     // Mettre à jour l'interface utilisateur
     updateUI() {
-        console.log('updateUI() appelée avec langue:', this.currentLang);
         
         // Mettre à jour le titre de la fenêtre
         if (window.electronAPI && window.electronAPI.updateWindowTitle) {
             const windowTitle = this.t('app.window_title');
             window.electronAPI.updateWindowTitle(windowTitle);
-            console.log('Titre fenêtre mis à jour:', windowTitle);
         }
         
         // D'abord mettre à jour la zone de drag and drop (qui peut recréer du HTML)
@@ -299,7 +292,6 @@ class I18n {
         document.querySelectorAll('[data-i18n]').forEach(element => {
             const key = element.getAttribute('data-i18n');
             const translation = this.t(key);
-            console.log(`Traduction ${key}:`, translation);
             element.textContent = translation;
         });
 
@@ -317,7 +309,6 @@ class I18n {
             searchInput.placeholder = this.t('search.placeholder');
         }
         
-        console.log('updateUI() terminée');
         return 'Interface mise à jour';
     }
 

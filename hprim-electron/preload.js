@@ -1,7 +1,6 @@
 const { ipcRenderer } = require('electron');
 const path = require('path');
 
-console.log('Preload script loaded');
 
 // Avec contextIsolation: true, on utilise contextBridge pour sécuriser l'exposition
 const { contextBridge } = require('electron');
@@ -65,4 +64,3 @@ contextBridge.exposeInMainWorld('electronAPI', {
     }
 });
 
-console.log('electronAPI exposed to main world via contextBridge');
