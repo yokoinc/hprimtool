@@ -103,13 +103,13 @@ jobs:
     - name: Build macOS packages
       run: |
         cd hprim-electron
-        npm run build -- --mac --x64 --arm64
+        npm run build -- --mac zip --x64 --arm64
         
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: packages-macos
-        path: hprim-electron/dist/*.dmg
+        path: hprim-electron/dist/*.zip
         if-no-files-found: warn
         
   release:
@@ -131,7 +131,7 @@ jobs:
           packages-linux-*/*.rpm  
           packages-linux-*/*.AppImage
           packages-windows/*.exe
-          packages-macos/*.dmg
+          packages-macos/*.zip
         draft: false
         prerelease: false
         generate_release_notes: true
