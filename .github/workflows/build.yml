@@ -50,6 +50,7 @@ jobs:
           hprim-electron/dist/*.deb
           hprim-electron/dist/*.rpm
           hprim-electron/dist/*.AppImage
+        if-no-files-found: warn
 
   build-windows:
     runs-on: windows-latest
@@ -79,6 +80,7 @@ jobs:
       with:
         name: packages-windows
         path: hprim-electron/dist/*.exe
+        if-no-files-found: warn
 
   build-macos:
     runs-on: macos-latest
@@ -108,6 +110,7 @@ jobs:
       with:
         name: packages-macos
         path: hprim-electron/dist/*.dmg
+        if-no-files-found: warn
         
   release:
     needs: [build-linux, build-windows, build-macos]
