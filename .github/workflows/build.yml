@@ -79,9 +79,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: packages-windows
-        path: |
-          hprim-electron/dist/*.exe
-          hprim-electron/dist/*.portable
+        path: hprim-electron/dist/*.exe
         if-no-files-found: warn
 
   build-macos:
@@ -131,7 +129,6 @@ jobs:
           packages-linux-*/*.rpm  
           packages-linux-*/*.AppImage
           packages-windows/*.exe
-          packages-windows/*.portable
           packages-macos/*.dmg
         draft: false
         prerelease: false
