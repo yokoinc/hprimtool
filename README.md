@@ -2,7 +2,7 @@
 
 **Analyseur professionnel de fichiers de résultats biologiques au format HPRIM**
 
-[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](https://github.com/yokoinc/hprimtool/releases)
+[![Version](https://img.shields.io/badge/version-1.0.7-blue.svg)](https://github.com/yokoinc/hprimtool/releases)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey.svg)]()
 [![License](https://img.shields.io/badge/license-Free-green.svg)]()
 
@@ -63,17 +63,17 @@ L'application transforme les données brutes HPRIM en rapports médicaux facilem
 Téléchargez directement la version correspondant à votre système :
 
 #### 🍎 **macOS**
-- Télécharger : `HPRIM Tool-1.0.1-arm64.dmg`
+- Télécharger : `HPRIM Tool-1.0.7-arm64.dmg`
 - Double-cliquez sur le fichier DMG et glissez l'application dans Applications
 
 #### 🪟 **Windows**
-- **Installateur** : `HPRIM Tool Setup 1.0.1.exe` (recommandé)
-- **Portable** : `HPRIM Tool 1.0.1.exe` (sans installation)
+- **Installateur** : `HPRIM Tool Setup 1.0.7.exe` (recommandé)
+- **Portable** : `HPRIM Tool 1.0.7.exe` (sans installation)
 
 #### 🐧 **Linux/Ubuntu**
-- Télécharger : `HPRIM Tool-1.0.1-arm64.AppImage`
-- Rendre exécutable : `chmod +x "HPRIM Tool-1.0.1-arm64.AppImage"`
-- Lancer : `./HPRIM Tool-1.0.1-arm64.AppImage`
+- Télécharger : `HPRIM Tool-1.0.7-arm64.AppImage`
+- Rendre exécutable : `chmod +x "HPRIM Tool-1.0.7-arm64.AppImage"`
+- Lancer : `./HPRIM Tool-1.0.7-arm64.AppImage`
 
 ---
 
@@ -85,7 +85,7 @@ Téléchargez directement la version correspondant à votre système :
 
 #### Installation des dépendances
 ```bash
-git clone https://github.com/votre-username/hprimtool.git
+git clone https://github.com/yokoinc/hprimtool.git
 cd hprimtool/hprim-electron
 npm install
 ```
@@ -144,12 +144,13 @@ hprimtool/
 ├── hprim-electron/              # 🚀 Application Electron principale
 │   ├── main.js                 # ⚙️ Processus principal Electron
 │   ├── renderer.js             # 🧠 Logique de parsing HPRIM et rendu
-│   ├── index.html              # 🎨 Interface utilisateur
-│   ├── styles.css              # 💄 Styles de l'application
+│   ├── preload.js              # 🔒 Pont sécurisé contextBridge
+│   ├── i18n.js                 # 🌐 Traductions FR/EN
+│   ├── index.html              # 🎨 Interface utilisateur (styles inline)
 │   ├── package.json            # 📦 Configuration et dépendances
 │   ├── icons/                  # 🎯 Icônes multi-plateforme
-│   ├── dist/                   # 📱 Applications compilées
-│   └── samples/                # 📄 Fichiers d'exemple HPRIM
+│   └── test/fixtures/          # 📄 Fichiers HPRIM d'exemple
+├── CHANGELOG.md                # 📝 Journal des versions
 └── README.md                   # 📖 Documentation
 ```
 
