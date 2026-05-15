@@ -2,6 +2,40 @@ const { app, BrowserWindow, Menu, dialog, ipcMain, globalShortcut, shell } = req
 const path = require('path');
 const fs = require('fs');
 
+/**
+ * Décode un buffer de fichier HPRIM en chaîne JS en détectant l'encodage.
+ *
+ * Stratégie (mode conservateur) :
+ *   1. BOM UTF-8 / UTF-16 explicite → décodage selon le BOM.
+ *   2. Bytes valides en UTF-8 strict → c'est de l'UTF-8 (corrige les labos
+ *      qui exportent en UTF-8, auparavant mojibakés par l'ancien mapping
+ *      Latin-1 octet-à-octet).
+ *   3. Sinon → Windows-1252 (sur-ensemble d'ISO-8859-1). IMPORTANT :
+ *      Windows-1252 est STRICTEMENT identique à Latin-1 sur la plage
+ *      0xA0–0xFF. Les labos au charset propriétaire (octet 0xC8 = « é »,
+ *      etc.) produisent donc exactement les mêmes caractères (È, Ë…)
+ *      qu'avant, et la couche de remap legacy `ENCODING_MAP` de
+ *      renderer.js continue de les corriger À L'IDENTIQUE. Aucune
+ *      régression tant qu'on n'a pas les échantillons réels pour
+ *      caractériser proprement ces charsets.
+ */
+function decodeFileBuffer(buffer) {
+    if (buffer.length >= 3 && buffer[0] === 0xEF && buffer[1] === 0xBB && buffer[2] === 0xBF) {
+        return new TextDecoder('utf-8').decode(buffer.subarray(3));
+    }
+    if (buffer.length >= 2 && buffer[0] === 0xFF && buffer[1] === 0xFE) {
+        return new TextDecoder('utf-16le').decode(buffer.subarray(2));
+    }
+    if (buffer.length >= 2 && buffer[0] === 0xFE && buffer[1] === 0xFF) {
+        return new TextDecoder('utf-16be').decode(buffer.subarray(2));
+    }
+    try {
+        return new TextDecoder('utf-8', { fatal: true }).decode(buffer);
+    } catch {
+        return new TextDecoder('windows-1252').decode(buffer);
+    }
+}
+
 let mainWindow;
 let fileToOpen = null;
 
@@ -346,21 +380,15 @@ ipcMain.handle('read-file', async (event, filePath) => {
             throw new Error(`Fichier trop volumineux (${Math.round(stats.size / 1024 / 1024)}MB > 10MB)`);
         }
         
-        // Lire le fichier en binaire puis convertir en ISO-8859-1
+        // Lire le fichier en binaire puis décoder avec détection d'encodage
         const buffer = fs.readFileSync(normalizedPath);
-        
+
         // Vérifier que le fichier n'est pas vide
         if (buffer.length === 0) {
             throw new Error('Le fichier est vide');
         }
-        
-        // Convertir chaque byte en caractère ISO-8859-1
-        let text = '';
-        for (let i = 0; i < buffer.length; i++) {
-            text += String.fromCharCode(buffer[i]);
-        }
-        
-        return text;
+
+        return decodeFileBuffer(buffer);
         
     } catch (error) {
         
