@@ -120,7 +120,7 @@ npm run build
 ## 📱 Utilisation
 
 ### 🔄 **Méthodes d'ouverture**
-1. **Glisser-déposer** : Glissez un fichier HPRIM (.hpr, .hpm, .hprim) directement dans la fenêtre
+1. **Glisser-déposer** : Glissez un fichier HPRIM (.hpr, .hpm, .hpm1, .hpm2, .hpm3, .hprim) directement dans la fenêtre
 2. **Bouton Ouvrir** : Cliquez sur la zone ou utilisez Cmd+O (Mac) / Ctrl+O (Windows)
 3. **Double-clic** : Associez les fichiers HPRIM à l'application pour les ouvrir directement
 
@@ -160,8 +160,10 @@ Le format **HPRIM** (Health Protocol for data Interchange) est un standard fran�
 
 ### Formats supportés :
 - **.hpr** : Format HPRIM standard
-- **.hpm** : Variant HPRIM médical  
+- **.hpm** : Variant HPRIM médical
+- **.hpm1**, **.hpm2**, **.hpm3** : Variants HPRIM numérotés (résultats multi-fichiers)
 - **.hprim** : Extension générique
+- **.txt** : Fichiers texte (ouverture manuelle uniquement, non associés au niveau OS)
 
 ### Types de parsing :
 - **Format structuré** : Lignes RES| avec données séparées

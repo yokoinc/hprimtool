@@ -51,14 +51,32 @@
           "role": "Editor"
         },
         {
-          "ext": "hpm", 
+          "ext": "hpm",
+          "name": "HPRIM Medical File",
+          "description": "Medical test results file",
+          "role": "Editor"
+        },
+        {
+          "ext": "hpm1",
+          "name": "HPRIM Medical File",
+          "description": "Medical test results file",
+          "role": "Editor"
+        },
+        {
+          "ext": "hpm2",
+          "name": "HPRIM Medical File",
+          "description": "Medical test results file",
+          "role": "Editor"
+        },
+        {
+          "ext": "hpm3",
           "name": "HPRIM Medical File",
           "description": "Medical test results file",
           "role": "Editor"
         },
         {
           "ext": "hprim",
-          "name": "HPRIM Medical File", 
+          "name": "HPRIM Medical File",
           "description": "Medical test results file",
           "role": "Editor"
         }
@@ -109,6 +127,21 @@
           "description": "Medical test results file"
         },
         {
+          "ext": "hpm1",
+          "name": "HPRIM File",
+          "description": "Medical test results file"
+        },
+        {
+          "ext": "hpm2",
+          "name": "HPRIM File",
+          "description": "Medical test results file"
+        },
+        {
+          "ext": "hpm3",
+          "name": "HPRIM File",
+          "description": "Medical test results file"
+        },
+        {
           "ext": "hprim",
           "name": "HPRIM File",
           "description": "Medical test results file"
@@ -151,7 +184,31 @@
           "role": "Editor"
         },
         {
-          "ext": "hpm", 
+          "ext": "hpm",
+          "name": "HPRIM Medical File",
+          "description": "Medical test results file",
+          "mimeType": "application/x-hprim",
+          "icon": "icons/file_icon.png",
+          "role": "Editor"
+        },
+        {
+          "ext": "hpm1",
+          "name": "HPRIM Medical File",
+          "description": "Medical test results file",
+          "mimeType": "application/x-hprim",
+          "icon": "icons/file_icon.png",
+          "role": "Editor"
+        },
+        {
+          "ext": "hpm2",
+          "name": "HPRIM Medical File",
+          "description": "Medical test results file",
+          "mimeType": "application/x-hprim",
+          "icon": "icons/file_icon.png",
+          "role": "Editor"
+        },
+        {
+          "ext": "hpm3",
           "name": "HPRIM Medical File",
           "description": "Medical test results file",
           "mimeType": "application/x-hprim",
@@ -160,7 +217,7 @@
         },
         {
           "ext": "hprim",
-          "name": "HPRIM Medical File", 
+          "name": "HPRIM Medical File",
           "description": "Medical test results file",
           "mimeType": "application/x-hprim",
           "icon": "icons/file_icon.png",
