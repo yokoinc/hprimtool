@@ -193,20 +193,19 @@ function toggleSearch() {
     }
     
     // Créer la barre de recherche
+    const placeholder = window.i18n ? window.i18n.t('search.placeholder') : 'Rechercher dans les résultats...';
+    const clearText = window.i18n ? window.i18n.t('search.clear') : 'Effacer';
     const searchHTML = `
-        <div id="searchContainer" style="background: white; padding: 10px; margin: 10px 0; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-left: 3px solid #2c5aa0;">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <input type="text" id="searchInput" placeholder="${window.i18n ? window.i18n.t('search.placeholder') : 'Rechercher dans les résultats...'}" 
-                       style="flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem;" 
+        <div id="searchContainer" class="search-bar">
+            <div class="search-row">
+                <input type="text" id="searchInput" class="search-input" placeholder="${placeholder}"
                        oninput="performSearch(this.value)" onkeyup="handleSearchKeyup(event)">
-                <button onclick="clearSearch()" style="background: linear-gradient(145deg, #f8f9fa, #e9ecef); border: 1px solid #ddd; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2); transition: all 0.2s ease;">
-                    ${window.i18n ? window.i18n.t('search.clear') : 'Effacer'}
-                </button>
-                <button onclick="toggleSearch()" style="background: linear-gradient(145deg, #dc3545, #c82333); color: white; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; box-shadow: 0 2px 4px rgba(220,53,69,0.3), inset 0 1px 0 rgba(255,255,255,0.2); transition: all 0.2s ease; text-shadow: 0 1px 1px rgba(0,0,0,0.2);">
-                    ✕
+                <button class="btn" onclick="clearSearch()">${clearText}</button>
+                <button class="btn btn-danger" onclick="toggleSearch()" aria-label="${clearText}">
+                    ${svgIcon('close')}
                 </button>
             </div>
-            <div id="searchStats" style="font-size: 0.8rem; color: #666; margin-top: 5px; display: none;"></div>
+            <div id="searchStats" class="search-stats" style="display: none;"></div>
         </div>
     `;
     
@@ -397,12 +396,16 @@ function parseAndDisplay(content) {
     Logger.debug('Parsed results:', parsed);
     
     let html = '';
-    
+
     // Ajouter l'en-tête patient si disponible
     if (patientInfo.patientName || patientInfo.samplingDate) {
         html += generatePatientHeader(patientInfo);
     }
-    
+
+    // Bandeau de synthèse (valeurs élevées / basses / normales)
+    html += generateSummaryBar(parsed);
+
+    let rowsHtml = '';
     for (const result of parsed) {
         
         // Détecter si c'est un commentaire/conclusion/résultats textuels (texte libre)
@@ -440,78 +443,73 @@ function parseAndDisplay(content) {
                 }
             }
             
-            html += `
-                <div class="result-item" style="border-left-color: #ddd; margin: 15px 0;">
-                    <div style="grid-column: 1 / -1; padding: 12px 0; text-align: left;">
-                        <div style="font-weight: 500; color: inherit; margin-bottom: 8px; font-size: 0.95rem;">
-                            ${result.name}
-                        </div>
-                        <div style="line-height: 1.5; color: inherit; font-size: 0.9rem; text-align: left;">
-                            ${textContent}
-                        </div>
-                    </div>
+            rowsHtml += `
+                <div class="result-item text-result">
+                    <div class="text-result-title">${svgIcon('message')}<span>${result.name}</span></div>
+                    <div class="text-result-body">${textContent}</div>
                 </div>
             `;
         } else {
             // Affichage normal pour les résultats avec valeurs numériques
-            
-            // Couleurs uniquement pour les statuts H/L explicites du fichier
-            let abnormalClass = '';
-            if (result.isAbnormal) {
-                abnormalClass = 'style="border-left-color: #ff5722;"'; // Rouge pour H/L explicites
-            }
-            
-            // Construire l'affichage avec colonnes alignées
+
+            // État (statut explicite H/L OU comparaison numérique aux normes)
+            const status = getResultState(result);
+            const stateClass = (status === 'high' || status === 'low') ? ` is-${status}` : '';
+            const badge = status === 'high'
+                ? '<span class="value-badge badge-high">H</span>'
+                : (status === 'low' ? '<span class="value-badge badge-low">L</span>' : '');
+
             const formattedValue1 = formatValue(result.value1, result.operator1 || null, result.isHighlighted1 || false);
             const formattedNormes1 = formatNorms(result.min1, result.max1, result);
-            
+
             let valuesColumn = `<div class="value-line">
                 <span class="result-number">${formattedValue1}</span>
-                <span class="result-unit">${result.unit1}</span>
+                <span class="result-unit">${result.unit1}</span>${badge}
             </div>`;
-            
-            let normsColumn = `<div class="result-norms">${formattedNormes1}</div>`;
-            
+
             if (result.hasMultipleUnits) {
                 const formattedValue2 = formatValue(result.value2, result.operator2 || null, result.isHighlighted2 || false);
-                const formattedNormes2 = formatNorms(result.min2, result.max2, result);
-                
                 valuesColumn += `<div class="value-line">
                     <span class="result-number">${formattedValue2}</span>
                     <span class="result-unit">${result.unit2}</span>
                 </div>`;
-                
-                normsColumn += `<div class="result-norms">${formattedNormes2}</div>`;
             }
-            
+
+            // Colonne centrale : barre de position si intervalle numérique, sinon normes en texte
+            const midColumn = buildRangeColumn(result.value1, result.min1, result.max1, result.unit1, status, formattedNormes1);
+
             // Commentaires associés
             let commentsHtml = '';
             if (result.comments && result.comments.length > 0) {
-                // Regrouper tous les commentaires en un seul bloc pour éviter les interlignes
-                const allComments = result.comments
-                    .filter(comment => comment.trim())
-                    .join(' ');
-                
+                const allComments = result.comments.filter(comment => comment.trim()).join(' ');
                 if (allComments) {
-                    commentsHtml += `<div style="grid-column: 1 / -1; margin-top: 8px; padding: 8px 12px; background: #f8f9fa; border-radius: 3px; font-size: 0.75em; color: #666; line-height: 1.3; font-family: Arial, Helvetica, sans-serif; font-style: italic; font-weight: 300; text-align: left;">
-                        ${allComments}
-                    </div>`;
+                    commentsHtml += `<div class="result-comment">${allComments}</div>`;
                 }
             }
-            
-            html += `
-                <div class="result-item" ${abnormalClass}>
+
+            const loVal = parseFloat(result.min1);
+            const hiVal = parseFloat(result.max1);
+            const dataAttrs = `data-status="${result.status || ''}"`
+                + (isFinite(loVal) ? ` data-min="${loVal}"` : '')
+                + (isFinite(hiVal) ? ` data-max="${hiVal}"` : '');
+
+            rowsHtml += `
+                <div class="result-item${stateClass}" ${dataAttrs}>
                     <div class="result-name">${result.name}</div>
+                    <div class="result-mid">${midColumn}</div>
                     <div class="result-value-container">${valuesColumn}</div>
-                    <div>${normsColumn}</div>
                     ${commentsHtml}
                 </div>
             `;
         }
     }
     
+    if (rowsHtml) {
+        html += `<div class="results-card">${rowsHtml}</div>`;
+    }
+
     const noResultsMsg = window.i18n ? window.i18n.t('messages.no_results') : 'Aucun résultat trouvé';
-    results.innerHTML = html || `<p>${noResultsMsg}</p>`;
+    results.innerHTML = html || `<p style="text-align:center;color:var(--text-3);padding:24px 0;">${noResultsMsg}</p>`;
     
     // Activer les boutons imprimer/export s'il y a des résultats
     const printBtn = document.getElementById('printBtn');
@@ -543,9 +541,9 @@ function parseAndDisplay(content) {
     if (currentFileContent) {
         const viewRawText = window.i18n ? window.i18n.t('buttons.view_raw') : 'Voir fichier brut';
         const rawButton = `
-            <div style="text-align: center; margin-top: 20px; padding: 15px; border-top: 1px solid #ddd;">
-                <button class="btn" onclick="showRawFile()" style="background: #6c757d; font-size: 0.9rem;">
-                    📄 ${viewRawText}
+            <div class="raw-footer">
+                <button class="btn" onclick="showRawFile()">
+                    ${svgIcon('file')}<span>${viewRawText}</span>
                 </button>
             </div>
         `;
@@ -1002,7 +1000,9 @@ function parseStructuredPipesHPRIM(content) {
             isHighlighted1: result.isHighlighted1,
             isHighlighted2: result.isHighlighted2,
             operator1: result.operator1,
-            operator2: result.operator2
+            operator2: result.operator2,
+            status: result.status,
+            code: result.code
         });
     }
     
@@ -1740,75 +1740,172 @@ function validateDates(birthDate, samplingDate, fileDate) {
     return confidence;
 }
 
+// ============================================================================
+// HELPERS UI — icônes, barre de position, bandeau de synthèse
+// ============================================================================
+
+const ICONS = {
+    message: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+    stethoscope: '<path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/>',
+    flask: '<path d="M9 3h6"/><path d="M10 3v6.5L4.5 18A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-3L14 9.5V3"/><path d="M7.5 14h9"/>',
+    calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/>',
+    alert: '<path d="m10.3 3.6-8 14A2 2 0 0 0 4 20.5h16a2 2 0 0 0 1.7-2.9l-8-14a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+    file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>',
+    close: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'
+};
+
+function svgIcon(name) {
+    const path = ICONS[name];
+    if (!path) return '';
+    return `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
+}
+
+// Construit la colonne centrale : barre de position si l'intervalle est numérique,
+// sinon repli sur les normes affichées en texte.
+function buildRangeColumn(value1, min1, max1, unit1, status, normsText) {
+    const norms = `<div class="result-norms">${normsText || ''}</div>`;
+    const v = parseFloat(String(value1).replace(',', '.'));
+    const lo = parseFloat(min1);
+    const hi = parseFloat(max1);
+
+    // Barre uniquement si l'intervalle est numérique et borné des deux côtés.
+    if (!(isFinite(v) && isFinite(lo) && isFinite(hi) && hi > lo)) return norms;
+
+    // La bande verte (normes) occupe 18%..82% ; on place le marqueur en conséquence.
+    const frac = (v - lo) / (hi - lo);
+    let left = 18 + frac * 64;
+    if (left < 3) left = 3;
+    if (left > 97) left = 97;
+    const markerClass = status === 'high' ? ' is-high' : (status === 'low' ? ' is-low' : '');
+    const unitLabel = unit1 ? ` ${unit1}` : '';
+
+    return `
+        <div class="result-range">
+            <div class="range-track">
+                <div class="range-band"></div>
+                <div class="range-marker${markerClass}" style="left: ${left}%"></div>
+            </div>
+            <div class="range-scale"><span>${lo}</span><span>${hi}${unitLabel}</span></div>
+        </div>
+        ${norms}
+    `;
+}
+
+// État d'un résultat : 'high' / 'low' (anormal, avec direction) / 'normal' / '' (non mesurable).
+// Couvre le statut explicite H/L du fichier ET la comparaison numérique (format tags/texte).
+function getResultState(result) {
+    if (result.status === 'H') return 'high';
+    if (result.status === 'L') return 'low';
+
+    const v = parseFloat(String(result.value1).replace(',', '.'));
+    const lo = parseFloat(result.min1);
+    const hi = parseFloat(result.max1);
+
+    if (result.isAbnormal) {
+        if (isFinite(v) && isFinite(hi) && v > hi) return 'high';
+        if (isFinite(v) && isFinite(lo) && v < lo) return 'low';
+        return 'high';
+    }
+
+    if (isFinite(v) && (isFinite(lo) || isFinite(hi))) return 'normal';
+    return '';
+}
+
+// Compte les valeurs élevées / basses / normales et construit le bandeau de synthèse.
+function generateSummaryBar(parsed) {
+    let high = 0, low = 0, normal = 0;
+    for (const r of parsed) {
+        const state = getResultState(r);
+        if (state === 'high') high++;
+        else if (state === 'low') low++;
+        else if (state === 'normal') normal++;
+    }
+    if (high + low + normal === 0) return '';
+
+    const lang = window.i18n ? window.i18n.getCurrentLanguage() : 'fr';
+    const label = (n, kind, fallback) => {
+        let base = window.i18n ? window.i18n.t('summary.' + kind, {}, fallback) : fallback;
+        if (lang === 'fr' && n > 1) base += 's';
+        return base;
+    };
+
+    const chip = (kind, n, text) =>
+        `<div class="summary-chip ${kind}"><span class="summary-num">${n}</span><span class="summary-label">${text}</span></div>`;
+
+    let chips = '';
+    if (high) chips += chip('high', high, label(high, 'high', 'élevée'));
+    if (low) chips += chip('low', low, label(low, 'low', 'basse'));
+    if (normal) chips += chip('ok', normal, label(normal, 'normal', 'normale'));
+    return `<div class="summary-bar">${chips}</div>`;
+}
+
+function getPatientInitials(name) {
+    if (!name) return '?';
+    const words = name.trim().split(/\s+/).filter(Boolean);
+    if (words.length === 0) return '?';
+    if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
+    return (words[0][0] + words[1][0]).toUpperCase();
+}
+
 function generatePatientHeader(patientInfo) {
-    let headerHtml = `<div style="background: #e3f2fd; padding: 15px; margin: 15px 0; border-radius: 8px; border-left: 4px solid #1976d2;">`;
-    
-    // Première ligne : Nom + âge + date de naissance
-    let firstLine = '';
-    if (patientInfo.patientName) {
-        firstLine += `<span style="color: #1976d2; font-size: 1.1rem;">${patientInfo.patientName}</span>`;
-    }
-    
+    const name = patientInfo.patientName || '';
+    const initials = getPatientInitials(name);
+
+    // Sous-titre : âge + date de naissance
+    const subParts = [];
     if (patientInfo.age !== null && patientInfo.age !== undefined) {
-        if (firstLine) firstLine += ' • ';
         const ageText = window.i18n ? window.i18n.t('patient.years_old') : 'ans';
-        firstLine += `<span style="font-size: 1.1rem;">${patientInfo.age} ${ageText}</span>`;
+        subParts.push(`${patientInfo.age} ${ageText}`);
     }
-    
     if (patientInfo.birthDate) {
-        const birthDateStr = formatDate(patientInfo.birthDate);
-        if (firstLine) firstLine += ' • ';
         const bornText = window.i18n ? window.i18n.t('patient.born') : 'Né(e) le';
-        firstLine += `<span style="font-size: 1.1rem;">${bornText} ${birthDateStr}</span>`;
+        subParts.push(`${bornText} ${formatDate(patientInfo.birthDate)}`);
     }
-    
-    if (firstLine) {
-        headerHtml += `<div style="margin-bottom: 8px;">${firstLine}</div>`;
-    }
-    
-    // Ligne prescripteur (sous le nom du patient)
+    const subLine = subParts.join(' · ');
+
+    // Ligne de méta : prescripteur, laboratoire, prélèvement
+    const metaItems = [];
     if (patientInfo.doctorName) {
-        // Ajouter "Dr" seulement si pas déjà présent
-        const prescripteurDisplay = patientInfo.doctorName.toLowerCase().startsWith('dr') 
-            ? patientInfo.doctorName 
+        const prescripteurDisplay = patientInfo.doctorName.toLowerCase().startsWith('dr')
+            ? patientInfo.doctorName
             : `Dr ${patientInfo.doctorName}`;
-        const prescriptorText = window.i18n ? window.i18n.t('patient.doctor') : 'Prescripteur';
-        headerHtml += `<div style="color: #666; font-size: 0.9rem; margin-bottom: 8px;">${prescriptorText} : ${prescripteurDisplay}</div>`;
+        metaItems.push(`<span>${svgIcon('stethoscope')}${prescripteurDisplay}</span>`);
     }
-    
-    // Ligne prélèvement (date + heure)
-    let samplingLine = '';
+    if (patientInfo.laboratoryName) {
+        const labDisplay = patientInfo.laboratoryName.toLowerCase().includes('laboratoire')
+            ? patientInfo.laboratoryName
+            : `${window.i18n ? window.i18n.t('patient.laboratory') : 'Laboratoire'} : ${patientInfo.laboratoryName}`;
+        metaItems.push(`<span>${svgIcon('flask')}${labDisplay}</span>`);
+    }
     if (patientInfo.samplingDate) {
-        const dateStr = formatDate(patientInfo.samplingDate);
         const samplingText = window.i18n ? window.i18n.t('patient.sampling') : 'Prélèvement';
-        samplingLine = `${samplingText} : ${dateStr}`;
-        
-        // Ajouter l'heure si disponible
+        let samplingLine = `${samplingText} ${formatDate(patientInfo.samplingDate)}`;
         if (patientInfo.samplingTime) {
             const atText = window.i18n ? window.i18n.t('patient.sampling_at') : 'à';
             samplingLine += ` ${atText} ${patientInfo.samplingTime}`;
         }
+        metaItems.push(`<span>${svgIcon('calendar')}${samplingLine}</span>`);
     }
-    
-    if (samplingLine) {
-        headerHtml += `<div style="color: #666; font-size: 0.9rem; margin-bottom: 8px;">${samplingLine}</div>`;
-    }
-    
-    // Troisième ligne : Laboratoire (si disponible)
-    if (patientInfo.laboratoryName) {
-        const labDisplay = patientInfo.laboratoryName.toLowerCase().includes('laboratoire') 
-            ? patientInfo.laboratoryName 
-            : `${window.i18n ? window.i18n.t('patient.laboratory') : 'Laboratoire'} : ${patientInfo.laboratoryName}`;
-        headerHtml += `<div style="color: #666; font-size: 0.9rem; margin-bottom: 8px;">${labDisplay}</div>`;
-    }
-    
+
+    let warning = '';
     if (patientInfo.confidence < 0.8) {
         const warningText = window.i18n ? window.i18n.t('messages.low_confidence') : 'Informations extraites avec confiance réduite';
-        headerHtml += `<div style="color: #ff9800; font-size: 0.8rem; margin-top: 5px;">⚠️ ${warningText}</div>`;
+        warning = `<div class="patient-warning">${svgIcon('alert')}${warningText}</div>`;
     }
-    
-    headerHtml += `</div>`;
-    return headerHtml;
+
+    return `
+        <div class="patient-card">
+            <div class="patient-avatar" aria-hidden="true">${initials}</div>
+            <div class="patient-info">
+                <div class="patient-identity">
+                    ${name ? `<span class="patient-name">${name}</span>` : ''}
+                    ${subLine ? `<span class="patient-sub">${subLine}</span>` : ''}
+                </div>
+                ${metaItems.length ? `<div class="patient-meta">${metaItems.join('')}</div>` : ''}
+                ${warning}
+            </div>
+        </div>
+    `;
 }
 
 function formatDate(date) {
@@ -1943,30 +2040,34 @@ function extractResultsData() {
     const resultItems = document.querySelectorAll('.result-item');
     
     resultItems.forEach(item => {
+        // Ignorer les blocs de texte libre (interprétation, conclusion…)
+        if (item.classList.contains('text-result')) return;
+
         const name = item.querySelector('.result-name')?.textContent?.trim() || '';
         const valueElement = item.querySelector('.result-number');
         const value1 = valueElement?.textContent?.trim() || '';
         const unit1 = item.querySelector('.result-unit')?.textContent?.trim() || '';
-        const normsElement = item.querySelector('.result-norms');
-        let min1 = null, max1 = null;
-        
-        if (normsElement) {
-            const normsText = normsElement.textContent.trim();
-            const match = normsText.match(/\(([^)]+)\)/);
-            if (match) {
-                const normsContent = match[1];
-                const rangeMatch = normsContent.match(/([\d.,]+)\s*-\s*([\d.,]+)/);
-                if (rangeMatch) {
-                    min1 = parseFloat(rangeMatch[1].replace(',', '.'));
-                    max1 = parseFloat(rangeMatch[2].replace(',', '.'));
+
+        // Normes lues depuis les data-* (fiable), repli sur le texte des normes
+        let min1 = item.dataset.min !== undefined ? parseFloat(item.dataset.min) : null;
+        let max1 = item.dataset.max !== undefined ? parseFloat(item.dataset.max) : null;
+        if (min1 === null && max1 === null) {
+            const normsElement = item.querySelector('.result-norms');
+            if (normsElement) {
+                const match = normsElement.textContent.trim().match(/\(([^)]+)\)/);
+                if (match) {
+                    const rangeMatch = match[1].match(/([\d.,]+)\s*-\s*([\d.,]+)/);
+                    if (rangeMatch) {
+                        min1 = parseFloat(rangeMatch[1].replace(',', '.'));
+                        max1 = parseFloat(rangeMatch[2].replace(',', '.'));
+                    }
                 }
             }
         }
-        
-        // Détecter si anormal (bordure rouge ou gras)
-        const isAbnormal = item.style.borderLeftColor === 'rgb(255, 87, 34)' || 
-                          valueElement?.innerHTML?.includes('font-weight: bold');
-        
+
+        // Anormal : statut explicite H/L (classes is-high / is-low)
+        const isAbnormal = item.classList.contains('is-high') || item.classList.contains('is-low');
+
         if (name) {
             results.push({
                 name,
