@@ -1,6 +1,7 @@
 const { app, BrowserWindow, Menu, dialog, ipcMain, globalShortcut, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const { decodeBuffer } = require('./parser.js');
 
 let mainWindow;
 let fileToOpen = null;
@@ -346,21 +347,16 @@ ipcMain.handle('read-file', async (event, filePath) => {
             throw new Error(`Fichier trop volumineux (${Math.round(stats.size / 1024 / 1024)}MB > 10MB)`);
         }
         
-        // Lire le fichier en binaire puis convertir en ISO-8859-1
+        // Lire le fichier en binaire
         const buffer = fs.readFileSync(normalizedPath);
-        
+
         // Vérifier que le fichier n'est pas vide
         if (buffer.length === 0) {
             throw new Error('Le fichier est vide');
         }
-        
-        // Convertir chaque byte en caractère ISO-8859-1
-        let text = '';
-        for (let i = 0; i < buffer.length; i++) {
-            text += String.fromCharCode(buffer[i]);
-        }
-        
-        return text;
+
+        // Décodage avec détection d'encodage (UTF-8 strict, repli windows-1252)
+        return decodeBuffer(buffer);
         
     } catch (error) {
         

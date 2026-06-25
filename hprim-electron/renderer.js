@@ -376,23 +376,23 @@ function parseAndDisplay(content) {
                             (result.value1 && result.value1.length > 50 && !result.value1.match(/^\d/)); // Valeur1 est un long texte (pas numérique)
         
         if (isTextResult) {
-            // Affichage spécial pour les commentaires/conclusions sur toute la largeur
-            let textContent = result.unit1 || result.value1 || '';
-            
+            // Affichage spécial pour les commentaires/conclusions sur toute la largeur.
+            // On échappe chaque fragment de données du fichier, puis on assemble avec
+            // notre propre balisage <br> (anti-XSS sans casser la mise en forme).
+            let textContent = escapeHtml(result.unit1 || result.value1 || '');
+
             // Pour "Mise en garde", le contenu est dans value1, pas unit1
             if (result.name.toLowerCase().includes('mise en garde')) {
-                textContent = result.value1 || '';
+                textContent = escapeHtml(result.value1 || '');
                 // Forcer le titre en majuscules sans le contenu
                 result.name = 'MISE EN GARDE :';
             }
-            
-            // Ne pas transformer automatiquement les virgules en puces
-            // Le texte sera affiché tel quel, sauf si le format source contient déjà des indicateurs de liste
-            
+
             // Inclure aussi les commentaires associés s'il y en a
             if (result.comments && result.comments.length > 0) {
                 const additionalComments = result.comments
                     .filter(comment => comment.trim())
+                    .map(escapeHtml)
                     .join('<br>• ');
                 if (additionalComments) {
                     textContent += '<br>• ' + additionalComments;
@@ -401,7 +401,7 @@ function parseAndDisplay(content) {
             
             rowsHtml += `
                 <div class="result-item text-result">
-                    <div class="text-result-title">${svgIcon('message')}<span>${result.name}</span></div>
+                    <div class="text-result-title">${svgIcon('message')}<span>${escapeHtml(result.name)}</span></div>
                     <div class="text-result-body">${textContent}</div>
                 </div>
             `;
@@ -420,14 +420,14 @@ function parseAndDisplay(content) {
 
             let valuesColumn = `<div class="value-line">
                 <span class="result-number">${formattedValue1}</span>
-                <span class="result-unit">${result.unit1}</span>${badge}
+                <span class="result-unit">${escapeHtml(result.unit1)}</span>${badge}
             </div>`;
 
             if (result.hasMultipleUnits) {
                 const formattedValue2 = formatValue(result.value2, result.operator2 || null, result.isHighlighted2 || false);
                 valuesColumn += `<div class="value-line">
                     <span class="result-number">${formattedValue2}</span>
-                    <span class="result-unit">${result.unit2}</span>
+                    <span class="result-unit">${escapeHtml(result.unit2)}</span>
                 </div>`;
             }
 
@@ -439,19 +439,19 @@ function parseAndDisplay(content) {
             if (result.comments && result.comments.length > 0) {
                 const allComments = result.comments.filter(comment => comment.trim()).join(' ');
                 if (allComments) {
-                    commentsHtml += `<div class="result-comment">${allComments}</div>`;
+                    commentsHtml += `<div class="result-comment">${escapeHtml(allComments)}</div>`;
                 }
             }
 
             const loVal = parseFloat(result.min1);
             const hiVal = parseFloat(result.max1);
-            const dataAttrs = `data-status="${result.status || ''}"`
+            const dataAttrs = `data-status="${escapeHtml(result.status || '')}"`
                 + (isFinite(loVal) ? ` data-min="${loVal}"` : '')
                 + (isFinite(hiVal) ? ` data-max="${hiVal}"` : '');
 
             rowsHtml += `
                 <div class="result-item${stateClass}" ${dataAttrs}>
-                    <div class="result-name">${result.name}</div>
+                    <div class="result-name">${escapeHtml(result.name)}</div>
                     <div class="result-mid">${midColumn}</div>
                     <div class="result-value-container">${valuesColumn}</div>
                     ${commentsHtml}
@@ -546,7 +546,7 @@ function buildRangeColumn(value1, min1, max1, unit1, status, normsText) {
     if (left < 3) left = 3;
     if (left > 97) left = 97;
     const markerClass = status === 'high' ? ' is-high' : (status === 'low' ? ' is-low' : '');
-    const unitLabel = unit1 ? ` ${unit1}` : '';
+    const unitLabel = unit1 ? ` ${escapeHtml(unit1)}` : '';
 
     return `
         <div class="result-range">
@@ -619,20 +619,20 @@ function generatePatientHeader(patientInfo) {
         const prescripteurDisplay = patientInfo.doctorName.toLowerCase().startsWith('dr')
             ? patientInfo.doctorName
             : `Dr ${patientInfo.doctorName}`;
-        metaItems.push(`<span>${svgIcon('stethoscope')}${prescripteurDisplay}</span>`);
+        metaItems.push(`<span>${svgIcon('stethoscope')}${escapeHtml(prescripteurDisplay)}</span>`);
     }
     if (patientInfo.laboratoryName) {
         const labDisplay = patientInfo.laboratoryName.toLowerCase().includes('laboratoire')
             ? patientInfo.laboratoryName
             : `${window.i18n ? window.i18n.t('patient.laboratory') : 'Laboratoire'} : ${patientInfo.laboratoryName}`;
-        metaItems.push(`<span>${svgIcon('flask')}${labDisplay}</span>`);
+        metaItems.push(`<span>${svgIcon('flask')}${escapeHtml(labDisplay)}</span>`);
     }
     if (patientInfo.samplingDate) {
         const samplingText = window.i18n ? window.i18n.t('patient.sampling') : 'Prélèvement';
         let samplingLine = `${samplingText} ${formatDate(patientInfo.samplingDate)}`;
         if (patientInfo.samplingTime) {
             const atText = window.i18n ? window.i18n.t('patient.sampling_at') : 'à';
-            samplingLine += ` ${atText} ${patientInfo.samplingTime}`;
+            samplingLine += ` ${atText} ${escapeHtml(patientInfo.samplingTime)}`;
         }
         metaItems.push(`<span>${svgIcon('calendar')}${samplingLine}</span>`);
     }
@@ -645,11 +645,11 @@ function generatePatientHeader(patientInfo) {
 
     return `
         <div class="patient-card">
-            <div class="patient-avatar" aria-hidden="true">${initials}</div>
+            <div class="patient-avatar" aria-hidden="true">${escapeHtml(initials)}</div>
             <div class="patient-info">
                 <div class="patient-identity">
-                    ${name ? `<span class="patient-name">${name}</span>` : ''}
-                    ${subLine ? `<span class="patient-sub">${subLine}</span>` : ''}
+                    ${name ? `<span class="patient-name">${escapeHtml(name)}</span>` : ''}
+                    ${subLine ? `<span class="patient-sub">${escapeHtml(subLine)}</span>` : ''}
                 </div>
                 ${metaItems.length ? `<div class="patient-meta">${metaItems.join('')}</div>` : ''}
                 ${warning}

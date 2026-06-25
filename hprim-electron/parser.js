@@ -82,6 +82,41 @@ function decodeHTMLEntities(text) {
         .replace(/<\/?(?:p|div|span|b|i|strong|em|u|font|center|table|tr|td|th|tbody|thead|head|body|html)[^>]*>/gi, ''); // Balises HTML courantes seulement
 }
 
+// Échappe les caractères HTML — à appliquer à TOUTE donnée issue du fichier avant
+// insertion via innerHTML (le contenu d'un fichier HPRIM n'est pas de confiance).
+function escapeHtml(s) {
+    if (s === null || s === undefined) return '';
+    return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+// Décode un fichier (Buffer/Uint8Array) en texte, en détectant l'encodage :
+// UTF-8 strict d'abord, repli windows-1252 (fréquent pour les HPRIM français),
+// puis latin1 en dernier recours. Gère le BOM UTF-8. Corrige le mojibake dû à
+// une lecture forcée en latin1.
+function decodeBuffer(bytes) {
+    if (bytes === null || bytes === undefined) return '';
+    const u8 = (bytes instanceof Uint8Array) ? bytes : Uint8Array.from(bytes);
+    // Retirer un éventuel BOM UTF-8
+    const body = (u8.length >= 3 && u8[0] === 0xEF && u8[1] === 0xBB && u8[2] === 0xBF)
+        ? u8.subarray(3) : u8;
+    try {
+        return new TextDecoder('utf-8', { fatal: true }).decode(body);
+    } catch (e) {
+        try {
+            return new TextDecoder('windows-1252').decode(body);
+        } catch (e2) {
+            let s = '';
+            for (let i = 0; i < body.length; i++) s += String.fromCharCode(body[i]);
+            return s;
+        }
+    }
+}
+
 function parseHPRIM(content) {
     Logger.debug('Parsing HPRIM avec détection automatique de format...');
     
@@ -843,33 +878,35 @@ function parseNorm(normStr) {
 
 function formatValue(value, operator, highlighted) {
     if (value === null || value === undefined) return '';
-    
-    let formatted = (operator || '') + value;
-    
+
+    // value peut être du texte libre issu du fichier -> échappement obligatoire
+    // (l'opérateur < / > est échappé aussi pour ne pas être pris pour une balise).
+    let formatted = escapeHtml((operator || '') + value);
+
     if (highlighted) {
         formatted = `<span style="font-weight: bold;">${formatted}</span>`;
     }
-    
+
     return formatted;
 }
 
 function formatNorms(min, max, result) {
+    let text;
     // Normes spéciales pour le DFG
     if (result && result.name && result.name.toLowerCase().includes('dfg')) {
-        return '(> 60)';
-    }
-    if (result && result.code && result.code.includes('1.6')) {
-        return '(> 60)';
-    }
-    
-    if (min !== null && max !== null) {
-        return `(${min} - ${max})`;
+        text = '(> 60)';
+    } else if (result && result.code && result.code.includes('1.6')) {
+        text = '(> 60)';
+    } else if (min !== null && max !== null) {
+        text = `(${min} - ${max})`;
     } else if (max !== null) {
-        return `(< ${max})`;
+        text = `(< ${max})`;
     } else if (min !== null) {
-        return `(> ${min})`;
+        text = `(> ${min})`;
+    } else {
+        return '';
     }
-    return '';
+    return escapeHtml(text);
 }
 
 // Fonctions d'extraction des informations patient
@@ -895,9 +932,16 @@ function extractPatientInfo(content) {
         info.age = calculateAge(info.birthDate, info.samplingDate);
     }
     
-    // Validation croisée
+    // Validation croisée (cohérence des dates)
     info.confidence = validateDates(info.birthDate, info.samplingDate, info.fileDate);
-    
+
+    // Identitovigilance : une donnée d'identité ABSENTE doit faire chuter la confiance
+    // (validateDates ne juge que la cohérence, pas la présence). Distingue
+    // "donnée absente" de "donnée validée".
+    if (!info.patientName) info.confidence *= 0.4;
+    if (!info.birthDate) info.confidence *= 0.6;
+    if (!info.samplingDate) info.confidence *= 0.8;
+
     return info;
 }
 
@@ -1256,7 +1300,7 @@ function getResultState(result) {
 // ----------------------------------------------------------------------------
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
-        Logger, cleanEncoding, decodeHTMLEntities,
+        Logger, cleanEncoding, decodeHTMLEntities, escapeHtml, decodeBuffer,
         detectHPRIMFormat, parseHPRIM,
         parseStructuredTagsHPRIM, parseStructuredPipesHPRIM, parseTextReadableHPRIM,
         parseTextFormatHPRIM, parseRESLine, collectFollowingTEX, processRawResults,

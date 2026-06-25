@@ -110,6 +110,23 @@ test('tags : norme combinée "min-max" -> borne haute préservée (fix MAJOR par
 });
 
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+test('decodeBuffer : UTF-8 préservé, windows-1252 récupéré, BOM géré', () => {
+    assert.equal(P.decodeBuffer(Buffer.from([0xC3, 0xA9])), 'é');            // "é" UTF-8
+    assert.equal(P.decodeBuffer(Buffer.from([0x4E, 0xE9, 0x65])), 'Née');    // 0xE9 = "é" cp1252 (invalide UTF-8 -> repli)
+    assert.equal(P.decodeBuffer(Buffer.from([0xEF, 0xBB, 0xBF, 0x41])), 'A'); // BOM UTF-8 retiré
+});
+
+test('escapeHtml neutralise le HTML injecté', () => {
+    assert.equal(P.escapeHtml('<img onerror=x>'), '&lt;img onerror=x&gt;');
+    assert.equal(P.escapeHtml(`a & "b" 'c'`), 'a &amp; &quot;b&quot; &#39;c&#39;');
+});
+
+test('confidence : chute sous le seuil quand l\'identité est absente', () => {
+    const info = P.extractPatientInfo('RES|GLUCOSE|GLU|N|1.0|g/L|0.7|1.1||\nRES|UREE|URE|N|0.4|g/L|0.1|0.5||');
+    assert.ok(info.confidence < 0.8, 'confidence doit être pénalisée (' + info.confidence + ')');
+});
+
 test('text : format détecté, patient extrait, parsing sans erreur', () => {
     assert.equal(P.detectHPRIMFormat(text), 'text_readable');
     const info = P.extractPatientInfo(text);
