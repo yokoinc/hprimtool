@@ -8,9 +8,26 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-linux:
+  test:
     runs-on: ubuntu-latest
-    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Run parser tests
+      # Les tests sont sans dépendance (node:test + parser.js pur) : pas de npm ci.
+      run: |
+        cd hprim-electron
+        npm test
+
+  build-linux:
+    needs: [test]
+    runs-on: ubuntu-latest
+
     strategy:
       matrix:
         arch: [x64, arm64]
@@ -53,6 +70,7 @@ jobs:
         if-no-files-found: warn
 
   build-windows:
+    needs: [test]
     runs-on: windows-latest
     
     steps:
@@ -83,6 +101,7 @@ jobs:
         if-no-files-found: warn
 
   build-macos:
+    needs: [test]
     runs-on: macos-latest
     
     steps:
