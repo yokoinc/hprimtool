@@ -90,7 +90,12 @@ dropZone.addEventListener('drop', async (e) => {
     
     const files = e.dataTransfer.files;
     if (files.length > 0) {
-        await handleFile(files[0].path);
+        const filePath = window.electronAPI.getPathForFile(files[0]);
+        if (filePath) {
+            await handleFile(filePath);
+        } else {
+            Logger.error('Impossible de déterminer le chemin du fichier déposé');
+        }
     }
 });
 

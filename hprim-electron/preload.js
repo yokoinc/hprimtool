@@ -1,4 +1,4 @@
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, webUtils } = require('electron');
 const path = require('path');
 
 
@@ -26,6 +26,18 @@ contextBridge.exposeInMainWorld('electronAPI', {
     },
     
     openFileDialog: () => ipcRenderer.send('open-file-dialog'),
+
+    // Récupère le chemin absolu d'un fichier glissé-déposé, de façon robuste aux
+    // versions d'Electron : webUtils.getPathForFile (Electron 30+) avec repli sur
+    // la propriété non-standard File.path (Electron <= 29, supprimée en 32+).
+    getPathForFile: (file) => {
+        try {
+            if (webUtils && typeof webUtils.getPathForFile === 'function') {
+                return webUtils.getPathForFile(file);
+            }
+        } catch (e) { /* repli ci-dessous */ }
+        return (file && file.path) ? file.path : '';
+    },
     
     quitApp: () => ipcRenderer.send('quit-app'),
     
