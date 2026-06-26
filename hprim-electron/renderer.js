@@ -408,19 +408,17 @@ function parseAndDisplay(content) {
         } else {
             // Affichage normal pour les résultats avec valeurs numériques
 
-            // État (statut explicite H/L OU comparaison numérique aux normes)
+            // État (statut explicite H/L OU comparaison numérique aux normes).
+            // L'anomalie reste signalée par la valeur colorée + la ligne teintée + la barre.
             const status = getResultState(result);
             const stateClass = (status === 'high' || status === 'low') ? ` is-${status}` : '';
-            const badge = status === 'high'
-                ? '<span class="value-badge badge-high">H</span>'
-                : (status === 'low' ? '<span class="value-badge badge-low">L</span>' : '');
 
             const formattedValue1 = formatValue(result.value1, result.operator1 || null, result.isHighlighted1 || false);
             const formattedNormes1 = formatNorms(result.min1, result.max1, result);
 
             let valuesColumn = `<div class="value-line">
                 <span class="result-number">${formattedValue1}</span>
-                <span class="result-unit">${escapeHtml(result.unit1)}</span>${badge}
+                <span class="result-unit">${escapeHtml(result.unit1)}</span>
             </div>`;
 
             if (result.hasMultipleUnits) {

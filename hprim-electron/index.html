@@ -306,15 +306,6 @@
         .result-item.is-high .result-number { color: var(--high-text); }
         .result-item.is-low .result-number { color: var(--low-text); }
 
-        .value-badge {
-            display: inline-flex; align-items: center;
-            font-size: 10px; font-weight: 500;
-            padding: 1px 6px; border-radius: 5px;
-            margin-left: 2px;
-        }
-        .badge-high { background: var(--high-chip); color: var(--high-text); }
-        .badge-low { background: var(--low-chip); color: var(--low-text); }
-
         /* Commentaire rattaché à un résultat */
         .result-comment {
             grid-column: 1 / -1;
@@ -376,7 +367,6 @@
             .result-mid:has(.result-range) > .result-norms { display: block; }
             .result-norms { color: #333; font-size: 8.5pt; text-align: right; }
             .result-number, .result-unit { color: #000; font-size: 8.5pt; }
-            .value-badge { background: #fff; color: #000; padding: 0 2px; font-weight: 700; }
             .result-item.is-high .result-number, .result-item.is-low .result-number { color: #000; font-weight: 700; }
             .result-comment { color: #333; font-size: 7.5pt; font-style: italic; }
             .result-item.text-result { background: #fff; }
