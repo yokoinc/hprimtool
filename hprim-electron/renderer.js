@@ -174,14 +174,13 @@ function toggleSearch() {
     // Créer la barre de recherche
     const placeholder = window.i18n ? window.i18n.t('search.placeholder') : 'Rechercher dans les résultats...';
     const clearText = window.i18n ? window.i18n.t('search.clear') : 'Effacer';
+    const closeText = window.i18n ? window.i18n.t('buttons.close') : 'Fermer';
     const searchHTML = `
         <div id="searchContainer" class="search-bar">
             <div class="search-row">
                 <input type="text" id="searchInput" class="search-input" placeholder="${placeholder}">
                 <button class="btn" data-action="clear-search">${clearText}</button>
-                <button class="btn btn-danger" data-action="toggle-search" aria-label="${clearText}">
-                    ${svgIcon('close')}
-                </button>
+                <button class="btn" data-action="toggle-search">${closeText}</button>
             </div>
             <div id="searchStats" class="search-stats" style="display: none;"></div>
         </div>
@@ -533,23 +532,13 @@ function parseAndDisplay(content) {
 // Fonction pour détecter le format HPRIM
 
 // ============================================================================
-// HELPERS UI — icônes, barre de position, bandeau de synthèse
+// HELPERS UI — barre de position, bandeau de synthèse
 // ============================================================================
 
-const ICONS = {
-    message: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
-    stethoscope: '<path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/>',
-    flask: '<path d="M9 3h6"/><path d="M10 3v6.5L4.5 18A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-3L14 9.5V3"/><path d="M7.5 14h9"/>',
-    calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/>',
-    alert: '<path d="m10.3 3.6-8 14A2 2 0 0 0 4 20.5h16a2 2 0 0 0 1.7-2.9l-8-14a2 2 0 0 0-3.4 0z"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
-    file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>',
-    close: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>'
-};
-
-function svgIcon(name) {
-    const path = ICONS[name];
-    if (!path) return '';
-    return `<svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`;
+// Icônes retirées : interface uniforme, texte uniquement. Conservé en no-op
+// pour ne pas casser les points d'appel qui l'utilisaient.
+function svgIcon() {
+    return '';
 }
 
 // Construit la colonne centrale : barre de position si l'intervalle est numérique,
