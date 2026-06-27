@@ -353,10 +353,13 @@
             .results-card { border: none; border-radius: 0; background: #fff; }
             .result-group-header { background: #fff; color: #000; border: none; border-bottom: 1px solid #999; padding: 6px 0 2px; }
 
+            /* Flex + align-items:baseline : valeur ET norme sur la même ligne de base
+               (le grid plaçait la norme sur une 2e ligne). */
             .result-item {
-                display: grid;
-                grid-template-columns: 48% 22% 30%;
-                gap: 8px;
+                display: flex;
+                align-items: baseline;
+                flex-wrap: wrap;
+                column-gap: 14px;
                 padding: 3px 0;
                 border-top: none;
                 border-bottom: 1px dotted #ccc;
@@ -364,12 +367,15 @@
                 box-shadow: none !important;
                 page-break-inside: avoid; break-inside: avoid;
             }
-            .result-name { color: #000; font-size: 8.5pt; order: 1; }
-            .result-value-container { align-items: flex-start; order: 2; }
-            .result-mid { order: 3; }
+            .result-name { color: #000; font-size: 8.5pt; order: 1; flex: 1 1 auto; }
+            /* display:block (pas flex-colonne) : sinon la ligne de base est synthétisée
+               en bas du bloc et la norme se décale sous la valeur. */
+            .result-value-container { display: block; order: 2; flex: 0 0 auto; }
+            .result-mid { order: 3; flex: 0 0 auto; }
+            .result-comment { order: 4; flex: 1 1 100%; }   /* commentaire en pleine largeur, sous la ligne */
             .result-mid:has(.result-range) > .result-norms { display: block; }
-            .result-norms { color: #333; font-size: 8.5pt; text-align: right; }
-            .result-number, .result-unit { color: #000; font-size: 8.5pt; }
+            .result-norms { color: #333; font-size: 8.5pt; text-align: right; white-space: nowrap; }
+            .result-number, .result-unit { color: #000; font-size: 8.5pt; min-width: 0; }
             .result-item.is-high .result-number, .result-item.is-low .result-number { color: #000; font-weight: 700; }
             .result-comment { color: #333; font-size: 7.5pt; font-style: italic; }
             .result-item.text-result { background: #fff; }
