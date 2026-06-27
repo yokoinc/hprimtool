@@ -121,6 +121,24 @@ dropZone.addEventListener('click', () => {
 // FONCTIONS POUR LES BOUTONS DE L'INTERFACE
 // ============================================================================
 
+// Délégation des clics : les boutons portent un data-action (compatible CSP
+// script-src 'self', et fonctionne pour le HTML généré dynamiquement).
+const UI_ACTIONS = {
+    'toggle-search': () => toggleSearch(),
+    'print': () => window.print(),
+    'export': () => exportToCSV(),
+    'quit': () => quitApp(),
+    'open': () => openFile(),
+    'clear-search': () => clearSearch(),
+    'view-raw': () => showRawFile()
+};
+document.addEventListener('click', (e) => {
+    const target = e.target.closest('[data-action]');
+    if (!target) return;
+    const handler = UI_ACTIONS[target.dataset.action];
+    if (handler) handler();
+});
+
 // Fonction pour ouvrir un fichier (bouton "Ouvrir")
 function openFile() {
     if (isOpeningFile) return;
@@ -159,23 +177,25 @@ function toggleSearch() {
     const searchHTML = `
         <div id="searchContainer" class="search-bar">
             <div class="search-row">
-                <input type="text" id="searchInput" class="search-input" placeholder="${placeholder}"
-                       oninput="performSearch(this.value)" onkeyup="handleSearchKeyup(event)">
-                <button class="btn" onclick="clearSearch()">${clearText}</button>
-                <button class="btn btn-danger" onclick="toggleSearch()" aria-label="${clearText}">
+                <input type="text" id="searchInput" class="search-input" placeholder="${placeholder}">
+                <button class="btn" data-action="clear-search">${clearText}</button>
+                <button class="btn btn-danger" data-action="toggle-search" aria-label="${clearText}">
                     ${svgIcon('close')}
                 </button>
             </div>
             <div id="searchStats" class="search-stats" style="display: none;"></div>
         </div>
     `;
-    
+
     // Insérer après l'en-tête
     const header = document.querySelector('header');
     header.insertAdjacentHTML('afterend', searchHTML);
-    
-    // Focus sur l'input
-    document.getElementById('searchInput').focus();
+
+    // Écouteurs de l'input (CSP : pas de oninput/onkeyup inline)
+    const input = document.getElementById('searchInput');
+    input.addEventListener('input', (e) => performSearch(e.target.value));
+    input.addEventListener('keyup', handleSearchKeyup);
+    input.focus();
 }
 
 function performSearch(query) {
@@ -344,7 +364,7 @@ function parseAndDisplay(content) {
         // Fallback si i18n n'est pas encore chargé
         const compactContent = `
             <h3 data-i18n="dropzone.compact_title">Glisser un autre fichier</h3>
-            <button class="btn" onclick="openFile()" data-i18n="buttons.select_file">Sélectionner un fichier</button>
+            <button class="btn" data-action="open" data-i18n="buttons.select_file">Sélectionner un fichier</button>
         `;
         dropZone.innerHTML = compactContent;
     }
@@ -501,7 +521,7 @@ function parseAndDisplay(content) {
         const viewRawText = window.i18n ? window.i18n.t('buttons.view_raw') : 'Voir fichier brut';
         const rawButton = `
             <div class="raw-footer">
-                <button class="btn" onclick="showRawFile()">
+                <button class="btn" data-action="view-raw">
                     ${svgIcon('file')}<span>${viewRawText}</span>
                 </button>
             </div>
@@ -939,18 +959,12 @@ function showRawFilePopup() {
                         Lignes: ${currentFileContent.split('\\n').length}
                     </div>
                     <div style="display: flex; gap: 10px;">
-                        <button class="print-btn" onclick="printRawFile()">🖨️ Imprimer</button>
-                        <button class="close-btn" onclick="window.close()">Fermer</button>
+                        <button class="print-btn">🖨️ Imprimer</button>
+                        <button class="close-btn">Fermer</button>
                     </div>
                 </div>
                 <div class="content" id="rawContent">${currentFileContent.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
-                
-                <script>
-                    function printRawFile() {
-                        window.print();
-                    }
-                </script>
-                
+
                 <style>
                     @media print {
                         .header {
@@ -984,6 +998,11 @@ function showRawFilePopup() {
             </html>
         `);
         rawWindow.document.close();
+        // Listeners attachés depuis la fenêtre parente (CSP : pas de onclick/script inline dans le popup)
+        const printBtn = rawWindow.document.querySelector('.print-btn');
+        const closeBtn = rawWindow.document.querySelector('.close-btn');
+        if (printBtn) printBtn.addEventListener('click', () => rawWindow.print());
+        if (closeBtn) closeBtn.addEventListener('click', () => rawWindow.close());
     } else {
         // Fallback si popup bloquée : afficher dans un alert (pas idéal mais fonctionnel)
         alert('Impossible d\'ouvrir une nouvelle fenêtre. Contenu du fichier :\\n\\n' + 

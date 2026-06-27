@@ -129,7 +129,7 @@ function createWindow() {
             nodeIntegration: false,     // ✅ Sécurisé - empêche l'accès direct à Node.js
             contextIsolation: true,     // ✅ Isolation du contexte pour la sécurité
             enableRemoteModule: false,  // ✅ Désactive le module remote vulnérable
-            sandbox: false,             // Désactivé pour compatibilité avec preload
+            sandbox: true,              // ✅ Renderer/preload sandboxés (preload n'utilise que contextBridge/ipcRenderer/webUtils)
             preload: path.join(__dirname, 'preload.js')
         },
         icon: path.join(__dirname, 'icons', 'icon.png')

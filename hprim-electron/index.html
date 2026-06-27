@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; base-uri 'none'; form-action 'none'">
     <title>HPRIM Tool - Analyseur de résultats médicaux</title>
     <style>
         /* ============================================================
@@ -398,19 +399,19 @@
                 </div>
             </div>
             <div class="app-actions">
-                <button class="btn" onclick="toggleSearch()" id="searchBtn">
+                <button class="btn" data-action="toggle-search" id="searchBtn">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
                     <span data-i18n="search.button">Rechercher</span>
                 </button>
-                <button class="btn btn-primary" onclick="window.print()" id="printBtn" disabled>
+                <button class="btn btn-primary" data-action="print" id="printBtn" disabled>
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6"/><path d="M6 18H4a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="7" rx="1"/></svg>
                     <span data-i18n="buttons.print">Imprimer</span>
                 </button>
-                <button class="btn" onclick="exportToCSV()" id="exportBtn" disabled>
+                <button class="btn" data-action="export" id="exportBtn" disabled>
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h2"/><path d="M8 17h2"/><path d="M14 13h2"/><path d="M14 17h2"/></svg>
                     <span data-i18n="buttons.export">Export CSV</span>
                 </button>
-                <button class="btn btn-danger" onclick="quitApp()">
+                <button class="btn btn-danger" data-action="quit">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg>
                     <span data-i18n="buttons.quit">Quitter</span>
                 </button>
@@ -420,7 +421,7 @@
         <div class="drop-zone" id="dropZone" tabindex="0" role="button" data-i18n-attr='{"aria-label": "tooltip.drag_drop"}'>
             <h3 data-i18n="dropzone.title">Glissez votre fichier HPRIM ici</h3>
             <p data-i18n="dropzone.or">ou</p>
-            <button class="btn btn-primary" onclick="openFile()" data-i18n="buttons.select_file" data-i18n-attr='{"aria-label": "tooltip.select_dialog"}'>
+            <button class="btn btn-primary" data-action="open" data-i18n="buttons.select_file" data-i18n-attr='{"aria-label": "tooltip.select_dialog"}'>
                 Sélectionner un fichier
             </button>
             <p class="drop-formats">
@@ -435,17 +436,8 @@
     </div>
 
     <script src="i18n.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', async function() {
-            if (window.i18n) {
-                await window.i18n.autoDetectLanguage();
-                setTimeout(() => { window.i18n.updateUI(); }, 100);
-            } else {
-                console.error('window.i18n non disponible!');
-            }
-        });
-    </script>
     <script src="parser.js"></script>
     <script src="renderer.js"></script>
+    <script src="init.js"></script>
 </body>
 </html>

@@ -1,29 +1,11 @@
-const { ipcRenderer, webUtils } = require('electron');
-const path = require('path');
-
-
-// Avec contextIsolation: true, on utilise contextBridge pour sécuriser l'exposition
-const { contextBridge } = require('electron');
+// Preload compatible sandbox:true — n'utilise que des API Electron (contextBridge,
+// ipcRenderer, webUtils), aucun module Node (pas de 'path'/'fs').
+const { ipcRenderer, contextBridge, webUtils } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
-    readFile: (filePath) => {
-        if (!filePath || typeof filePath !== 'string') {
-            throw new Error('Invalid file path');
-        }
-        
-        const normalizedPath = path.normalize(filePath);
-        if (normalizedPath.includes('..')) {
-            throw new Error('Path traversal not allowed');
-        }
-        
-        const allowedExtensions = ['.hpr', '.hpm', '.hpm1', '.hpm2', '.hpm3', '.hprim', '.txt'];
-        const ext = path.extname(normalizedPath).toLowerCase();
-        if (!allowedExtensions.includes(ext)) {
-            throw new Error('File type not allowed');
-        }
-        
-        return ipcRenderer.invoke('read-file', normalizedPath);
-    },
+    // La validation (normalisation, anti-traversée, extension, taille, existence)
+    // est faite côté main dans le handler 'read-file' (processus de confiance).
+    readFile: (filePath) => ipcRenderer.invoke('read-file', filePath),
     
     openFileDialog: () => ipcRenderer.send('open-file-dialog'),
 

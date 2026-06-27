@@ -334,14 +334,14 @@ class I18n {
                 // Mode compact
                 dropZone.innerHTML = `
                     <h3 data-i18n="dropzone.compact_title">${this.t('dropzone.compact_title')}</h3>
-                    <button class="btn btn-primary" onclick="openFile()" data-i18n="buttons.select_file">${this.t('buttons.select_file')}</button>
+                    <button class="btn btn-primary" data-action="open" data-i18n="buttons.select_file">${this.t('buttons.select_file')}</button>
                 `;
             } else {
                 // Mode normal - Préserver les attributs data-i18n pour la cohérence
                 dropZone.innerHTML = `
                     <h3 data-i18n="dropzone.title">${this.t('dropzone.title')}</h3>
                     <p data-i18n="dropzone.or">${this.t('dropzone.or')}</p>
-                    <button class="btn btn-primary" onclick="openFile()" data-i18n="buttons.select_file" data-i18n-attr='{"aria-label": "tooltip.select_dialog"}' aria-label="${this.t('tooltip.select_dialog')}">
+                    <button class="btn btn-primary" data-action="open" data-i18n="buttons.select_file" data-i18n-attr='{"aria-label": "tooltip.select_dialog"}' aria-label="${this.t('tooltip.select_dialog')}">
                         ${this.t('buttons.select_file')}
                     </button>
                     <p class="drop-formats">
