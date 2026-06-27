@@ -66,6 +66,27 @@ async function handleFile(filePath) {
     }
 }
 
+// Glisser-déposer : on lit le CONTENU du fichier (API web standard file.arrayBuffer(),
+// disponible en sandbox et sur toute version d'Electron) et on le décode côté main.
+// Indépendant de File.path (retiré en Electron 32+) et de webUtils (Electron 30+).
+async function handleDroppedFile(file) {
+    try {
+        document.body.style.cursor = 'wait';
+        const loadingMsg = window.i18n ? window.i18n.t('messages.loading') : 'Chargement du fichier';
+        results.innerHTML = `<p style="color: blue;">${loadingMsg}: ${file.name}</p>`;
+
+        const bytes = new Uint8Array(await file.arrayBuffer());
+        const content = await window.electronAPI.decodeBuffer(bytes, file.name);
+        parseAndDisplay(content);
+    } catch (error) {
+        isOpeningFile = false;
+        document.body.style.cursor = 'default';
+        const fileErrorMsg = window.i18n ? window.i18n.t('messages.file_error') : 'Erreur lors de la lecture du fichier';
+        results.innerHTML = `<p style="color: red;">${fileErrorMsg}: ${error.message}</p>`;
+        Logger.error('Erreur glisser-déposer:', error);
+    }
+}
+
 // Initialiser l'application après le chargement
 window.addEventListener('load', () => {
     // Afficher le message d'accueil
@@ -90,12 +111,7 @@ dropZone.addEventListener('drop', async (e) => {
     
     const files = e.dataTransfer.files;
     if (files.length > 0) {
-        const filePath = window.electronAPI.getPathForFile(files[0]);
-        if (filePath) {
-            await handleFile(filePath);
-        } else {
-            Logger.error('Impossible de déterminer le chemin du fichier déposé');
-        }
+        await handleDroppedFile(files[0]);
     }
 });
 

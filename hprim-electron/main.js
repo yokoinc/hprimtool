@@ -373,6 +373,29 @@ ipcMain.handle('read-file', async (event, filePath) => {
     }
 });
 
+// IPC: Décoder le contenu d'un fichier déposé (glisser-déposer).
+// Pas de chemin requis -> fiable quelle que soit la version d'Electron et le sandbox.
+ipcMain.handle('decode-buffer', async (event, data, fileName) => {
+    try {
+        const buffer = Buffer.from(data);
+        if (buffer.length === 0) {
+            throw new Error('Le fichier est vide');
+        }
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        if (buffer.length > maxSize) {
+            throw new Error(`Fichier trop volumineux (${Math.round(buffer.length / 1024 / 1024)}MB > 10MB)`);
+        }
+        const allowedExtensions = ['.hpr', '.hpm', '.hpm1', '.hpm2', '.hpm3', '.hprim', '.txt'];
+        const ext = path.extname(fileName || '').toLowerCase();
+        if (ext && !allowedExtensions.includes(ext)) {
+            throw new Error(`Extension de fichier non autorisée: ${ext}`);
+        }
+        return decodeBuffer(buffer);
+    } catch (error) {
+        throw new Error(`Erreur lors de la lecture du fichier: ${error.message}`);
+    }
+});
+
 // IPC: Ouvrir la boîte de dialogue de fichier
 ipcMain.on('open-file-dialog', (event) => {
     openFileDialog();
