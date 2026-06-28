@@ -891,22 +891,25 @@ function formatValue(value, operator, highlighted) {
 }
 
 function formatNorms(min, max, result) {
-    let text;
     // Normes spéciales pour le DFG
     if (result && result.name && result.name.toLowerCase().includes('dfg')) {
-        text = '(> 60)';
-    } else if (result && result.code && result.code.includes('1.6')) {
-        text = '(> 60)';
-    } else if (min !== null && max !== null) {
-        text = `(${min} - ${max})`;
-    } else if (max !== null) {
-        text = `(< ${max})`;
-    } else if (min !== null) {
-        text = `(> ${min})`;
-    } else {
-        return '';
+        return '&gt; 60';
     }
-    return escapeHtml(text);
+    if (result && result.code && result.code.includes('1.6')) {
+        return '&gt; 60';
+    }
+    // Intervalle min-max : min et max dans des spans dédiés pour pouvoir les aligner
+    // autour du tiret (min à droite, tiret, max à gauche). min/max sont numériques.
+    if (min !== null && max !== null) {
+        return `<span class="norm-min">${min}</span><span class="norm-sep"> – </span><span class="norm-max">${max}</span>`;
+    }
+    if (max !== null) {
+        return `&lt; ${max}`;
+    }
+    if (min !== null) {
+        return `&gt; ${min}`;
+    }
+    return '';
 }
 
 // Fonctions d'extraction des informations patient

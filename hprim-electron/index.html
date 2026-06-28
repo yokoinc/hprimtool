@@ -372,13 +372,18 @@
                en bas du bloc et la norme se décale sous la valeur. */
             /* Largeurs FIXES pour valeur et norme + alignées à droite : elles forment
                des colonnes nettes en descendant la page (et non plus en drapeau). */
-            .result-value-container { display: block; order: 2; flex: 0 0 80px; text-align: right; }
+            .result-value-container { display: block; order: 2; flex: 0 0 86px; }
+            /* nombre aligné à droite / unité alignée à gauche -> sous-colonnes nettes */
             .value-line { justify-content: flex-end; }
-            .result-mid { order: 3; flex: 0 0 104px; }
+            .result-number { color: #000; font-size: 8.5pt; text-align: right; min-width: 36px; }
+            .result-unit { color: #000; font-size: 8.5pt; text-align: left; min-width: 42px; }
+            .result-mid { order: 3; flex: 0 0 108px; }
             .result-comment { order: 4; flex: 1 1 100%; }   /* commentaire en pleine largeur, sous la ligne */
             .result-mid:has(.result-range) > .result-norms { display: block; }
-            .result-norms { color: #333; font-size: 8.5pt; text-align: right; white-space: nowrap; }
-            .result-number, .result-unit { color: #000; font-size: 8.5pt; min-width: 0; }
+            /* norme : min aligné à droite, tiret, max aligné à gauche -> les tirets s'alignent */
+            .result-norms { color: #333; font-size: 8.5pt; text-align: left; white-space: nowrap; }
+            .norm-min { display: inline-block; min-width: 30px; text-align: right; }
+            .norm-max { display: inline-block; text-align: left; }
             .result-item.is-high .result-number, .result-item.is-low .result-number { color: #000; font-weight: 700; }
             .result-comment { color: #333; font-size: 7.5pt; font-style: italic; }
             .result-item.text-result { background: #fff; }
