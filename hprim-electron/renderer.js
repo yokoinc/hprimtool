@@ -847,158 +847,74 @@ function showRawFilePopup() {
     const rawWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
     if (rawWindow) {
         const title = window.i18n ? window.i18n.t('buttons.view_raw') : 'Fichier brut';
-        
+        const linesLabel = window.i18n ? window.i18n.t('file.lines') : 'Lignes';
+        const charsLabel = window.i18n ? window.i18n.t('file.characters') : 'caractères';
+        const printLabel = window.i18n ? window.i18n.t('buttons.print') : 'Imprimer';
+        const closeLabel = window.i18n ? window.i18n.t('buttons.close') : 'Fermer';
+        // Compte robuste des lignes (gère \r\n, \r seul et \n)
+        const lineCount = currentFileContent.split(/\r\n|\r|\n/).length;
+        const escaped = currentFileContent.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
         rawWindow.document.write(`
             <!DOCTYPE html>
-            <html>
+            <html lang="fr">
             <head>
+                <meta charset="UTF-8">
                 <title>${title} - HPRIM Tool</title>
                 <style>
-                    body { 
-                        font-family: 'Courier New', monospace; 
-                        background: #f5f5f5; 
-                        margin: 20px; 
-                        line-height: 1.4;
+                    :root {
+                        --bg: #f1f5f9; --surface: #ffffff; --border: #e2e8f0;
+                        --text: #0f172a; --text-2: #475569; --text-3: #64748b;
+                    }
+                    * { box-sizing: border-box; }
+                    body {
+                        font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+                        background: var(--bg); color: var(--text);
+                        margin: 0; padding: 18px;
+                        -webkit-font-smoothing: antialiased;
                     }
                     .header {
-                        background: white;
-                        padding: 15px;
-                        border-radius: 8px;
-                        margin-bottom: 20px;
-                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                        display: flex; align-items: center; justify-content: space-between;
+                        gap: 16px; flex-wrap: wrap;
+                        background: var(--surface); border: 1px solid var(--border);
+                        border-radius: 12px; padding: 13px 18px; margin-bottom: 14px;
                     }
+                    .header h2 { margin: 0; font-size: 16px; font-weight: 500; letter-spacing: -0.2px; }
+                    .stats { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+                    .actions { display: flex; gap: 8px; }
+                    .btn {
+                        background: var(--surface); color: var(--text-2);
+                        border: 1px solid var(--border); padding: 7px 14px;
+                        border-radius: 8px; cursor: pointer; font-size: 13px;
+                        font-weight: 500; font-family: inherit;
+                    }
+                    .btn:hover { background: var(--bg); border-color: var(--text-3); }
                     .content {
-                        background: white;
-                        padding: 20px;
-                        border-radius: 8px;
-                        white-space: pre-wrap;
-                        overflow-wrap: break-word;
-                        font-size: 12px;
-                        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                        max-height: 70vh;
-                        overflow-y: auto;
+                        background: var(--surface); border: 1px solid var(--border);
+                        border-radius: 12px; padding: 16px 18px;
+                        white-space: pre-wrap; overflow-wrap: break-word;
+                        font-family: 'Consolas', 'SFMono-Regular', 'Courier New', monospace;
+                        font-size: 12px; line-height: 1.5; color: var(--text);
                     }
-                    .stats {
-                        color: #666;
-                        font-size: 14px;
-                        margin-bottom: 10px;
-                    }
-                    .close-btn {
-                        background: #dc3545;
-                        color: white;
-                        border: none;
-                        padding: 10px 20px;
-                        border-radius: 5px;
-                        cursor: pointer;
-                        font-size: 14px;
-                    }
-                    .close-btn:hover {
-                        background: #c82333;
-                    }
-                    .print-btn {
-                        background: #28a745;
-                        color: white;
-                        border: none;
-                        padding: 10px 20px;
-                        border-radius: 5px;
-                        cursor: pointer;
-                        font-size: 14px;
-                        position: relative;
-                    }
-                    .print-btn:hover {
-                        background: #218838;
-                    }
-                    .print-menu {
-                        position: absolute;
-                        top: 100%;
-                        left: 0;
-                        background: white;
-                        border: 1px solid #ddd;
-                        border-radius: 6px;
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                        z-index: 1000;
-                        min-width: 140px;
-                        display: none;
-                    }
-                    .print-menu.show {
-                        display: block;
-                    }
-                    .print-menu button {
-                        display: block;
-                        width: 100%;
-                        padding: 12px 16px;
-                        border: none;
-                        background: white;
-                        text-align: left;
-                        cursor: pointer;
-                        transition: background 0.2s;
-                        border-radius: 0;
-                        font-size: 14px;
-                        color: #333;
-                    }
-                    .print-menu button:first-child {
-                        border-radius: 6px 6px 0 0;
-                    }
-                    .print-menu button:last-child {
-                        border-radius: 0 0 6px 6px;
-                    }
-                    .print-menu button:hover {
-                        background: #f8f9fa;
-                    }
-                    kbd {
-                        background: #f1f1f1;
-                        border: 1px solid #ccc;
-                        border-radius: 3px;
-                        padding: 2px 6px;
-                        font-family: monospace;
-                        font-size: 11px;
-                        box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+                    @media print {
+                        body { background: #fff; margin: 0; padding: 0; }
+                        .header { display: none !important; }
+                        .content { border: none; border-radius: 0; padding: 0; font-size: 8pt; line-height: 1.2; }
                     }
                 </style>
             </head>
             <body>
                 <div class="header">
-                    <h2>📄 ${title}</h2>
-                    <div class="stats">
-                        Taille: ${currentFileContent.length} caractères | 
-                        Lignes: ${currentFileContent.split('\\n').length}
+                    <div>
+                        <h2>${title}</h2>
+                        <div class="stats">${lineCount} ${linesLabel} · ${currentFileContent.length} ${charsLabel}</div>
                     </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="print-btn">🖨️ Imprimer</button>
-                        <button class="close-btn">Fermer</button>
+                    <div class="actions">
+                        <button class="btn print-btn">${printLabel}</button>
+                        <button class="btn close-btn">${closeLabel}</button>
                     </div>
                 </div>
-                <div class="content" id="rawContent">${currentFileContent.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
-
-                <style>
-                    @media print {
-                        .header {
-                            display: none !important;
-                        }
-                        
-                        body {
-                            margin: 0;
-                            padding: 10px;
-                            background: white;
-                            font-family: 'Courier New', monospace;
-                            font-size: 9pt;
-                            line-height: 1.2;
-                        }
-                        
-                        .content {
-                            background: white;
-                            padding: 0;
-                            margin: 0;
-                            box-shadow: none;
-                            border-radius: 0;
-                            font-size: 8pt;
-                            max-height: none;
-                            overflow: visible;
-                            white-space: pre-wrap;
-                            word-wrap: break-word;
-                        }
-                    }
-                </style>
+                <div class="content" id="rawContent">${escaped}</div>
             </body>
             </html>
         `);
