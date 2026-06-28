@@ -854,6 +854,11 @@ function showRawFilePopup() {
         // Compte robuste des lignes (gère \r\n, \r seul et \n)
         const lineCount = currentFileContent.split(/\r\n|\r|\n/).length;
         const escaped = currentFileContent.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        // Le popup suit le thème jour/nuit de la fenêtre principale
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const themeVars = isDark
+            ? '--bg:#0f172a;--surface:#1e293b;--border:#334155;--text:#e2e8f0;--text-2:#cbd5e1;--text-3:#94a3b8;'
+            : '--bg:#f1f5f9;--surface:#ffffff;--border:#e2e8f0;--text:#0f172a;--text-2:#475569;--text-3:#64748b;';
 
         rawWindow.document.write(`
             <!DOCTYPE html>
@@ -862,10 +867,7 @@ function showRawFilePopup() {
                 <meta charset="UTF-8">
                 <title>${title} - HPRIM Tool</title>
                 <style>
-                    :root {
-                        --bg: #f1f5f9; --surface: #ffffff; --border: #e2e8f0;
-                        --text: #0f172a; --text-2: #475569; --text-3: #64748b;
-                    }
+                    :root { ${themeVars} }
                     * { box-sizing: border-box; }
                     body {
                         font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
