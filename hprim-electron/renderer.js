@@ -453,6 +453,10 @@ function parseAndDisplay(content) {
             const status = getResultState(result);
             const stateClass = (status === 'high' || status === 'low') ? ` is-${status}` : '';
 
+            // Valeur texte (qualitative, ex. "Diabète", "négatif") -> alignée à gauche
+            const v1 = (result.value1 === null || result.value1 === undefined) ? '' : String(result.value1).trim();
+            const qualClass = (v1 !== '' && !isFinite(parseFloat(v1.replace(',', '.')))) ? ' qualitative' : '';
+
             const formattedValue1 = formatValue(result.value1, result.operator1 || null, result.isHighlighted1 || false);
             const formattedNormes1 = formatNorms(result.min1, result.max1, result);
 
@@ -488,7 +492,7 @@ function parseAndDisplay(content) {
                 + (isFinite(hiVal) ? ` data-max="${hiVal}"` : '');
 
             rowsHtml += `
-                <div class="result-item${stateClass}" ${dataAttrs}>
+                <div class="result-item${stateClass}${qualClass}" ${dataAttrs}>
                     <div class="result-name">${escapeHtml(result.name)}</div>
                     <div class="result-mid">${midColumn}</div>
                     <div class="result-value-container">${valuesColumn}</div>

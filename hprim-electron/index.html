@@ -309,6 +309,12 @@
         .result-item.is-high .result-number { color: var(--high-text); }
         .result-item.is-low .result-number { color: var(--low-text); }
 
+        /* Valeur qualitative (texte) : alignée à gauche, occupe la zone valeur+norme */
+        .result-item.qualitative .result-mid { display: none; }
+        .result-item.qualitative .result-value-container { grid-column: 2 / -1; align-items: flex-start; }
+        .result-item.qualitative .result-number { text-align: left; min-width: 0; }
+        .result-item.qualitative .value-line { white-space: normal; }
+
         /* Commentaire rattaché à un résultat */
         .result-comment {
             grid-column: 1 / -1;
@@ -385,6 +391,12 @@
             .norm-min { display: inline-block; min-width: 30px; text-align: right; }
             .norm-max { display: inline-block; text-align: left; }
             .result-item.is-high .result-number, .result-item.is-low .result-number { color: #000; font-weight: 700; }
+            /* Valeur texte en impression : à gauche, juste après le nom */
+            .result-item.qualitative .result-mid { display: none; }
+            .result-item.qualitative .result-name { flex: 0 1 auto; }
+            .result-item.qualitative .result-value-container { flex: 1 1 auto; }
+            .result-item.qualitative .value-line { justify-content: flex-start; }
+            .result-item.qualitative .result-number { text-align: left; min-width: 0; }
             .result-comment { color: #333; font-size: 7.5pt; font-style: italic; }
             .result-item.text-result { background: #fff; }
             .text-result-title { color: #000; }
