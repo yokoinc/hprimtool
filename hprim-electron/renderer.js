@@ -659,6 +659,9 @@ function generatePatientHeader(patientInfo) {
             : `${window.i18n ? window.i18n.t('patient.laboratory') : 'Laboratoire'} : ${patientInfo.laboratoryName}`;
         metaItems.push(`<span>${svgIcon('flask')}${escapeHtml(labDisplay)}</span>`);
     }
+    if (patientInfo.phone) {
+        metaItems.push(`<span>Tél : ${escapeHtml(patientInfo.phone)}</span>`);
+    }
     if (patientInfo.samplingDate) {
         const samplingText = window.i18n ? window.i18n.t('patient.sampling') : 'Prélèvement';
         let samplingLine = `${samplingText} ${formatDate(patientInfo.samplingDate)}`;

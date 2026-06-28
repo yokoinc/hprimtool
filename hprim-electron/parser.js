@@ -926,9 +926,10 @@ function extractPatientInfo(content) {
     info.samplingTime = extractSamplingTime(lines);
     info.fileDate = extractFileDate(lines);
     
-    // Extraction médecin et laboratoire
+    // Extraction médecin, laboratoire et téléphone
     info.doctorName = extractDoctorName(lines);
     info.laboratoryName = extractLaboratoryName(lines);
+    info.phone = extractPhone(lines);
     
     // Calcul de l'âge
     if (info.birthDate && info.samplingDate) {
@@ -1095,7 +1096,29 @@ function extractFileDate(lines) {
     return extractSamplingDate(lines);
 }
 
+// Téléphone du laboratoire : "Tel:..." / "Tél : ..." dans l'en-tête.
+function extractPhone(lines) {
+    for (let i = 0; i < Math.min(25, lines.length); i++) {
+        const line = lines[i] || '';
+        const m = line.match(/T[ée]l\.?\s*:?\s*(0\d[\d .]{7,}\d)/i);
+        if (m) return m[1].replace(/\s+/g, ' ').trim();
+    }
+    return null;
+}
+
 function extractDoctorName(lines) {
+    // Priorité 0 : "Médecin <nom>" (avec ou sans ':') ou "Dr/DR <nom>" dans l'en-tête,
+    // y compris noms tout en majuscules (formats SOLABIO/Cerballiance réels).
+    for (let i = 0; i < Math.min(25, lines.length); i++) {
+        const line = (lines[i] || '').replace(/<[^>]+>/g, '').trim();
+        let m = line.match(/M[éèêÉ]?decin\s*:?\s+([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ'’.\- ]{2,40})$/);
+        if (!m) m = line.match(/\b(?:Dr|DR|Docteur|Pr)\s+([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ'’.\- ]{2,40})$/);
+        if (m) {
+            const name = m[1].replace(/\s+/g, ' ').trim();
+            if (name && !/^\d/.test(name) && !/expediteur/i.test(name)) return name;
+        }
+    }
+
     // Priorité 1 : Section HTML "Médecin :"
     for (let i = 13; i < Math.min(20, lines.length); i++) {
         const line = lines[i] || '';
@@ -1163,6 +1186,23 @@ function extractDoctorName(lines) {
 }
 
 function extractLaboratoryName(lines) {
+    // Priorité 0a : ligne "Expediteur <labo>   Tel:..." (formats SOLABIO/BIOLBS)
+    for (let i = 0; i < Math.min(25, lines.length); i++) {
+        const line = (lines[i] || '').trim();
+        const m = line.match(/Exp[ée]diteur\s+(.+)/i);
+        if (m) {
+            return m[1].replace(/\s{2,}T[ée]l.*$/i, '').replace(/\s+/g, ' ').trim();
+        }
+    }
+    // Priorité 0b : ligne "<code numérique>   <NOM DU LABO>" (format Cerballiance)
+    for (let i = 0; i < Math.min(15, lines.length); i++) {
+        const line = (lines[i] || '').trim();
+        const m = line.match(/^\d{8,}\s+([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ0-9'’.\- ]{8,})$/);
+        if (m && /[A-Za-zÀ-ÿ]{4,}/.test(m[1])) {
+            return m[1].replace(/\s+/g, ' ').trim();
+        }
+    }
+
     // Priorité 1 : Recherche dans les premières lignes (souvent ligne 1 ou dans l'en-tête)
     for (let i = 0; i < Math.min(15, lines.length); i++) {
         const line = lines[i]?.trim();
@@ -1309,7 +1349,7 @@ if (typeof module !== 'undefined' && module.exports) {
         parseTextFormatHPRIM, parseRESLine, collectFollowingTEX, processRawResults,
         parseSpecialValue, parseNorm, formatValue, formatNorms,
         extractPatientInfo, extractPatientName, extractBirthDate, extractSamplingDate,
-        extractSamplingTime, extractFileDate, extractDoctorName, extractLaboratoryName,
+        extractSamplingTime, extractFileDate, extractDoctorName, extractLaboratoryName, extractPhone,
         parseDate, calculateAge, validateDates,
         computeAbnormal, getResultState
     };

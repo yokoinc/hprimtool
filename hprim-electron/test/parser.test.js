@@ -127,6 +127,17 @@ test('confidence : chute sous le seuil quand l\'identité est absente', () => {
     assert.ok(info.confidence < 0.8, 'confidence doit être pénalisée (' + info.confidence + ')');
 });
 
+test('en-tête SOLABIO : nom, naissance, labo, téléphone, prescripteur extraits', () => {
+    const content = fixture('header-solabio.hpm');
+    const info = P.extractPatientInfo(content);
+    assert.equal(info.patientName, 'DUPONT JEAN');
+    assert.ok(info.birthDate, 'date de naissance extraite');
+    assert.equal(info.birthDate.getFullYear(), 1950);
+    assert.equal(info.laboratoryName, 'LBM BIOLBS - LA HETRAIE');
+    assert.equal(info.phone, '02.32.85.33.33');
+    assert.equal(info.doctorName, 'MARTIN PAUL');
+});
+
 test('text : format détecté, patient extrait, parsing sans erreur', () => {
     assert.equal(P.detectHPRIMFormat(text), 'text_readable');
     const info = P.extractPatientInfo(text);
