@@ -14,6 +14,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
     openFileDialog: () => ipcRenderer.send('open-file-dialog'),
 
     quitApp: () => ipcRenderer.send('quit-app'),
+
+    // Contrôles de fenêtre (barre de titre custom)
+    minimizeWindow: () => ipcRenderer.send('window-minimize'),
+    toggleMaximizeWindow: () => ipcRenderer.send('window-maximize-toggle'),
+    closeWindow: () => ipcRenderer.send('window-close'),
     
     onFileToOpen: (callback) => {
         ipcRenderer.on('file-to-open', (event, filePath) => {

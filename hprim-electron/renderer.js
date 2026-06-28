@@ -146,7 +146,10 @@ const UI_ACTIONS = {
     'quit': () => quitApp(),
     'open': () => openFile(),
     'clear-search': () => clearSearch(),
-    'view-raw': () => showRawFile()
+    'view-raw': () => showRawFile(),
+    'win-min': () => window.electronAPI.minimizeWindow && window.electronAPI.minimizeWindow(),
+    'win-max': () => window.electronAPI.toggleMaximizeWindow && window.electronAPI.toggleMaximizeWindow(),
+    'win-close': () => window.electronAPI.closeWindow && window.electronAPI.closeWindow()
 };
 document.addEventListener('click', (e) => {
     const target = e.target.closest('[data-action]');

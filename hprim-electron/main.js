@@ -315,6 +315,19 @@ ipcMain.on('quit-app', (event) => {
     app.quit();
 });
 
+// IPC: Contrôles de fenêtre (barre de titre custom, fenêtre sans cadre)
+ipcMain.on('window-minimize', () => {
+    if (mainWindow) mainWindow.minimize();
+});
+ipcMain.on('window-maximize-toggle', () => {
+    if (!mainWindow) return;
+    if (mainWindow.isMaximized()) mainWindow.unmaximize();
+    else mainWindow.maximize();
+});
+ipcMain.on('window-close', () => {
+    if (mainWindow) mainWindow.close();
+});
+
 // IPC: Obtenir la langue du système
 ipcMain.handle('get-system-language', async () => {
     return app.getLocale();

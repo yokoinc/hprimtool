@@ -84,12 +84,35 @@
             background: var(--bg);
             min-height: 100vh;
             color: var(--text);
-            padding: 18px;
+            padding: 0;
             cursor: default;
             transition: background 0.2s ease, color 0.2s ease;
         }
 
-        .container { max-width: 980px; margin: 0 auto; }
+        .container { max-width: 980px; margin: 0 auto; padding: 14px 18px 18px; }
+
+        /* ---------- Barre de titre custom (fenêtre sans cadre) ---------- */
+        .titlebar {
+            display: flex; align-items: center; justify-content: space-between;
+            height: 32px;
+            padding-left: 14px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            -webkit-app-region: drag;
+            user-select: none;
+        }
+        .titlebar-title { font-size: 12px; font-weight: 500; color: var(--text-3); letter-spacing: 0.2px; }
+        .titlebar-controls { display: flex; height: 100%; -webkit-app-region: no-drag; }
+        .winctl {
+            width: 44px; height: 100%;
+            border: none; background: transparent;
+            color: var(--text-2); font-size: 14px; line-height: 1;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-family: inherit;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+        .winctl:hover { background: var(--surface-2); }
+        .winctl-close:hover { background: #e81123; color: #fff; }
 
         /* ---------- En-tête application ---------- */
         .app-header {
@@ -349,7 +372,7 @@
         @media print {
             body { background: #fff; color: #000; padding: 0; font-size: 9pt; }
             .container { max-width: none; margin: 0; }
-            .app-header, .drop-zone, .search-bar, .summary-bar, .raw-footer, .result-range { display: none !important; }
+            .titlebar, .app-header, .drop-zone, .search-bar, .summary-bar, .raw-footer, .result-range { display: none !important; }
 
             .patient-card {
                 border: none; border-bottom: 1px solid #999; border-radius: 0;
@@ -418,6 +441,14 @@
     </style>
 </head>
 <body>
+    <div class="titlebar">
+        <span class="titlebar-title" data-i18n="app.title">HPRIM Tool</span>
+        <div class="titlebar-controls">
+            <button class="winctl" data-action="win-min" aria-label="Réduire" title="Réduire">&#x2013;</button>
+            <button class="winctl" data-action="win-max" aria-label="Agrandir" title="Agrandir">&#x25A1;</button>
+            <button class="winctl winctl-close" data-action="win-close" aria-label="Fermer" title="Fermer">&#x2715;</button>
+        </div>
+    </div>
     <div class="container">
         <header class="app-header">
             <div class="app-brand">
