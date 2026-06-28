@@ -372,12 +372,12 @@
                en bas du bloc et la norme se décale sous la valeur. */
             /* Largeurs FIXES pour valeur et norme + alignées à droite : elles forment
                des colonnes nettes en descendant la page (et non plus en drapeau). */
-            .result-value-container { display: block; order: 2; flex: 0 0 86px; }
+            .result-value-container { display: block; order: 2; flex: 0 0 120px; }
             /* nombre aligné à droite / unité alignée à gauche -> sous-colonnes nettes */
             .value-line { justify-content: flex-end; }
-            .result-number { color: #000; font-size: 8.5pt; text-align: right; min-width: 36px; }
-            .result-unit { color: #000; font-size: 8.5pt; text-align: left; min-width: 42px; }
-            .result-mid { order: 3; flex: 0 0 108px; }
+            .result-number { color: #000; font-size: 8.5pt; text-align: right; min-width: 46px; }
+            .result-unit { color: #000; font-size: 8.5pt; text-align: left; min-width: 58px; }
+            .result-mid { order: 3; flex: 0 0 150px; }
             .result-comment { order: 4; flex: 1 1 100%; }   /* commentaire en pleine largeur, sous la ligne */
             .result-mid:has(.result-range) > .result-norms { display: block; }
             /* norme : min aligné à droite, tiret, max aligné à gauche -> les tirets s'alignent */
