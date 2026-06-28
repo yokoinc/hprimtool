@@ -102,7 +102,10 @@
             border-radius: 6px;
             padding: 13px 18px;
             margin-bottom: 12px;
+            -webkit-app-region: drag;   /* fenêtre sans cadre : l'en-tête sert à déplacer */
         }
+        /* les boutons restent cliquables (non-drag) */
+        .app-header .btn { -webkit-app-region: no-drag; }
 
         .app-brand { display: flex; align-items: center; gap: 11px; }
 

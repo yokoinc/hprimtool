@@ -124,6 +124,8 @@ function createWindow() {
         minWidth: 400,
         minHeight: 300,
         center: true,
+        frame: false,               // Pas de barre de titre Windows (interface épurée)
+        autoHideMenuBar: true,      // Pas de barre de menu
         title: 'HPRIM Tool - Analyseur de résultats médicaux',
         webPreferences: {
             nodeIntegration: false,     // ✅ Sécurisé - empêche l'accès direct à Node.js
@@ -138,106 +140,8 @@ function createWindow() {
     // Charger l'interface
     mainWindow.loadFile('index.html');
 
-    // Menu en français pour toutes les plateformes
-    const template = [];
-    
-    // Menu spécifique macOS
-    if (process.platform === 'darwin') {
-        template.push({
-            label: 'HPRIM Tool',
-            submenu: [
-                { role: 'about', label: 'À propos de HPRIM Tool' },
-                { type: 'separator' },
-                { role: 'hide', label: 'Masquer HPRIM Tool' },
-                { role: 'hideothers', label: 'Masquer les autres' },
-                { role: 'unhide', label: 'Tout afficher' },
-                { type: 'separator' },
-                { role: 'quit', label: 'Quitter HPRIM Tool' }
-            ]
-        });
-    }
-    
-    // Menu Fichier pour toutes les plateformes
-    template.push({
-        label: 'Fichier',
-        submenu: [
-            {
-                label: 'Ouvrir...',
-                accelerator: 'CmdOrCtrl+O',
-                click: openFileDialog
-            },
-            { type: 'separator' },
-            process.platform === 'darwin' 
-                ? { role: 'close', label: 'Fermer la fenêtre' }
-                : { role: 'quit', label: 'Quitter' }
-        ]
-    });
-    
-    // Menu Édition
-    template.push({
-        label: 'Édition',
-        submenu: [
-            { role: 'undo', label: 'Annuler' },
-            { role: 'redo', label: 'Rétablir' },
-            { type: 'separator' },
-            { role: 'cut', label: 'Couper' },
-            { role: 'copy', label: 'Copier' },
-            { role: 'paste', label: 'Coller' },
-            { role: 'selectall', label: 'Tout sélectionner' }
-        ]
-    });
-    
-    // Menu Affichage
-    template.push({
-        label: 'Affichage',
-        submenu: [
-            { role: 'reload', label: 'Actualiser' },
-            { role: 'toggledevtools', label: 'Outils de développement' },
-            { type: 'separator' },
-            { role: 'resetzoom', label: 'Taille réelle' },
-            { role: 'zoomin', label: 'Zoom avant' },
-            { role: 'zoomout', label: 'Zoom arrière' },
-            { type: 'separator' },
-            { role: 'togglefullscreen', label: 'Plein écran' }
-        ]
-    });
-    
-    // Menu Fenêtre
-    template.push({
-        label: 'Fenêtre',
-        submenu: [
-            { role: 'minimize', label: 'Réduire' },
-            ...(process.platform === 'darwin' 
-                ? [
-                    { role: 'zoom', label: 'Zoom' },
-                    { type: 'separator' },
-                    { role: 'front', label: 'Tout à l\'avant' }
-                ] 
-                : [])
-        ]
-    });
-    
-    // Menu Aide
-    template.push({
-        label: 'Aide',
-        submenu: [
-            {
-                label: 'À propos',
-                click: () => {
-                    dialog.showMessageBox(mainWindow, {
-                        type: 'info',
-                        title: 'À propos de HPRIM Tool',
-                        message: 'HPRIM Tool',
-                        detail: 'Outil de visualisation et d\'analyse de fichiers HPRIM.\n\nVersion: 1.0.0',
-                        buttons: ['OK']
-                    });
-                }
-            }
-        ]
-    });
-    
-    const menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
+    // Interface épurée : aucune barre de menu (les actions sont des boutons dans l'app).
+    Menu.setApplicationMenu(null);
 
     // Gérer les raccourcis globaux
     globalShortcut.register('CommandOrControl+Q', () => {
@@ -255,6 +159,11 @@ function createWindow() {
             // Déclencher l'impression via JavaScript (comme le bouton Imprimer)
             mainWindow.webContents.executeJavaScript('window.print();');
         }
+    });
+
+    // Ouvrir un fichier (remplace l'entrée de menu supprimée)
+    globalShortcut.register('CommandOrControl+O', () => {
+        openFileDialog();
     });
 
     // Gérer la fermeture de la fenêtre - quitter l'app au lieu de juste fermer
