@@ -370,8 +370,11 @@
             .result-name { color: #000; font-size: 8.5pt; order: 1; flex: 1 1 auto; }
             /* display:block (pas flex-colonne) : sinon la ligne de base est synthétisée
                en bas du bloc et la norme se décale sous la valeur. */
-            .result-value-container { display: block; order: 2; flex: 0 0 auto; }
-            .result-mid { order: 3; flex: 0 0 auto; }
+            /* Largeurs FIXES pour valeur et norme + alignées à droite : elles forment
+               des colonnes nettes en descendant la page (et non plus en drapeau). */
+            .result-value-container { display: block; order: 2; flex: 0 0 80px; text-align: right; }
+            .value-line { justify-content: flex-end; }
+            .result-mid { order: 3; flex: 0 0 104px; }
             .result-comment { order: 4; flex: 1 1 100%; }   /* commentaire en pleine largeur, sous la ligne */
             .result-mid:has(.result-range) > .result-norms { display: block; }
             .result-norms { color: #333; font-size: 8.5pt; text-align: right; white-space: nowrap; }
