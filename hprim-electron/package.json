@@ -28,7 +28,12 @@
       "main.js",
       "preload.js",
       "parser.js",
+      "render.js",
+      "search.js",
+      "export.js",
+      "rawfile.js",
       "renderer.js",
+      "init.js",
       "index.html",
       "i18n.js",
       "icons/**/*"
