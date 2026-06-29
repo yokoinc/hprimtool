@@ -93,15 +93,13 @@
 
         /* ---------- Barre de titre custom (fenêtre sans cadre) ---------- */
         .titlebar {
-            display: flex; align-items: center; justify-content: space-between;
+            display: flex; align-items: center; justify-content: flex-end;
             height: 32px;
-            padding-left: 14px;
             background: var(--surface);
             border-bottom: 1px solid var(--border);
             -webkit-app-region: drag;
             user-select: none;
         }
-        .titlebar-title { font-size: 12px; font-weight: 500; color: var(--text-3); letter-spacing: 0.2px; }
         .titlebar-controls { display: flex; height: 100%; -webkit-app-region: no-drag; }
         .winctl {
             width: 44px; height: 100%;
@@ -442,7 +440,6 @@
 </head>
 <body>
     <div class="titlebar">
-        <span class="titlebar-title" data-i18n="app.title">HPRIM Tool</span>
         <div class="titlebar-controls">
             <button class="winctl" data-action="win-min" aria-label="Réduire" title="Réduire">&#x2013;</button>
             <button class="winctl" data-action="win-max" aria-label="Agrandir" title="Agrandir">&#x25A1;</button>
@@ -461,7 +458,6 @@
                 <button class="btn" data-action="toggle-search" id="searchBtn"><span data-i18n="search.button">Rechercher</span></button>
                 <button class="btn" data-action="print" id="printBtn" disabled><span data-i18n="buttons.print">Imprimer</span></button>
                 <button class="btn" data-action="export" id="exportBtn" disabled><span data-i18n="buttons.export">Export CSV</span></button>
-                <button class="btn" data-action="quit"><span data-i18n="buttons.quit">Quitter</span></button>
             </div>
         </header>
 
