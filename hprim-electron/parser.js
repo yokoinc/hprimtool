@@ -836,13 +836,15 @@ function parseSpecialValue(valueStr) {
         cleanValue = cleanValue.replace(/\*/g, '');
     }
     
-    // Gérer les opérateurs de comparaison
-    if (cleanValue.startsWith('<')) {
-        operator = '<';
-        cleanValue = cleanValue.substring(1);
-    } else if (cleanValue.startsWith('>')) {
-        operator = '>';
-        cleanValue = cleanValue.substring(1);
+    // Gérer les opérateurs de comparaison : < > ≤ ≥ =, et leurs variantes ASCII
+    // <= >= (normalisées en ≤ ≥). Les valeurs censurées restent ainsi numériques.
+    const opMatch = cleanValue.match(/^(<=|>=|[<>≤≥=])/);
+    if (opMatch) {
+        let op = opMatch[1];
+        if (op === '<=') op = '≤';
+        else if (op === '>=') op = '≥';
+        operator = op;
+        cleanValue = cleanValue.substring(opMatch[1].length);
     }
     
     // Essayer de convertir en nombre, sinon garder comme texte
@@ -891,13 +893,7 @@ function formatValue(value, operator, highlighted) {
 }
 
 function formatNorms(min, max, result) {
-    // Normes spéciales pour le DFG
-    if (result && result.name && result.name.toLowerCase().includes('dfg')) {
-        return '&gt; 60';
-    }
-    if (result && result.code && result.code.includes('1.6')) {
-        return '&gt; 60';
-    }
+    // Les normes réellement présentes dans le fichier priment toujours.
     // Intervalle min-max : min et max dans des spans dédiés pour pouvoir les aligner
     // autour du tiret (min à droite, tiret, max à gauche). min/max sont numériques.
     if (min !== null && max !== null) {
@@ -908,6 +904,13 @@ function formatNorms(min, max, result) {
     }
     if (min !== null) {
         return `&gt; ${min}`;
+    }
+    // Aucune norme dans le fichier : pour le DFG (estimé), repli sur le seuil
+    // de référence usuel "> 60 mL/min". N'écrase JAMAIS une borne fournie par le labo.
+    const isDFG = (result && result.name && result.name.toLowerCase().includes('dfg'))
+        || (result && result.code && result.code.includes('1.6'));
+    if (isDFG) {
+        return '&gt; 60';
     }
     return '';
 }
@@ -985,8 +988,10 @@ function extractBirthDate(lines) {
         const dateCandidate = lines[6]?.trim();
         if (dateCandidate && dateCandidate.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
             const birthYear = parseInt(dateCandidate.split('/')[2]);
-            // Validation : année de naissance réaliste (1920-2024)
-            if (birthYear >= 1920 && birthYear <= 2024) {
+            // Validation : année de naissance réaliste (de 1900 à l'année courante).
+            // Plafond dynamique -> ne rejette plus les naissances après 2024.
+            const currentYear = new Date().getFullYear();
+            if (birthYear >= 1900 && birthYear <= currentYear) {
                 return parseDate(dateCandidate);
             }
         }
@@ -1316,11 +1321,14 @@ function computeAbnormal(result) {
     const op = result.operator1 || '';
 
     if (isFinite(v)) {
-        // Une valeur censurée ">x" ne peut pas être "basse" ; "<x" ne peut pas être "haute".
-        const canBeHigh = op !== '<';
-        const canBeLow = op !== '>';
-        if (canBeHigh && isFinite(hi) && (v > hi || (op === '>' && v >= hi))) return { isAbnormal: true, direction: 'high' };
-        if (canBeLow && isFinite(lo) && (v < lo || (op === '<' && v <= lo))) return { isAbnormal: true, direction: 'low' };
+        // Censure de la valeur : "<x"/"≤x" plafonnent -> jamais "haute" ;
+        // ">x"/"≥x" planchent -> jamais "basse" ; "=" et absence d'opérateur : neutres.
+        const upperCensored = (op === '<' || op === '≤');
+        const lowerCensored = (op === '>' || op === '≥');
+        const canBeHigh = !upperCensored;
+        const canBeLow = !lowerCensored;
+        if (canBeHigh && isFinite(hi) && (v > hi || (lowerCensored && v >= hi))) return { isAbnormal: true, direction: 'high' };
+        if (canBeLow && isFinite(lo) && (v < lo || (upperCensored && v <= lo))) return { isAbnormal: true, direction: 'low' };
     }
     return { isAbnormal: false, direction: '' };
 }

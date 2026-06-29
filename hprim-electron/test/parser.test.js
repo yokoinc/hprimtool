@@ -144,3 +144,46 @@ test('text : format détecté, patient extrait, parsing sans erreur', () => {
     assert.ok(info.patientName && info.patientName.toUpperCase().includes('MARTIN'));
     assert.ok(Array.isArray(P.parseHPRIM(text)));
 });
+
+// ---------------------------------------------------------------------------
+// Opérateurs ≤ ≥ = (et variantes ASCII) — extraction + gating de l'anomalie.
+test('parseSpecialValue extrait ≤ ≥ = et normalise <= >=', () => {
+    assert.deepEqual(P.parseSpecialValue('≤0,05'), { value: 0.05, highlighted: false, operator: '≤' });
+    assert.deepEqual(P.parseSpecialValue('≥120'), { value: 120, highlighted: false, operator: '≥' });
+    assert.deepEqual(P.parseSpecialValue('<=5'), { value: 5, highlighted: false, operator: '≤' });
+    assert.deepEqual(P.parseSpecialValue('>=10'), { value: 10, highlighted: false, operator: '≥' });
+    assert.deepEqual(P.parseSpecialValue('=7'), { value: 7, highlighted: false, operator: '=' });
+    assert.equal(P.parseSpecialValue('-8').operator, null); // négatif != opérateur
+});
+
+test('computeAbnormal : ≤ se comporte comme <, ≥ comme >, = neutre', () => {
+    // ≤ : plafonné -> jamais haut ; bas si sous l'intervalle
+    assert.equal(P.computeAbnormal({ value1: '0.03', operator1: '≤', min1: 0.5, max1: 1.0 }).direction, 'low');
+    assert.equal(P.computeAbnormal({ value1: '0.8', operator1: '≤', min1: 0.5, max1: 1.0 }).direction, ''); // peut être dans l'intervalle
+    // ≥ : planché -> jamais bas ; haut si au-dessus (borne incluse comme pour >)
+    assert.equal(P.computeAbnormal({ value1: '200', operator1: '≥', min1: 10, max1: 100 }).direction, 'high');
+    assert.equal(P.computeAbnormal({ value1: '4.2', operator1: '≥', min1: 0.27, max1: 4.2 }).direction, 'high');
+    assert.equal(P.computeAbnormal({ value1: '0.5', operator1: '≥', min1: 1.0, max1: 4.0 }).direction, ''); // peut être dans l'intervalle
+    // = : pas de censure, comparaison des deux côtés
+    assert.equal(P.computeAbnormal({ value1: '5', operator1: '=', min1: 1, max1: 4 }).direction, 'high');
+    assert.equal(P.computeAbnormal({ value1: '0.5', operator1: '=', min1: 1, max1: 4 }).direction, 'low');
+});
+
+// ---------------------------------------------------------------------------
+// DFG : la borne du fichier prime ; "> 60" n'est qu'un repli sans normes.
+test('formatNorms : DFG ne masque pas une borne fournie par le labo', () => {
+    assert.equal(P.formatNorms(null, null, { name: 'DFG (estimé)' }), '&gt; 60'); // repli
+    assert.equal(P.formatNorms(null, null, { code: '1.6' }), '&gt; 60');          // repli par code
+    assert.equal(P.formatNorms(90, null, { name: 'DFG' }), '&gt; 90');            // borne réelle respectée
+    assert.equal(P.formatNorms(null, null, { name: 'GLUCOSE' }), '');             // non-DFG sans normes
+});
+
+// ---------------------------------------------------------------------------
+// Plafond de l'année de naissance dynamique (plus de blocage après 2024).
+test('extractBirthDate : plafond = année courante (accepte une naissance récente, rejette le futur)', () => {
+    const recent = `${new Date().getFullYear()}`;
+    const ok = P.extractBirthDate(['', '', '', '', '', '', `15/03/${recent}`]);
+    assert.ok(ok && ok.getFullYear() === new Date().getFullYear(), 'naissance de l\'année courante acceptée');
+    const future = P.extractBirthDate(['', '', '', '', '', '', '15/03/2999']);
+    assert.equal(future, null, 'année dans le futur rejetée');
+});
