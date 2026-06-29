@@ -70,6 +70,12 @@ const translations = {
             doctor: 'Prescripteur',
             laboratory: 'Laboratoire'
         },
+        summary: {
+            high: 'élevée',
+            low: 'basse',
+            normal: 'normale',
+            interpretation: 'Interprétation'
+        },
         tooltip: {
             theme_dark: 'Passer en mode sombre',
             theme_light: 'Passer en mode clair',
@@ -144,6 +150,12 @@ const translations = {
             sampling_at: 'sampled at',
             doctor: 'Dr',
             laboratory: 'Laboratory'
+        },
+        summary: {
+            high: 'high',
+            low: 'low',
+            normal: 'normal',
+            interpretation: 'Interpretation'
         },
         tooltip: {
             theme_dark: 'Switch to dark mode',
@@ -322,17 +334,17 @@ class I18n {
                 // Mode compact
                 dropZone.innerHTML = `
                     <h3 data-i18n="dropzone.compact_title">${this.t('dropzone.compact_title')}</h3>
-                    <button class="btn" onclick="openFile()" data-i18n="buttons.select_file">${this.t('buttons.select_file')}</button>
+                    <button class="btn" data-action="open" data-i18n="buttons.select_file">${this.t('buttons.select_file')}</button>
                 `;
             } else {
                 // Mode normal - Préserver les attributs data-i18n pour la cohérence
                 dropZone.innerHTML = `
                     <h3 data-i18n="dropzone.title">${this.t('dropzone.title')}</h3>
                     <p data-i18n="dropzone.or">${this.t('dropzone.or')}</p>
-                    <button class="btn" onclick="openFile()" data-i18n="buttons.select_file" data-i18n-attr='{"aria-label": "tooltip.select_dialog"}' aria-label="${this.t('tooltip.select_dialog')}">
+                    <button class="btn" data-action="open" data-i18n="buttons.select_file" data-i18n-attr='{"aria-label": "tooltip.select_dialog"}' aria-label="${this.t('tooltip.select_dialog')}">
                         ${this.t('buttons.select_file')}
                     </button>
-                    <p style="margin-top: 15px; font-size: 0.9em; color: #666;">
+                    <p class="drop-formats">
                         <span data-i18n="dropzone.formats">${this.t('dropzone.formats')}</span><br>
                         <span data-i18n="dropzone.size_limit">${this.t('dropzone.size_limit')}</span>
                     </p>

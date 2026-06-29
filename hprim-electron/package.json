@@ -11,7 +11,7 @@
   "license": "MIT",
   "scripts": {
     "start": "electron .",
-    "test": "node test-simple.js",
+    "test": "node --test test/*.test.js",
     "build": "electron-builder",
     "build-win": "electron-builder --win",
     "build-mac": "electron-builder --mac",
@@ -27,7 +27,13 @@
     "files": [
       "main.js",
       "preload.js",
+      "parser.js",
+      "render.js",
+      "search.js",
+      "export.js",
+      "rawfile.js",
       "renderer.js",
+      "init.js",
       "index.html",
       "i18n.js",
       "icons/**/*"

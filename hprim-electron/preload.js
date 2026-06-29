@@ -1,33 +1,24 @@
-const { ipcRenderer } = require('electron');
-const path = require('path');
-
-
-// Avec contextIsolation: true, on utilise contextBridge pour sécuriser l'exposition
-const { contextBridge } = require('electron');
+// Preload compatible sandbox:true — n'utilise que des API Electron (contextBridge,
+// ipcRenderer), aucun module Node (pas de 'path'/'fs').
+const { ipcRenderer, contextBridge } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
-    readFile: (filePath) => {
-        if (!filePath || typeof filePath !== 'string') {
-            throw new Error('Invalid file path');
-        }
-        
-        const normalizedPath = path.normalize(filePath);
-        if (normalizedPath.includes('..')) {
-            throw new Error('Path traversal not allowed');
-        }
-        
-        const allowedExtensions = ['.hpr', '.hpm', '.hpm1', '.hpm2', '.hpm3', '.hprim', '.txt'];
-        const ext = path.extname(normalizedPath).toLowerCase();
-        if (!allowedExtensions.includes(ext)) {
-            throw new Error('File type not allowed');
-        }
-        
-        return ipcRenderer.invoke('read-file', normalizedPath);
-    },
+    // La validation (normalisation, anti-traversée, extension, taille, existence)
+    // est faite côté main dans le handler 'read-file' (processus de confiance).
+    readFile: (filePath) => ipcRenderer.invoke('read-file', filePath),
+
+    // Décodage d'un fichier déposé à partir de ses octets (glisser-déposer) — fiable
+    // sans dépendre de File.path (supprimé en Electron 32+) ni de webUtils (Electron 30+).
+    decodeBuffer: (data, fileName) => ipcRenderer.invoke('decode-buffer', data, fileName),
     
     openFileDialog: () => ipcRenderer.send('open-file-dialog'),
-    
+
     quitApp: () => ipcRenderer.send('quit-app'),
+
+    // Contrôles de fenêtre (barre de titre custom)
+    minimizeWindow: () => ipcRenderer.send('window-minimize'),
+    toggleMaximizeWindow: () => ipcRenderer.send('window-maximize-toggle'),
+    closeWindow: () => ipcRenderer.send('window-close'),
     
     onFileToOpen: (callback) => {
         ipcRenderer.on('file-to-open', (event, filePath) => {

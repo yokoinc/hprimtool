@@ -1,6 +1,7 @@
 const { app, BrowserWindow, Menu, dialog, ipcMain, globalShortcut, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const { decodeBuffer } = require('./parser.js');
 
 let mainWindow;
 let fileToOpen = null;
@@ -123,12 +124,14 @@ function createWindow() {
         minWidth: 400,
         minHeight: 300,
         center: true,
+        frame: false,               // Pas de barre de titre Windows (interface épurée)
+        autoHideMenuBar: true,      // Pas de barre de menu
         title: 'HPRIM Tool - Analyseur de résultats médicaux',
         webPreferences: {
             nodeIntegration: false,     // ✅ Sécurisé - empêche l'accès direct à Node.js
             contextIsolation: true,     // ✅ Isolation du contexte pour la sécurité
             enableRemoteModule: false,  // ✅ Désactive le module remote vulnérable
-            sandbox: false,             // Désactivé pour compatibilité avec preload
+            sandbox: true,              // ✅ Renderer/preload sandboxés (preload n'utilise que contextBridge/ipcRenderer/webUtils)
             preload: path.join(__dirname, 'preload.js')
         },
         icon: path.join(__dirname, 'icons', 'icon.png')
@@ -137,106 +140,8 @@ function createWindow() {
     // Charger l'interface
     mainWindow.loadFile('index.html');
 
-    // Menu en français pour toutes les plateformes
-    const template = [];
-    
-    // Menu spécifique macOS
-    if (process.platform === 'darwin') {
-        template.push({
-            label: 'HPRIM Tool',
-            submenu: [
-                { role: 'about', label: 'À propos de HPRIM Tool' },
-                { type: 'separator' },
-                { role: 'hide', label: 'Masquer HPRIM Tool' },
-                { role: 'hideothers', label: 'Masquer les autres' },
-                { role: 'unhide', label: 'Tout afficher' },
-                { type: 'separator' },
-                { role: 'quit', label: 'Quitter HPRIM Tool' }
-            ]
-        });
-    }
-    
-    // Menu Fichier pour toutes les plateformes
-    template.push({
-        label: 'Fichier',
-        submenu: [
-            {
-                label: 'Ouvrir...',
-                accelerator: 'CmdOrCtrl+O',
-                click: openFileDialog
-            },
-            { type: 'separator' },
-            process.platform === 'darwin' 
-                ? { role: 'close', label: 'Fermer la fenêtre' }
-                : { role: 'quit', label: 'Quitter' }
-        ]
-    });
-    
-    // Menu Édition
-    template.push({
-        label: 'Édition',
-        submenu: [
-            { role: 'undo', label: 'Annuler' },
-            { role: 'redo', label: 'Rétablir' },
-            { type: 'separator' },
-            { role: 'cut', label: 'Couper' },
-            { role: 'copy', label: 'Copier' },
-            { role: 'paste', label: 'Coller' },
-            { role: 'selectall', label: 'Tout sélectionner' }
-        ]
-    });
-    
-    // Menu Affichage
-    template.push({
-        label: 'Affichage',
-        submenu: [
-            { role: 'reload', label: 'Actualiser' },
-            { role: 'toggledevtools', label: 'Outils de développement' },
-            { type: 'separator' },
-            { role: 'resetzoom', label: 'Taille réelle' },
-            { role: 'zoomin', label: 'Zoom avant' },
-            { role: 'zoomout', label: 'Zoom arrière' },
-            { type: 'separator' },
-            { role: 'togglefullscreen', label: 'Plein écran' }
-        ]
-    });
-    
-    // Menu Fenêtre
-    template.push({
-        label: 'Fenêtre',
-        submenu: [
-            { role: 'minimize', label: 'Réduire' },
-            ...(process.platform === 'darwin' 
-                ? [
-                    { role: 'zoom', label: 'Zoom' },
-                    { type: 'separator' },
-                    { role: 'front', label: 'Tout à l\'avant' }
-                ] 
-                : [])
-        ]
-    });
-    
-    // Menu Aide
-    template.push({
-        label: 'Aide',
-        submenu: [
-            {
-                label: 'À propos',
-                click: () => {
-                    dialog.showMessageBox(mainWindow, {
-                        type: 'info',
-                        title: 'À propos de HPRIM Tool',
-                        message: 'HPRIM Tool',
-                        detail: 'Outil de visualisation et d\'analyse de fichiers HPRIM.\n\nVersion: 1.0.0',
-                        buttons: ['OK']
-                    });
-                }
-            }
-        ]
-    });
-    
-    const menu = Menu.buildFromTemplate(template);
-    Menu.setApplicationMenu(menu);
+    // Interface épurée : aucune barre de menu (les actions sont des boutons dans l'app).
+    Menu.setApplicationMenu(null);
 
     // Gérer les raccourcis globaux
     globalShortcut.register('CommandOrControl+Q', () => {
@@ -254,6 +159,11 @@ function createWindow() {
             // Déclencher l'impression via JavaScript (comme le bouton Imprimer)
             mainWindow.webContents.executeJavaScript('window.print();');
         }
+    });
+
+    // Ouvrir un fichier (remplace l'entrée de menu supprimée)
+    globalShortcut.register('CommandOrControl+O', () => {
+        openFileDialog();
     });
 
     // Gérer la fermeture de la fenêtre - quitter l'app au lieu de juste fermer
@@ -346,21 +256,16 @@ ipcMain.handle('read-file', async (event, filePath) => {
             throw new Error(`Fichier trop volumineux (${Math.round(stats.size / 1024 / 1024)}MB > 10MB)`);
         }
         
-        // Lire le fichier en binaire puis convertir en ISO-8859-1
+        // Lire le fichier en binaire
         const buffer = fs.readFileSync(normalizedPath);
-        
+
         // Vérifier que le fichier n'est pas vide
         if (buffer.length === 0) {
             throw new Error('Le fichier est vide');
         }
-        
-        // Convertir chaque byte en caractère ISO-8859-1
-        let text = '';
-        for (let i = 0; i < buffer.length; i++) {
-            text += String.fromCharCode(buffer[i]);
-        }
-        
-        return text;
+
+        // Décodage avec détection d'encodage (UTF-8 strict, repli windows-1252)
+        return decodeBuffer(buffer);
         
     } catch (error) {
         
@@ -377,6 +282,29 @@ ipcMain.handle('read-file', async (event, filePath) => {
     }
 });
 
+// IPC: Décoder le contenu d'un fichier déposé (glisser-déposer).
+// Pas de chemin requis -> fiable quelle que soit la version d'Electron et le sandbox.
+ipcMain.handle('decode-buffer', async (event, data, fileName) => {
+    try {
+        const buffer = Buffer.from(data);
+        if (buffer.length === 0) {
+            throw new Error('Le fichier est vide');
+        }
+        const maxSize = 10 * 1024 * 1024; // 10MB
+        if (buffer.length > maxSize) {
+            throw new Error(`Fichier trop volumineux (${Math.round(buffer.length / 1024 / 1024)}MB > 10MB)`);
+        }
+        const allowedExtensions = ['.hpr', '.hpm', '.hpm1', '.hpm2', '.hpm3', '.hprim', '.txt'];
+        const ext = path.extname(fileName || '').toLowerCase();
+        if (ext && !allowedExtensions.includes(ext)) {
+            throw new Error(`Extension de fichier non autorisée: ${ext}`);
+        }
+        return decodeBuffer(buffer);
+    } catch (error) {
+        throw new Error(`Erreur lors de la lecture du fichier: ${error.message}`);
+    }
+});
+
 // IPC: Ouvrir la boîte de dialogue de fichier
 ipcMain.on('open-file-dialog', (event) => {
     openFileDialog();
@@ -385,6 +313,19 @@ ipcMain.on('open-file-dialog', (event) => {
 // IPC: Quitter l'application
 ipcMain.on('quit-app', (event) => {
     app.quit();
+});
+
+// IPC: Contrôles de fenêtre (barre de titre custom, fenêtre sans cadre)
+ipcMain.on('window-minimize', () => {
+    if (mainWindow) mainWindow.minimize();
+});
+ipcMain.on('window-maximize-toggle', () => {
+    if (!mainWindow) return;
+    if (mainWindow.isMaximized()) mainWindow.unmaximize();
+    else mainWindow.maximize();
+});
+ipcMain.on('window-close', () => {
+    if (mainWindow) mainWindow.close();
 });
 
 // IPC: Obtenir la langue du système
