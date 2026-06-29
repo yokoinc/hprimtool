@@ -187,3 +187,15 @@ test('extractBirthDate : plafond = année courante (accepte une naissance récen
     const future = P.extractBirthDate(['', '', '', '', '', '', '15/03/2999']);
     assert.equal(future, null, 'année dans le futur rejetée');
 });
+
+// ---------------------------------------------------------------------------
+// parseDate : dates valides acceptées, dates impossibles rejetées proprement.
+test('parseDate : valide une date correcte et rejette jour/mois hors bornes', () => {
+    const ok = P.parseDate('15/03/1980');
+    assert.ok(ok && ok.getDate() === 15 && ok.getMonth() === 2 && ok.getFullYear() === 1980);
+    assert.equal(P.parseDate('32/01/1980'), null); // jour > 31
+    assert.equal(P.parseDate('15/13/1980'), null); // mois > 12
+    assert.equal(P.parseDate('00/00/1980'), null); // composantes nulles
+    assert.equal(P.parseDate('31/02/1980'), null); // 31 février -> pas de débordement silencieux
+    assert.equal(P.parseDate('15-03-1980'), null); // séparateur non géré (les appelants normalisent en '/')
+});

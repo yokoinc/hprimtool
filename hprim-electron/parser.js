@@ -1270,10 +1270,21 @@ function extractLaboratoryName(lines) {
 function parseDate(dateStr) {
     if (!dateStr) return null;
     const parts = dateStr.split('/');
-    if (parts.length === 3) {
-        return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
-    }
-    return null;
+    if (parts.length !== 3) return null;
+
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10);
+    const year = parseInt(parts[2], 10);
+
+    // Rejet propre si une composante manque ou sort des bornes calendaires.
+    if (!Number.isFinite(day) || !Number.isFinite(month) || !Number.isFinite(year)) return null;
+    if (day < 1 || day > 31 || month < 1 || month > 12) return null;
+
+    const d = new Date(year, month - 1, day);
+    // Garde anti-débordement : JS « roule » les dates impossibles (31/02 -> 03/03).
+    // On exige que les composantes recalculées coïncident, sinon date invalide -> null.
+    if (d.getFullYear() !== year || d.getMonth() !== month - 1 || d.getDate() !== day) return null;
+    return d;
 }
 
 function calculateAge(birthDate, referenceDate) {
