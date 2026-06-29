@@ -1,6 +1,31 @@
 # Changelog - HPRIM Tool
 
-## Version 1.0.7 (Dernière version)
+## Version 1.1.0 (Dernière version)
+
+### 🎨 Refonte de l'interface (« clinique épuré »)
+- Nouvelle palette neutre et plate, accent médical unique, thème **clair/sombre** cohérent
+- Carte patient (identité, âge, prescripteur, laboratoire, téléphone, prélèvement)
+- **Bandeau de synthèse** (valeurs élevées / basses / normales) et **barre de position** dans l'intervalle de référence
+- Fenêtre sans cadre + barre de titre personnalisée (réduire / agrandir / fermer), sans barre de menu
+- Impression repensée : colonnes valeur/norme alignées, commentaires lisibles
+
+### 🩺 Fiabilité du parsing (cœur clinique)
+- Cœur de parsing extrait dans `parser.js` (pur, testable) + suite de tests `node:test` (24 cas)
+- **Détection d'anomalie unifiée** : statut H/L **et** comparaison numérique aux bornes, sur les 3 formats (corrige des faux négatifs)
+- Opérateurs `< > ≤ ≥ =` reconnus ; bornes négatives préservées ; virgule décimale française gérée
+- DFG : la borne du fichier prime (plus de seuil « > 60 » codé en dur)
+- Date de naissance : plafond d'année dynamique + rejet des dates impossibles (identitovigilance)
+- Décodage d'encodage robuste (UTF-8 / windows-1252 / BOM) — fin du mojibake
+
+### 🔒 Sécurité
+- **CSP stricte** + `sandbox: true` ; échappement anti-XSS de tout contenu de fichier
+- Glisser-déposer fiabilisé (lecture du contenu, indépendant de la version d'Electron)
+
+### 🧱 Qualité / maintenance
+- `renderer.js` découpé en modules (rendu, recherche, export, fichier brut, orchestrateur)
+- Tests bloquants en CI avant chaque build/release ; nettoyage de la racine du dépôt
+
+## Version 1.0.7
 
 ### 🔧 Améliorations techniques
 - **Builds automatisés GitHub Actions** : Pipeline complet de build pour Linux (x64/arm64), Windows et macOS
