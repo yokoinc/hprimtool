@@ -1,6 +1,11 @@
 # Changelog - HPRIM Tool
 
-## Version 1.2.3 (Dernière version)
+## Version 1.2.4 (Dernière version)
+
+### 🐛 Clignotement au démarrage : cause racine corrigée
+- Diagnostic (logs Electron) : le **processus GPU plantait en boucle** au lancement (sortie `0xC0000409`) ; chaque crash/redémarrage provoquait un flash noir ↔ thème. **Accélération matérielle désactivée** (`app.disableHardwareAcceleration()`) → plus de crash GPU, démarrage stable. Rendu logiciel sans impact perceptible pour cette interface 2D.
+
+## Version 1.2.3
 
 ### 🎨 Démarrage net (suite)
 - Fin du clignotement résiduel au lancement : la fenêtre n'apparaît plus qu'une fois le rendu **complètement prêt** (thème + i18n appliqués), via un signal du renderer, et les **transitions CSS sont désactivées pendant le chargement** (plus de fondu noir ↔ thème). i18n appliqué sans délai artificiel.

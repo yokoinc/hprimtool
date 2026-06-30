@@ -4,6 +4,13 @@ const fs = require('fs');
 const { decodeBuffer } = require('./parser.js');
 const { autoUpdater } = require('electron-updater');
 
+// Sur certaines configs (pilotes GPU + Chromium d'Electron 27), le processus GPU
+// plante en boucle au démarrage (sortie 0xC0000409) : chaque crash/redémarrage
+// provoque un flash noir <-> thème (« glitch » au lancement). L'interface étant en
+// 2D simple, le rendu logiciel est tout aussi fluide et supprime ces crashs.
+// DOIT être appelé avant app 'ready'.
+app.disableHardwareAcceleration();
+
 let mainWindow;
 let fileToOpen = null;
 
