@@ -2,182 +2,131 @@
 
 **Analyseur professionnel de fichiers de résultats biologiques au format HPRIM**
 
-[![Version](https://img.shields.io/badge/version-1.0.1-blue.svg)](https://github.com/yokoinc/hprimtool/releases)
+[![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)](https://github.com/yokoinc/hprimtool/releases)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey.svg)]()
-[![License](https://img.shields.io/badge/license-Free-green.svg)]()
+[![License](https://img.shields.io/badge/license-MIT-green.svg)]()
 
 ## 📋 Description
 
-HPRIM Tool est une application desktop moderne qui permet de lire, analyser et afficher de manière claire et structurée les fichiers de résultats d'analyses biologiques au format HPRIM (.hpr, .hpm, .hpm1, .hpm2, .hpm3, .hprim).
+HPRIM Tool est une application desktop (Electron) qui lit, analyse et affiche de manière claire et structurée les fichiers de résultats d'analyses biologiques au format HPRIM (`.hpr`, `.hpm`, `.hpm1`, `.hpm2`, `.hpm3`, `.hprim`).
 
-L'application transforme les données brutes HPRIM en rapports médicaux facilement lisibles avec une mise en forme professionnelle, une détection automatique des anomalies et un système d'impression optimisé.
+L'application transforme les données brutes HPRIM en un rapport médical lisible : carte patient, **détection automatique des anomalies**, bandeau de synthèse, barre de position dans l'intervalle de référence, et impression optimisée.
 
 ## ✨ Fonctionnalités
 
-### 📊 **Analyse et Affichage**
-- ✅ Lecture complète des fichiers HPRIM (.hpr, .hpm, .hpm1, .hpm2, .hpm3, .hprim)
-- ✅ Parsing intelligent des formats structurés et texte libre
-- ✅ Affichage professionnel avec colonnes parfaitement alignées
-- ✅ Extraction automatique des informations patient (nom • âge • date de naissance)
-- ✅ Gestion des commentaires et interprétations médicales
-- ✅ Nettoyage automatique des noms de résultats (suppression des "- ")
+### 📊 Analyse et affichage
+- Lecture des fichiers HPRIM dans leurs trois formats (tags `RES|`, pipes, texte libre)
+- Cœur de parsing isolé et **couvert par des tests automatisés**
+- Carte patient : nom, âge, date de naissance, prélèvement, prescripteur, laboratoire, téléphone
+- Score de confiance / identitovigilance lorsque l'identité est incomplète
+- Gestion des commentaires, conclusions et interprétations du laboratoire
 
-### 🎯 **Détection des Anomalies**
-- ✅ Détection automatique des valeurs hors normes
-- ✅ Mise en évidence des valeurs anormales (gras, couleurs)
-- ✅ Parsing avancé des normes (format "min-max" ou valeurs séparées)
-- ✅ Support des opérateurs de comparaison (<, >, ≤, ≥)
+### 🎯 Détection des anomalies
+- Détection **unifiée** : statut explicite H/L **et** comparaison numérique aux bornes de référence
+- Opérateurs de comparaison `< > ≤ ≥ =` (valeurs censurées gérées sans faux positif/négatif)
+- Bornes négatives préservées, virgule décimale française gérée
+- Signalement visuel : valeur colorée, ligne teintée, **bandeau de synthèse** (élevées / basses / normales) et **barre de position** dans l'intervalle
 
-### 🖥️ **Interface Utilisateur**
-- ✅ Interface moderne et intuitive
-- ✅ Support du glisser-déposer
-- ✅ Associations de fichiers (double-clic pour ouvrir)
-- ✅ Système de recherche en temps réel avec mise en surbrillance
-- ✅ Support multilingue (français/anglais, détection automatique)
-- ✅ Compatible macOS, Windows et Linux (ARM64 et x64)
+### 🖥️ Interface
+- Design « clinique épuré », **thème clair / sombre** (automatique selon l'heure)
+- Fenêtre sans cadre avec barre de titre intégrée (réduire / agrandir / fermer)
+- Glisser-déposer et associations de fichiers (double-clic, **instance unique**)
+- Recherche en temps réel avec surlignage
+- Bilingue français / anglais (détection automatique)
+- macOS, Windows et Linux (x64 et arm64)
 
-### 🖨️ **Impression Optimisée** 
-- ✅ Impression professionnelle avec colonnes parfaitement alignées
-- ✅ Raccourcis clavier : CMD+P (Mac) / Ctrl+P (Windows/Linux)
-- ✅ Layout optimisé : gauche-centre-droite
-- ✅ Suppression automatique des éléments non-imprimables
-- ✅ Police réduite et économie d'encre
+### 🔒 Sécurité
+- `contextIsolation` + `sandbox` activés, sans intégration Node dans le renderer
+- **Content Security Policy** stricte (aucun script injecté depuis un fichier ne s'exécute)
+- Échappement anti-XSS de tout contenu de fichier ; validation du chemin côté processus principal
+- Décodage robuste de l'encodage (UTF-8 / windows-1252 / BOM) — fin du mojibake
 
-### 📊 **Export de Données**
-- ✅ Export CSV compatible Excel (UTF-8 + BOM)
-- ✅ Formatage professionnel avec séparateurs français
-- ✅ Gestion des valeurs multiples et commentaires
-- ✅ Nom de fichier automatique avec date
-
-### 🔧 **Fonctionnalités Avancées**
-- ✅ Sécurité renforcée pour le traitement des fichiers
-- ✅ Gestion des unités multiples (ex: % et g/L)
-- ✅ Support des valeurs avec astérisques et symboles spéciaux
-- ✅ Validation croisée des données patient
-- ✅ Mode texte brut pour diagnostic
+### 🖨️ Impression & 📊 Export
+- Impression optimisée, colonnes valeur/norme alignées (Ctrl/Cmd + P)
+- Export CSV compatible Excel (UTF-8 + BOM, séparateurs français, nom de fichier daté)
+- Visualiseur « fichier brut » (suit le thème, imprimable)
 
 ## 📦 Installation
 
-### 🚀 **Installation Rapide (Utilisateurs)**
+### 🚀 Utilisateurs
 
-Téléchargez directement la version correspondant à votre système :
+Téléchargez la dernière version depuis la **[page des releases](https://github.com/yokoinc/hprimtool/releases/latest)** :
 
-#### 🍎 **macOS**
-- Télécharger : `HPRIM Tool-1.0.1-arm64.dmg`
-- Double-cliquez sur le fichier DMG et glissez l'application dans Applications
+- **🪟 Windows** — installateur `HPRIM.Tool.Setup.X.Y.Z.exe` (NSIS, associe les fichiers HPRIM)
+- **🍎 macOS** — `HPRIM.Tool-X.Y.Z-mac.zip` (Intel) ou `HPRIM.Tool-X.Y.Z-arm64-mac.zip` (Apple Silicon)
+- **🐧 Linux** — `.AppImage`, `.deb` ou `.rpm` (x64 et arm64)
+  ```bash
+  chmod +x HPRIM.Tool-*.AppImage && ./HPRIM.Tool-*.AppImage
+  ```
 
-#### 🪟 **Windows**
-- **Installateur** : `HPRIM Tool Setup 1.0.1.exe` (recommandé)
-- **Portable** : `HPRIM Tool 1.0.1.exe` (sans installation)
+> Les binaires ne sont pas signés : Windows SmartScreen / macOS Gatekeeper peuvent afficher un avertissement au premier lancement.
 
-#### 🐧 **Linux/Ubuntu**
-- Télécharger : `HPRIM Tool-1.0.1-arm64.AppImage`
-- Rendre exécutable : `chmod +x "HPRIM Tool-1.0.1-arm64.AppImage"`
-- Lancer : `./HPRIM Tool-1.0.1-arm64.AppImage`
+### 🛠️ Développeurs
 
----
+**Prérequis** : Node.js 18 ou supérieur.
 
-### 🛠️ **Installation pour Développeurs**
-
-#### Prérequis
-- Node.js (version 16 ou supérieure)
-- npm ou yarn
-
-#### Installation des dépendances
 ```bash
-git clone https://github.com/votre-username/hprimtool.git
+git clone https://github.com/yokoinc/hprimtool.git
 cd hprimtool/hprim-electron
 npm install
+npm start            # lancement en développement
+npm test             # tests du cœur de parsing (node:test, sans dépendance)
 ```
 
-#### Lancement en mode développement
+**Construction** :
+
 ```bash
-npm start
+npm run build-win    # Windows
+npm run build-mac    # macOS
+npm run build-linux  # Linux
+npm run build        # plateforme courante
 ```
 
-#### Construction de l'application
-
-**Pour macOS :**
-```bash
-npm run build-mac
-```
-
-**Pour Windows :**
-```bash
-npm run build-win
-```
-
-**Pour Linux :**
-```bash
-npm run build-linux
-```
-
-**Pour toutes les plateformes :**
-```bash
-npm run build
-```
+Les releases publiques (les 3 OS, x64 + arm64) sont produites automatiquement par GitHub Actions au push d'un tag `vX.Y.Z`.
 
 ## 📱 Utilisation
 
-### 🔄 **Méthodes d'ouverture**
-1. **Glisser-déposer** : Glissez un fichier HPRIM (.hpr, .hpm, .hprim) directement dans la fenêtre
-2. **Bouton Ouvrir** : Cliquez sur la zone ou utilisez Cmd+O (Mac) / Ctrl+O (Windows)
-3. **Double-clic** : Associez les fichiers HPRIM à l'application pour les ouvrir directement
+1. **Glisser-déposer** un fichier HPRIM dans la fenêtre, **ou**
+2. **Cliquer** sur la zone d'accueil / `Ctrl`+`O` (`Cmd`+`O` sur Mac), **ou**
+3. **Double-cliquer** un fichier associé (s'ouvre dans la fenêtre courante si l'app tourne déjà).
 
-### 📊 **Lecture des résultats**
-- **En-tête patient** : Nom, âge, date de naissance, date de prélèvement, médecin
-- **Résultats structurés** : Paramètre, valeur, unité, normes de référence
-- **Badges colorés** : 
-  - 🔴 Rouge = Valeur anormale (hors normes)
-  - 🟢 Vert = Valeur normale (dans les normes)
-- **Commentaires** : Interprétations et notes du laboratoire
-
-### 🖨️ **Fonctions avancées**
-- **Impression** : Bouton d'impression intégré
-- **Associations de fichiers** : Configuration automatique pour Windows
-- **Interface responsive** : S'adapte à différentes tailles d'écran
+Le rapport affiche la carte patient, le bandeau de synthèse, puis chaque résultat avec sa valeur, son unité, ses normes et sa position dans l'intervalle. Les valeurs hors normes sont mises en évidence ; les commentaires du laboratoire apparaissent sous les lignes concernées.
 
 ## 📁 Structure du projet
 
 ```
 hprimtool/
-├── hprim-electron/              # 🚀 Application Electron principale
-│   ├── main.js                 # ⚙️ Processus principal Electron
-│   ├── renderer.js             # 🧠 Logique de parsing HPRIM et rendu
-│   ├── index.html              # 🎨 Interface utilisateur
-│   ├── styles.css              # 💄 Styles de l'application
-│   ├── package.json            # 📦 Configuration et dépendances
-│   ├── icons/                  # 🎯 Icônes multi-plateforme
-│   ├── dist/                   # 📱 Applications compilées
-│   └── samples/                # 📄 Fichiers d'exemple HPRIM
-└── README.md                   # 📖 Documentation
+├── hprim-electron/          # Application Electron
+│   ├── main.js              # Processus principal (fenêtre, IPC, associations, instance unique)
+│   ├── preload.js           # Pont sécurisé (contextBridge), compatible sandbox
+│   ├── parser.js            # Cœur de parsing pur + détection d'anomalie (testable Node)
+│   ├── render.js            # Rendu DOM (carte patient, synthèse, lignes, barre de position)
+│   ├── search.js            # Recherche + surlignage
+│   ├── export.js            # Export CSV
+│   ├── rawfile.js           # Visualiseur « fichier brut »
+│   ├── renderer.js          # Orchestrateur (état, glisser-déposer, délégation, thème)
+│   ├── i18n.js / init.js    # Internationalisation (fr/en)
+│   ├── index.html           # Interface + styles
+│   ├── icons/               # Icônes multi-plateforme
+│   └── test/                # Tests node:test + fixtures HPRIM
+├── .github/workflows/       # CI : tests bloquants + build/release multi-OS
+└── README.md
 ```
 
 ## 🧬 Format HPRIM
 
-Le format **HPRIM** (Health Protocol for data Interchange) est un standard français pour l'échange de données médicales, notamment utilisé pour les résultats d'analyses biologiques.
+Le format **HPRIM** est un standard français d'échange de données médicales, notamment pour les résultats d'analyses biologiques.
 
-### Formats supportés :
-- **.hpr** : Format HPRIM standard
-- **.hpm** : Variant HPRIM médical  
-- **.hprim** : Extension générique
-
-### Types de parsing :
-- **Format structuré** : Lignes RES| avec données séparées
-- **Format texte libre** : Parsing intelligent des résultats alignés
-- **Format mixte** : Combinaison des deux approches
+- **Extensions** : `.hpr`, `.hpm` (`.hpm1/2/3`), `.hprim`
+- **Formats reconnus** : structuré à tags (`****LAB****` + lignes `RES|`), structuré à pipes, texte libre — détectés automatiquement.
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues ! N'hésitez pas à :
-- 🐛 Signaler des bugs
-- 💡 Proposer des améliorations
-- 🔧 Soumettre des pull requests
-- 📝 Améliorer la documentation
+Bugs, idées et pull requests bienvenus. Les tests (`npm test`) doivent passer ; ils s'exécutent aussi en CI avant chaque build.
 
 ## 📄 Licence
 
-Ce projet est sous **licence libre** pour usage personnel et professionnel dans le domaine médical.
+Projet sous licence **MIT**, pour usage personnel et professionnel dans le domaine médical.
 
 ---
 
