@@ -1,6 +1,11 @@
 # Changelog - HPRIM Tool
 
-## Version 1.3.0 (Dernière version)
+## Version 1.3.1 (Dernière version)
+
+### 🐛 Auto-update réparé (nom d'installeur)
+- L'auto-update ne se déclenchait pas : `latest.yml` référençait `HPRIM-Tool-Setup-x.y.z.exe` (tirets) alors que GitHub renommait l'asset en `HPRIM.Tool.Setup.x.y.z.exe` (points, conversion des espaces) → téléchargement en 404 silencieux. Correctif : nom d'installeur **sans espaces** (`artifactName`), donc fichier / `latest.yml` / asset GitHub identiques. Les versions ≥ 1.2.0 pourront désormais se mettre à jour automatiquement.
+
+## Version 1.3.0
 
 ### ⬆️ Modernisation de la base technique
 - **Electron 27 → 42** (Chromium récent) et **electron-builder 24 → 26**. Corrige à la source l'instabilité du processus GPU (testé : 0 crash sous Electron 42, accélération matérielle comprise) et apporte les correctifs de sécurité récents.
