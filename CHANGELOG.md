@@ -1,6 +1,13 @@
 # Changelog - HPRIM Tool
 
-## Version 1.2.4 (Dernière version)
+## Version 1.3.0 (Dernière version)
+
+### ⬆️ Modernisation de la base technique
+- **Electron 27 → 42** (Chromium récent) et **electron-builder 24 → 26**. Corrige à la source l'instabilité du processus GPU (testé : 0 crash sous Electron 42, accélération matérielle comprise) et apporte les correctifs de sécurité récents.
+- Config `win` mise à jour pour le schéma electron-builder 26 (`signDlls`/`publisherName` retirés ; signature de code restructurée). `verifyUpdateCodeSignature: false` conservé pour l'auto-update non signé.
+- Le rendu logiciel reste activé par prudence (`disableHardwareAcceleration`), mais peut être retiré en une ligne puisque le GPU est désormais stable.
+
+## Version 1.2.4
 
 ### 🐛 Clignotement au démarrage : cause racine corrigée
 - Diagnostic (logs Electron) : le **processus GPU plantait en boucle** au lancement (sortie `0xC0000409`) ; chaque crash/redémarrage provoquait un flash noir ↔ thème. **Accélération matérielle désactivée** (`app.disableHardwareAcceleration()`) → plus de crash GPU, démarrage stable. Rendu logiciel sans impact perceptible pour cette interface 2D.

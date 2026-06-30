@@ -9,6 +9,10 @@ const { autoUpdater } = require('electron-updater');
 // provoque un flash noir <-> thème (« glitch » au lancement). L'interface étant en
 // 2D simple, le rendu logiciel est tout aussi fluide et supprime ces crashs.
 // DOIT être appelé avant app 'ready'.
+// Sécurité d'affichage : rendu logiciel par défaut (zéro crash GPU, démarrage net).
+// NB : sous Electron 42, le GPU fonctionne sans planter (testé) — cette ligne peut
+// être retirée pour réactiver l'accélération matérielle si un rendu accéléré est
+// souhaité. Conservée par prudence vu l'historique de clignotement.
 app.disableHardwareAcceleration();
 
 let mainWindow;
