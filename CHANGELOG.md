@@ -1,6 +1,14 @@
 # Changelog - HPRIM Tool
 
-## Version 1.2.2 (Dernière version)
+## Version 1.2.3 (Dernière version)
+
+### 🎨 Démarrage net (suite)
+- Fin du clignotement résiduel au lancement : la fenêtre n'apparaît plus qu'une fois le rendu **complètement prêt** (thème + i18n appliqués), via un signal du renderer, et les **transitions CSS sont désactivées pendant le chargement** (plus de fondu noir ↔ thème). i18n appliqué sans délai artificiel.
+
+### 🪟 Distribution
+- Application recentrée sur **Windows** (builds/maintenance) ; le code reste multiplateforme.
+
+## Version 1.2.2
 
 ### 🎨 Démarrage sans clignotement
 - La fenêtre n'apparaît plus **vide** avec plusieurs repeints au lancement : elle est créée masquée et affichée seulement quand le rendu est prêt (`ready-to-show`), avec la **couleur de fond du thème** dès l'ouverture et le **thème appliqué avant le premier rendu** (`theme-init.js`).

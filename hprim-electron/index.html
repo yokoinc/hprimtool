@@ -11,6 +11,12 @@
            HPRIM Tool — design « clinique épuré »
            Tokens clair/sombre, surfaces plates, accent bleu médical
            ============================================================ */
+        /* Anti-flicker : aucune transition/animation tant que la page charge
+           (classe posée par theme-init.js, retirée par init.js une fois prête). */
+        html.no-anim *, html.no-anim *::before, html.no-anim *::after {
+            transition: none !important;
+            animation: none !important;
+        }
         :root, [data-theme="light"] {
             --bg: #f1f5f9;
             --surface: #ffffff;

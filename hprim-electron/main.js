@@ -160,12 +160,12 @@ function createWindow() {
     // Charger l'interface
     mainWindow.loadFile('index.html');
 
-    // N'afficher la fenêtre qu'une fois le premier rendu prêt -> pas de fenêtre vide
-    // ni de clignotement au démarrage. did-finish-load sert de filet de sécurité au
-    // cas où ready-to-show ne se déclencherait pas.
+    // N'afficher la fenêtre que lorsque le renderer signale qu'il a fini de peindre
+    // (thème + i18n appliqués, 2 frames passées) -> démarrage net, sans fenêtre vide
+    // ni clignotement. Filet de sécurité : délai max si le signal n'arrive pas.
     const showWhenReady = () => { if (mainWindow && !mainWindow.isVisible()) mainWindow.show(); };
-    mainWindow.once('ready-to-show', showWhenReady);
-    mainWindow.webContents.once('did-finish-load', showWhenReady);
+    ipcMain.once('renderer-ready', showWhenReady);
+    setTimeout(showWhenReady, 4000); // secours si 'renderer-ready' n'est jamais reçu
 
     // Interface épurée : aucune barre de menu (les actions sont des boutons dans l'app).
     Menu.setApplicationMenu(null);
