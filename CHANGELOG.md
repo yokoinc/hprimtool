@@ -1,6 +1,14 @@
 # Changelog - HPRIM Tool
 
-## Version 1.2.1 (Dernière version)
+## Version 1.2.2 (Dernière version)
+
+### 🎨 Démarrage sans clignotement
+- La fenêtre n'apparaît plus **vide** avec plusieurs repeints au lancement : elle est créée masquée et affichée seulement quand le rendu est prêt (`ready-to-show`), avec la **couleur de fond du thème** dès l'ouverture et le **thème appliqué avant le premier rendu** (`theme-init.js`).
+
+### 🔗 Associations de fichiers étendues
+- `.hpm1`, `.hpm2`, `.hpm3` sont désormais **associés** à l'application (Windows / macOS / Linux), comme `.hpr` / `.hpm` / `.hprim`. Le double-clic ouvre directement ces fichiers (le contenu était déjà géré).
+
+## Version 1.2.1
 
 ### 🐛 Correction
 - **Association de fichiers (Windows)** : double-cliquer un fichier dont l'extension est en **majuscules** (ex. `.HPM`) alors que l'app était fermée l'ouvrait à vide (il fallait re-cliquer). Le test d'extension au lancement est désormais **insensible à la casse**, comme le reste de l'application.

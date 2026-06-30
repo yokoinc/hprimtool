@@ -126,6 +126,14 @@ if (process.argv.length > 1) {
     }
 }
 
+// Couleur de fond initiale = fond du thème (clair/sombre) selon l'heure, pour éviter
+// un flash blanc avant le premier rendu (fenêtre sans cadre). Règle alignée sur
+// autoDetectTheme() (renderer) et theme-init.js : sombre de 19h à 7h.
+function initialThemeBackground() {
+    const h = new Date().getHours();
+    return (h >= 19 || h < 7) ? '#0f172a' : '#f1f5f9';
+}
+
 function createWindow() {
     // Créer la fenêtre principale
     mainWindow = new BrowserWindow({
@@ -134,6 +142,8 @@ function createWindow() {
         minWidth: 400,
         minHeight: 300,
         center: true,
+        show: false,                            // Affichée seulement quand le rendu est prêt (anti-flash)
+        backgroundColor: initialThemeBackground(), // Fond du thème dès l'ouverture
         frame: false,               // Pas de barre de titre Windows (interface épurée)
         autoHideMenuBar: true,      // Pas de barre de menu
         title: 'HPRIM Tool - Analyseur de résultats médicaux',
@@ -149,6 +159,13 @@ function createWindow() {
 
     // Charger l'interface
     mainWindow.loadFile('index.html');
+
+    // N'afficher la fenêtre qu'une fois le premier rendu prêt -> pas de fenêtre vide
+    // ni de clignotement au démarrage. did-finish-load sert de filet de sécurité au
+    // cas où ready-to-show ne se déclencherait pas.
+    const showWhenReady = () => { if (mainWindow && !mainWindow.isVisible()) mainWindow.show(); };
+    mainWindow.once('ready-to-show', showWhenReady);
+    mainWindow.webContents.once('did-finish-load', showWhenReady);
 
     // Interface épurée : aucune barre de menu (les actions sont des boutons dans l'app).
     Menu.setApplicationMenu(null);

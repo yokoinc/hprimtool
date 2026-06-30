@@ -2,7 +2,7 @@
 
 **Analyseur professionnel de fichiers de résultats biologiques au format HPRIM**
 
-[![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)](https://github.com/yokoinc/hprimtool/releases)
+[![Version](https://img.shields.io/badge/version-1.2.2-blue.svg)](https://github.com/yokoinc/hprimtool/releases)
 [![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-green.svg)]()
 
