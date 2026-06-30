@@ -1,6 +1,11 @@
 # Changelog - HPRIM Tool
 
-## Version 1.1.1 (Dernière version)
+## Version 1.1.2 (Dernière version)
+
+### 🎨 Interface
+- **Visualiseur « fichier brut » sans cadre natif** : la fenêtre suit le même style épuré que la fenêtre principale (plus de barre de titre Windows). Déplacement par l'en-tête, fermeture par le bouton « Fermer ».
+
+## Version 1.1.1
 
 ### 🐛 Correction
 - **Association de fichiers** : verrou d'instance unique. Double-cliquer un `.hpr`/`.hpm`/`.hprim` alors que l'app tourne déjà ouvre désormais le fichier dans la **fenêtre existante** (et la ramène au premier plan) au lieu de lancer une 2ᵉ instance/fenêtre (Windows/Linux).

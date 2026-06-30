@@ -60,6 +60,7 @@ function showRawFilePopup() {
                         gap: 16px; flex-wrap: wrap;
                         background: var(--surface); border: 1px solid var(--border);
                         border-radius: 6px; padding: 13px 18px; margin-bottom: 14px;
+                        -webkit-app-region: drag; /* zone de déplacement (fenêtre sans cadre) */
                     }
                     .header h2 { margin: 0; font-size: 16px; font-weight: 500; letter-spacing: -0.2px; }
                     .stats { font-size: 12px; color: var(--text-3); margin-top: 2px; }
@@ -69,6 +70,7 @@ function showRawFilePopup() {
                         border: 1px solid var(--border); padding: 7px 14px;
                         border-radius: 4px; cursor: pointer; font-size: 13px;
                         font-weight: 500; font-family: inherit;
+                        -webkit-app-region: no-drag; /* cliquable malgré l'en-tête draggable */
                     }
                     .btn:hover { background: var(--bg); border-color: var(--text-3); }
                     .content {

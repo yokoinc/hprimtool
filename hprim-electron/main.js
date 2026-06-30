@@ -143,6 +143,22 @@ function createWindow() {
     // Interface épurée : aucune barre de menu (les actions sont des boutons dans l'app).
     Menu.setApplicationMenu(null);
 
+    // Les fenêtres ouvertes via window.open (visualiseur « fichier brut ») héritent
+    // du même style épuré : sans cadre natif, comme la fenêtre principale. La fermeture
+    // se fait par le bouton « Fermer » du contenu, et l'en-tête sert de zone de déplacement.
+    mainWindow.webContents.setWindowOpenHandler(() => {
+        return {
+            action: 'allow',
+            overrideBrowserWindowOptions: {
+                frame: false,
+                autoHideMenuBar: true,
+                width: 800,
+                height: 600,
+                resizable: true
+            }
+        };
+    });
+
     // Gérer les raccourcis globaux
     globalShortcut.register('CommandOrControl+Q', () => {
         app.quit();
