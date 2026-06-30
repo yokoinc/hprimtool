@@ -12,10 +12,8 @@
   "scripts": {
     "start": "electron .",
     "test": "node --test test/*.test.js",
-    "build": "electron-builder",
+    "build": "electron-builder --win",
     "build-win": "electron-builder --win",
-    "build-mac": "electron-builder --mac",
-    "build-linux": "electron-builder --linux",
     "dist": "npm run build"
   },
   "build": {
@@ -44,80 +42,6 @@
       "i18n.js",
       "icons/**/*"
     ],
-    "mac": {
-      "category": "public.app-category.medical",
-      "target": {
-        "target": "dmg",
-        "arch": [
-          "arm64",
-          "x64"
-        ]
-      },
-      "icon": "icons/icon.icns",
-      "gatekeeperAssess": false,
-      "hardenedRuntime": true,
-      "entitlements": "build/entitlements.mac.plist",
-      "entitlementsInherit": "build/entitlements.mac.plist",
-      "fileAssociations": [
-        {
-          "ext": "hpr",
-          "name": "HPRIM Medical File",
-          "description": "Medical test results file",
-          "role": "Editor"
-        },
-        {
-          "ext": "hpm",
-          "name": "HPRIM Medical File",
-          "description": "Medical test results file",
-          "role": "Editor"
-        },
-        {
-          "ext": "hprim",
-          "name": "HPRIM Medical File",
-          "description": "Medical test results file",
-          "role": "Editor"
-        },
-        {
-          "ext": "hpm1",
-          "name": "HPRIM Medical File",
-          "description": "Medical test results file",
-          "role": "Editor"
-        },
-        {
-          "ext": "hpm2",
-          "name": "HPRIM Medical File",
-          "description": "Medical test results file",
-          "role": "Editor"
-        },
-        {
-          "ext": "hpm3",
-          "name": "HPRIM Medical File",
-          "description": "Medical test results file",
-          "role": "Editor"
-        }
-      ]
-    },
-    "dmg": {
-      "title": "HPRIM Tool",
-      "icon": "icons/icon.icns",
-      "window": {
-        "width": 600,
-        "height": 450
-      },
-      "contents": [
-        {
-          "x": 150,
-          "y": 200,
-          "type": "file"
-        },
-        {
-          "x": 450,
-          "y": 200,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ]
-    },
     "win": {
       "target": [
         {
@@ -164,120 +88,6 @@
           "description": "Medical test results file"
         }
       ]
-    },
-    "linux": {
-      "target": [
-        {
-          "target": "AppImage",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        },
-        {
-          "target": "deb",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        },
-        {
-          "target": "rpm",
-          "arch": [
-            "x64",
-            "arm64"
-          ]
-        }
-      ],
-      "icon": "icons/",
-      "category": "Office",
-      "description": "Analyseur de résultats biologiques HPRIM",
-      "desktop": {
-        "Name": "HPRIM Tool",
-        "Comment": "Analyseur de résultats biologiques",
-        "GenericName": "Analyseur médical",
-        "Keywords": "medical;hprim;laboratory;results;analyse;biologie;",
-        "StartupWMClass": "HPRIM Tool",
-        "MimeType": "application/x-hprim;"
-      },
-      "fileAssociations": [
-        {
-          "ext": "hpr",
-          "name": "HPRIM Medical File",
-          "description": "Medical test results file",
-          "mimeType": "application/x-hprim",
-          "icon": "icons/file_icon.png",
-          "role": "Editor"
-        },
-        {
-          "ext": "hpm",
-          "name": "HPRIM Medical File",
-          "description": "Medical test results file",
-          "mimeType": "application/x-hprim",
-          "icon": "icons/file_icon.png",
-          "role": "Editor"
-        },
-        {
-          "ext": "hprim",
-          "name": "HPRIM Medical File",
-          "description": "Medical test results file",
-          "mimeType": "application/x-hprim",
-          "icon": "icons/file_icon.png",
-          "role": "Editor"
-        },
-        {
-          "ext": "hpm1",
-          "name": "HPRIM Medical File",
-          "description": "Medical test results file",
-          "mimeType": "application/x-hprim",
-          "icon": "icons/file_icon.png",
-          "role": "Editor"
-        },
-        {
-          "ext": "hpm2",
-          "name": "HPRIM Medical File",
-          "description": "Medical test results file",
-          "mimeType": "application/x-hprim",
-          "icon": "icons/file_icon.png",
-          "role": "Editor"
-        },
-        {
-          "ext": "hpm3",
-          "name": "HPRIM Medical File",
-          "description": "Medical test results file",
-          "mimeType": "application/x-hprim",
-          "icon": "icons/file_icon.png",
-          "role": "Editor"
-        }
-      ]
-    },
-    "deb": {
-      "priority": "optional",
-      "depends": [
-        "libgtk-3-0",
-        "libnotify4",
-        "libnss3",
-        "libxss1",
-        "libxtst6",
-        "xdg-utils",
-        "libatspi2.0-0",
-        "libasound2"
-      ],
-      "packageCategory": "utils",
-      "maintainer": "HPRIM Tool Team <cuffel.gregory@gmail.com>"
-    },
-    "rpm": {
-      "depends": [
-        "gtk3",
-        "libnotify",
-        "nss",
-        "libXScrnSaver",
-        "libXtst",
-        "xdg-utils",
-        "at-spi2-core",
-        "alsa-lib"
-      ],
-      "category": "Applications/Office"
     },
     "nsis": {
       "oneClick": false,

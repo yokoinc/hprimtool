@@ -3,7 +3,7 @@
 **Analyseur professionnel de fichiers de résultats biologiques au format HPRIM**
 
 [![Version](https://img.shields.io/badge/version-1.2.2-blue.svg)](https://github.com/yokoinc/hprimtool/releases)
-[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey.svg)]()
+[![Platform](https://img.shields.io/badge/platform-Windows-blue.svg)]()
 [![License](https://img.shields.io/badge/license-MIT-green.svg)]()
 
 ## 📋 Description
@@ -33,8 +33,8 @@ L'application transforme les données brutes HPRIM en un rapport médical lisibl
 - Glisser-déposer et associations de fichiers (double-clic, **instance unique**)
 - Recherche en temps réel avec surlignage
 - Bilingue français / anglais (détection automatique)
-- **Mise à jour automatique** (Windows et Linux AppImage) : notification puis installation au redémarrage
-- macOS, Windows et Linux (x64 et arm64)
+- **Mise à jour automatique** : notification puis installation au redémarrage
+- Windows (x64)
 
 ### 🔒 Sécurité
 - `contextIsolation` + `sandbox` activés, sans intégration Node dans le renderer
@@ -51,16 +51,11 @@ L'application transforme les données brutes HPRIM en un rapport médical lisibl
 
 ### 🚀 Utilisateurs
 
-Téléchargez la dernière version depuis la **[page des releases](https://github.com/yokoinc/hprimtool/releases/latest)** :
+Application **Windows uniquement**. Téléchargez la dernière version depuis la **[page des releases](https://github.com/yokoinc/hprimtool/releases/latest)** :
 
-- **🪟 Windows** — installateur `HPRIM.Tool.Setup.X.Y.Z.exe` (NSIS, associe les fichiers HPRIM)
-- **🍎 macOS** — `HPRIM.Tool-X.Y.Z-mac.zip` (Intel) ou `HPRIM.Tool-X.Y.Z-arm64-mac.zip` (Apple Silicon)
-- **🐧 Linux** — `.AppImage`, `.deb` ou `.rpm` (x64 et arm64)
-  ```bash
-  chmod +x HPRIM.Tool-*.AppImage && ./HPRIM.Tool-*.AppImage
-  ```
+- **🪟 Windows** — installateur `HPRIM.Tool.Setup.X.Y.Z.exe` (NSIS, associe les fichiers HPRIM, mise à jour automatique)
 
-> Les binaires ne sont pas signés : Windows SmartScreen / macOS Gatekeeper peuvent afficher un avertissement au premier lancement.
+> Le binaire n'est pas signé : Windows SmartScreen peut afficher un avertissement au premier lancement (« Informations complémentaires » → « Exécuter quand même »).
 
 ### 🛠️ Développeurs
 
@@ -77,13 +72,10 @@ npm test             # tests du cœur de parsing (node:test, sans dépendance)
 **Construction** :
 
 ```bash
-npm run build-win    # Windows
-npm run build-mac    # macOS
-npm run build-linux  # Linux
-npm run build        # plateforme courante
+npm run build-win    # installeur Windows (NSIS)
 ```
 
-Les releases publiques (les 3 OS, x64 + arm64) sont produites automatiquement par GitHub Actions au push d'un tag `vX.Y.Z`.
+La release Windows est produite automatiquement par GitHub Actions au push d'un tag `vX.Y.Z`.
 
 ## 📱 Utilisation
 
@@ -110,7 +102,7 @@ hprimtool/
 │   ├── index.html           # Interface + styles
 │   ├── icons/               # Icônes multi-plateforme
 │   └── test/                # Tests node:test + fixtures HPRIM
-├── .github/workflows/       # CI : tests bloquants + build/release multi-OS
+├── .github/workflows/       # CI : tests bloquants + build/release Windows
 └── README.md
 ```
 
