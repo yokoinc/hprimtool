@@ -109,10 +109,19 @@ function checkAndMoveToApplications() {
     }
 }
 
+// Extensions HPRIM reconnues — test INSENSIBLE À LA CASSE. Windows passe souvent
+// l'extension en majuscules (ex. « .HPM »), ce qui faisait échouer l'ouverture au
+// lancement à froid (endsWith sensible à la casse) alors que la 2ᵉ instance, elle,
+// matchait : d'où « 1er double-clic = rien, 2e double-clic = ça ouvre ».
+const HPRIM_FILE_RE = /\.(hpr|hpm|hpm1|hpm2|hpm3|hprim)$/i;
+function isHprimFile(p) {
+    return typeof p === 'string' && HPRIM_FILE_RE.test(p);
+}
+
 // Gestion des arguments de ligne de commande (fichier passé au lancement)
 if (process.argv.length > 1) {
     const potentialFile = process.argv[process.argv.length - 1];
-    if (potentialFile && (potentialFile.endsWith('.hpr') || potentialFile.endsWith('.hpm') || potentialFile.endsWith('.hpm1') || potentialFile.endsWith('.hpm2') || potentialFile.endsWith('.hpm3') || potentialFile.endsWith('.hprim'))) {
+    if (isHprimFile(potentialFile)) {
         fileToOpen = potentialFile;
     }
 }
@@ -500,7 +509,7 @@ if (!gotSingleInstanceLock) {
     app.on('second-instance', (event, argv) => {
         // Récupérer un éventuel fichier passé à la 2ᵉ instance (Windows/Linux)
         const potentialFile = argv[argv.length - 1];
-        if (potentialFile && /\.(hpr|hpm|hpm1|hpm2|hpm3|hprim)$/i.test(potentialFile)) {
+        if (isHprimFile(potentialFile)) {
             if (mainWindow && mainWindow.webContents) {
                 mainWindow.webContents.send('file-to-open', potentialFile);
             } else {

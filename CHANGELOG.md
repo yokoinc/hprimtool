@@ -1,6 +1,11 @@
 # Changelog - HPRIM Tool
 
-## Version 1.2.0 (Dernière version)
+## Version 1.2.1 (Dernière version)
+
+### 🐛 Correction
+- **Association de fichiers (Windows)** : double-cliquer un fichier dont l'extension est en **majuscules** (ex. `.HPM`) alors que l'app était fermée l'ouvrait à vide (il fallait re-cliquer). Le test d'extension au lancement est désormais **insensible à la casse**, comme le reste de l'application.
+
+## Version 1.2.0
 
 ### 🔄 Mise à jour automatique
 - L'application vérifie les nouvelles versions au lancement (flux des releases GitHub via `electron-updater`).
