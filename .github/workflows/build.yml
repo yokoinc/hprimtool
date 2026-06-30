@@ -67,8 +67,7 @@ jobs:
           hprim-electron/dist/*.deb
           hprim-electron/dist/*.rpm
           hprim-electron/dist/*.AppImage
-          hprim-electron/dist/*.yml
-          hprim-electron/dist/*.blockmap
+          hprim-electron/dist/latest*.yml
         if-no-files-found: warn
 
   build-windows:
@@ -101,8 +100,8 @@ jobs:
         name: packages-windows
         path: |
           hprim-electron/dist/*.exe
-          hprim-electron/dist/*.yml
-          hprim-electron/dist/*.blockmap
+          hprim-electron/dist/latest.yml
+          hprim-electron/dist/*.exe.blockmap
         if-no-files-found: warn
 
   build-macos:
@@ -156,10 +155,9 @@ jobs:
           packages-linux-*/*.AppImage
           packages-windows/*.exe
           packages-macos/*.zip
-          packages-windows/*.yml
-          packages-windows/*.blockmap
-          packages-linux-*/*.yml
-          packages-linux-*/*.blockmap
+          packages-windows/latest.yml
+          packages-windows/*.exe.blockmap
+          packages-linux-*/latest-linux*.yml
         draft: false
         prerelease: false
         generate_release_notes: true
