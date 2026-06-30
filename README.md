@@ -33,6 +33,7 @@ L'application transforme les données brutes HPRIM en un rapport médical lisibl
 - Glisser-déposer et associations de fichiers (double-clic, **instance unique**)
 - Recherche en temps réel avec surlignage
 - Bilingue français / anglais (détection automatique)
+- **Mise à jour automatique** (Windows et Linux AppImage) : notification puis installation au redémarrage
 - macOS, Windows et Linux (x64 et arm64)
 
 ### 🔒 Sécurité

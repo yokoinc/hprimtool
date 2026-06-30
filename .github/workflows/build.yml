@@ -57,7 +57,7 @@ jobs:
       run: |
         cd hprim-electron
         export USE_SYSTEM_FPM=true
-        npm run build -- --linux deb rpm AppImage --${{ matrix.arch }}
+        npm run build -- --linux deb rpm AppImage --${{ matrix.arch }} --publish never
         
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
@@ -67,6 +67,8 @@ jobs:
           hprim-electron/dist/*.deb
           hprim-electron/dist/*.rpm
           hprim-electron/dist/*.AppImage
+          hprim-electron/dist/*.yml
+          hprim-electron/dist/*.blockmap
         if-no-files-found: warn
 
   build-windows:
@@ -91,13 +93,16 @@ jobs:
     - name: Build Windows packages
       run: |
         cd hprim-electron
-        npm run build -- --win --x64
+        npm run build -- --win --x64 --publish never
         
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: packages-windows
-        path: hprim-electron/dist/*.exe
+        path: |
+          hprim-electron/dist/*.exe
+          hprim-electron/dist/*.yml
+          hprim-electron/dist/*.blockmap
         if-no-files-found: warn
 
   build-macos:
@@ -122,7 +127,7 @@ jobs:
     - name: Build macOS packages
       run: |
         cd hprim-electron
-        npm run build -- --mac zip --x64 --arm64
+        npm run build -- --mac zip --x64 --arm64 --publish never
         
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
@@ -147,10 +152,14 @@ jobs:
       with:
         files: |
           packages-linux-*/*.deb
-          packages-linux-*/*.rpm  
+          packages-linux-*/*.rpm
           packages-linux-*/*.AppImage
           packages-windows/*.exe
           packages-macos/*.zip
+          packages-windows/*.yml
+          packages-windows/*.blockmap
+          packages-linux-*/*.yml
+          packages-linux-*/*.blockmap
         draft: false
         prerelease: false
         generate_release_notes: true

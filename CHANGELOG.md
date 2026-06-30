@@ -1,6 +1,14 @@
 # Changelog - HPRIM Tool
 
-## Version 1.1.2 (Dernière version)
+## Version 1.2.0 (Dernière version)
+
+### 🔄 Mise à jour automatique
+- L'application vérifie les nouvelles versions au lancement (flux des releases GitHub via `electron-updater`).
+- **Comportement « notifier puis installer »** : la mise à jour se télécharge en tâche de fond, puis l'app propose de **redémarrer maintenant** ou d'installer à la prochaine fermeture.
+- Pris en charge sur **Windows** (.exe) et **Linux AppImage**. Les paquets `.deb`/`.rpm` restent gérés par le système ; **macOS** reste en mise à jour manuelle (nécessite une signature Apple).
+- _Note_ : l'auto-update s'applique à partir de cette version (1.2.0 → versions suivantes).
+
+## Version 1.1.2
 
 ### 🎨 Interface
 - **Visualiseur « fichier brut » sans cadre natif** : la fenêtre suit le même style épuré que la fenêtre principale (plus de barre de titre Windows). Déplacement par l'en-tête, fermeture par le bouton « Fermer ».

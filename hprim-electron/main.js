@@ -2,6 +2,7 @@ const { app, BrowserWindow, Menu, dialog, ipcMain, globalShortcut, shell } = req
 const path = require('path');
 const fs = require('fs');
 const { decodeBuffer } = require('./parser.js');
+const { autoUpdater } = require('electron-updater');
 
 let mainWindow;
 let fileToOpen = null;
@@ -452,6 +453,42 @@ app.on('open-file', (event, filePath) => {
     }
 });
 
+// Mise à jour automatique (Windows NSIS + Linux AppImage). Comportement « notifier
+// puis installer » : téléchargement en tâche de fond, puis proposition de redémarrer.
+// macOS non signé n'est pas pris en charge par l'updater -> mise à jour manuelle.
+function setupAutoUpdater() {
+    if (!app.isPackaged) return; // pas de mise à jour en développement
+
+    autoUpdater.autoDownload = true;
+    autoUpdater.autoInstallOnAppQuit = true;
+
+    autoUpdater.on('update-downloaded', (info) => {
+        if (!mainWindow) return;
+        dialog.showMessageBox(mainWindow, {
+            type: 'info',
+            buttons: ['Redémarrer maintenant', 'Plus tard'],
+            defaultId: 0,
+            cancelId: 1,
+            title: 'Mise à jour disponible',
+            message: `HPRIM Tool ${info.version} est prêt à être installé.`,
+            detail: 'Redémarrer maintenant pour appliquer la mise à jour ? Sinon elle sera installée à la prochaine fermeture de l\'application.'
+        }).then(({ response }) => {
+            if (response === 0) autoUpdater.quitAndInstall();
+        }).catch(() => {});
+    });
+
+    // Une erreur de mise à jour (hors ligne, release absente…) ne doit jamais
+    // déranger l'utilisateur ni bloquer l'application.
+    autoUpdater.on('error', (err) => {
+        console.error('Mise à jour : erreur ignorée —', err == null ? 'inconnue' : (err.stack || err).toString());
+    });
+
+    // Vérifier au lancement, avec un léger différé pour ne pas ralentir l'ouverture.
+    setTimeout(() => {
+        autoUpdater.checkForUpdates().catch(() => {});
+    }, 3000);
+}
+
 // Verrou d'instance unique : une seule fenêtre HPRIM Tool. Si une 2ᵉ instance est
 // lancée (double-clic sur un .hpr alors que l'app tourne déjà), on récupère son
 // argument fichier et on l'ouvre dans la fenêtre existante, au lieu d'ouvrir un
@@ -480,6 +517,7 @@ if (!gotSingleInstanceLock) {
     // Prêt à créer les fenêtres
     app.whenReady().then(() => {
         createWindow();
+        setupAutoUpdater();
 
         app.on('activate', () => {
             if (BrowserWindow.getAllWindows().length === 0) {
