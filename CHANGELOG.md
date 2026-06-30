@@ -1,6 +1,11 @@
 # Changelog - HPRIM Tool
 
-## Version 1.1.0 (Dernière version)
+## Version 1.1.1 (Dernière version)
+
+### 🐛 Correction
+- **Association de fichiers** : verrou d'instance unique. Double-cliquer un `.hpr`/`.hpm`/`.hprim` alors que l'app tourne déjà ouvre désormais le fichier dans la **fenêtre existante** (et la ramène au premier plan) au lieu de lancer une 2ᵉ instance/fenêtre (Windows/Linux).
+
+## Version 1.1.0
 
 ### 🎨 Refonte de l'interface (« clinique épuré »)
 - Nouvelle palette neutre et plate, accent médical unique, thème **clair/sombre** cohérent

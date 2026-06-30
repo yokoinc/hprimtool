@@ -436,16 +436,42 @@ app.on('open-file', (event, filePath) => {
     }
 });
 
-// Prêt à créer les fenêtres
-app.whenReady().then(() => {
-    createWindow();
-
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) {
-            createWindow();
+// Verrou d'instance unique : une seule fenêtre HPRIM Tool. Si une 2ᵉ instance est
+// lancée (double-clic sur un .hpr alors que l'app tourne déjà), on récupère son
+// argument fichier et on l'ouvre dans la fenêtre existante, au lieu d'ouvrir un
+// second processus/fenêtre. (macOS passe déjà par l'événement 'open-file'.)
+const gotSingleInstanceLock = app.requestSingleInstanceLock();
+if (!gotSingleInstanceLock) {
+    app.quit();
+} else {
+    app.on('second-instance', (event, argv) => {
+        // Récupérer un éventuel fichier passé à la 2ᵉ instance (Windows/Linux)
+        const potentialFile = argv[argv.length - 1];
+        if (potentialFile && /\.(hpr|hpm|hpm1|hpm2|hpm3|hprim)$/i.test(potentialFile)) {
+            if (mainWindow && mainWindow.webContents) {
+                mainWindow.webContents.send('file-to-open', potentialFile);
+            } else {
+                fileToOpen = potentialFile;
+            }
+        }
+        // Ramener la fenêtre existante au premier plan
+        if (mainWindow) {
+            if (mainWindow.isMinimized()) mainWindow.restore();
+            mainWindow.focus();
         }
     });
-});
+
+    // Prêt à créer les fenêtres
+    app.whenReady().then(() => {
+        createWindow();
+
+        app.on('activate', () => {
+            if (BrowserWindow.getAllWindows().length === 0) {
+                createWindow();
+            }
+        });
+    });
+}
 
 // Quitter quand toutes les fenêtres sont fermées
 app.on('window-all-closed', () => {
