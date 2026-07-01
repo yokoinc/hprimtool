@@ -100,12 +100,17 @@
 
         /* ---------- Barre de titre custom (fenêtre sans cadre) ---------- */
         .titlebar {
-            display: flex; align-items: center; justify-content: flex-end;
+            display: flex; align-items: center; justify-content: space-between;
             height: 32px;
             background: var(--surface);
             border-bottom: 1px solid var(--border);
             -webkit-app-region: drag;
             user-select: none;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .titlebar-title {
+            font-size: 12px; color: var(--text-3); font-weight: 500;
+            padding-left: 12px; letter-spacing: 0.2px; white-space: nowrap;
         }
         .titlebar-controls { display: flex; height: 100%; -webkit-app-region: no-drag; }
         .winctl {
@@ -131,6 +136,7 @@
             padding: 13px 18px;
             margin-bottom: 12px;
             -webkit-app-region: drag;   /* fenêtre sans cadre : l'en-tête sert à déplacer */
+            position: sticky; top: 32px; z-index: 90;   /* reste visible au défilement (sous la barre de titre) */
         }
         /* les boutons restent cliquables (non-drag) */
         .app-header .btn { -webkit-app-region: no-drag; }
@@ -447,6 +453,7 @@
 </head>
 <body>
     <div class="titlebar">
+        <div class="titlebar-title">HPRIM Tool <span id="appVersion"></span></div>
         <div class="titlebar-controls">
             <button class="winctl" data-action="win-min" aria-label="Réduire" title="Réduire">&#x2013;</button>
             <button class="winctl" data-action="win-max" aria-label="Agrandir" title="Agrandir">&#x25A1;</button>

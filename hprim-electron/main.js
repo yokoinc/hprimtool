@@ -387,6 +387,9 @@ ipcMain.handle('get-system-language', async () => {
     return app.getLocale();
 });
 
+// IPC: Version de l'application (affichée dans la barre de titre)
+ipcMain.handle('get-app-version', () => app.getVersion());
+
 // IPC: Mettre à jour le titre de la fenêtre
 ipcMain.on('update-window-title', (event, title) => {
     if (mainWindow) {
@@ -496,6 +499,14 @@ app.on('open-file', (event, filePath) => {
 function setupAutoUpdater() {
     if (!app.isPackaged) return; // pas de mise à jour en développement
 
+    // Journal des mises à jour dans un fichier (diagnostic) :
+    // %APPDATA%\HPRIM Tool\logs\main.log
+    try {
+        const log = require('electron-log');
+        log.transports.file.level = 'info';
+        autoUpdater.logger = log;
+    } catch (e) { /* electron-log absent : on continue sans journal fichier */ }
+
     autoUpdater.autoDownload = true;
     autoUpdater.autoInstallOnAppQuit = true;
 
@@ -510,7 +521,15 @@ function setupAutoUpdater() {
             message: `HPRIM Tool ${info.version} est prêt à être installé.`,
             detail: 'Redémarrer maintenant pour appliquer la mise à jour ? Sinon elle sera installée à la prochaine fermeture de l\'application.'
         }).then(({ response }) => {
-            if (response === 0) autoUpdater.quitAndInstall();
+            if (response === 0) {
+                // Les handlers de fermeture (mainWindow 'close' et 'window-all-closed')
+                // appellent app.quit() et interrompaient la séquence quitter->installer
+                // de quitAndInstall (bouton « Redémarrer » sans effet). On les retire
+                // pour laisser electron-updater piloter l'arrêt + l'installation.
+                app.removeAllListeners('window-all-closed');
+                if (mainWindow) mainWindow.removeAllListeners('close');
+                setImmediate(() => autoUpdater.quitAndInstall());
+            }
         }).catch(() => {});
     });
 

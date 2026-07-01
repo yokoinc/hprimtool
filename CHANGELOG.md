@@ -1,6 +1,16 @@
 # Changelog - HPRIM Tool
 
-## Version 1.3.1 (Dernière version)
+## Version 1.3.2 (Dernière version)
+
+### 🐛 Bouton « Redémarrer maintenant » réparé
+- Le bouton de la notification de mise à jour ne faisait rien : les handlers de fermeture de fenêtre (`close` / `window-all-closed`, qui appellent `app.quit()`) interrompaient la séquence de `quitAndInstall`. Ils sont désormais retirés juste avant l'installation, et l'appel est différé (`setImmediate`).
+- **Journal de mise à jour** ajouté (`electron-log`) : `%APPDATA%\HPRIM Tool\logs\main.log` — pour diagnostiquer si besoin.
+
+### ✨ Interface
+- **Numéro de version** affiché dans la barre de titre.
+- La **barre de titre et l'en-tête restent fixes** en haut lors du défilement (les boutons Rechercher / Imprimer / Export restent accessibles).
+
+## Version 1.3.1
 
 ### 🐛 Auto-update réparé (nom d'installeur)
 - L'auto-update ne se déclenchait pas : `latest.yml` référençait `HPRIM-Tool-Setup-x.y.z.exe` (tirets) alors que GitHub renommait l'asset en `HPRIM.Tool.Setup.x.y.z.exe` (points, conversion des espaces) → téléchargement en 404 silencieux. Correctif : nom d'installeur **sans espaces** (`artifactName`), donc fichier / `latest.yml` / asset GitHub identiques. Les versions ≥ 1.2.0 pourront désormais se mettre à jour automatiquement.

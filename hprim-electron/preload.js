@@ -18,6 +18,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
     // Signale que le renderer a fini de peindre (thème + i18n) -> main affiche la fenêtre
     notifyReady: () => ipcRenderer.send('renderer-ready'),
 
+    // Version de l'app (pour l'affichage dans la barre de titre)
+    getVersion: () => ipcRenderer.invoke('get-app-version'),
+
     // Contrôles de fenêtre (barre de titre custom)
     minimizeWindow: () => ipcRenderer.send('window-minimize'),
     toggleMaximizeWindow: () => ipcRenderer.send('window-maximize-toggle'),

@@ -25,6 +25,14 @@ window.electronAPI.onFileSelected((filePath) => {
     handleFile(filePath);
 });
 
+// Afficher la version de l'app dans la barre de titre
+if (window.electronAPI.getVersion) {
+    window.electronAPI.getVersion().then((v) => {
+        const el = document.getElementById('appVersion');
+        if (el && v) el.textContent = 'v' + v;
+    }).catch(() => {});
+}
+
 // Lecture d'un fichier par chemin (le main valide chemin/extension/taille).
 async function handleFile(filePath) {
     Logger.debug('handleFile appelé avec:', filePath);
