@@ -123,4 +123,4 @@ Projet sous licence **MIT**, pour usage personnel et professionnel dans le domai
 
 ---
 
-**Développé par le XXX avec ❤️ pour améliorer l'analyse des résultats biologiques**
+**Développé par **yokoinc** avec ❤️ pour améliorer l'analyse des résultats biologiques**
